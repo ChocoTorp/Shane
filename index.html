@@ -1285,6 +1285,171 @@
   .signoff .brand { font-size: 25px; }
   .signoff b { color: var(--ink); }
 
+  /* ================= SLIDE: Q&A FINALE ================= */
+  section[data-label="Q&A"] .frame { overflow: hidden; }
+  .finale-bg {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(800px 600px at 78% 28%, rgba(229,55,43,0.22), transparent 70%),
+      radial-gradient(600px 500px at 12% 80%, rgba(82,134,204,0.16), transparent 70%);
+  }
+  .finale-grid {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+  }
+  .finale-ticker {
+    position: absolute; top: 30px; left: 0; right: 0; z-index: 2;
+    overflow: hidden; pointer-events: none;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: rgba(229,55,43,0.06);
+    padding: 12px 0;
+  }
+  .finale-ticker-track {
+    display: inline-flex; gap: 60px; white-space: nowrap;
+    animation: finaleScroll 40s linear infinite;
+    font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 22px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .finale-ticker-track span.r { color: var(--accent); }
+  .finale-ticker-track .sep { color: var(--muted); opacity: 0.5; }
+  @keyframes finaleScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .finale-stage {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 60px; align-items: center;
+    margin-top: 90px; padding: 0 var(--pad-x);
+  }
+  .finale-eyebrow {
+    font-family: "Archivo", sans-serif; font-weight: 700; font-size: 18px;
+    letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent);
+    margin: 0 0 14px;
+  }
+  .finale-headline {
+    font-family: "Archivo", sans-serif; font-weight: 900;
+    font-size: 168px; line-height: 0.86; letter-spacing: -0.04em;
+    margin: 0; color: var(--ink); text-transform: uppercase;
+  }
+  .finale-headline .red { color: var(--accent); display: inline-block; }
+  .finale-headline .stroke {
+    -webkit-text-stroke: 2px var(--accent); color: transparent;
+    display: inline-block;
+  }
+  .finale-sub {
+    margin-top: 24px; max-width: 28ch;
+    font-family: "Source Serif 4", Georgia, serif; font-style: italic;
+    font-size: 28px; line-height: 1.35; color: var(--muted);
+  }
+  .finale-sub b { color: var(--ink); font-style: normal; font-weight: 700; }
+  .finale-jp {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+    font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    font-weight: 900; font-size: 168px; line-height: 0.92; letter-spacing: 0.01em;
+    margin: 0;
+  }
+  .finale-jp .a { color: var(--ink); display: block; white-space: nowrap; }
+  .finale-jp .b { color: var(--accent); display: block; white-space: nowrap; }
+  .finale-jp .c { -webkit-text-stroke: 3px var(--accent); color: transparent; display: block; white-space: nowrap; }
+  .finale-jp .romaji {
+    margin-top: 14px;
+    font-family: "Archivo", sans-serif; font-weight: 700;
+    font-size: 14px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .finale-stamp {
+    position: absolute; top: -8px; right: 200px; z-index: 4;
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 12px 22px; border: 2px solid var(--accent); color: var(--accent);
+    background: rgba(15,15,18,0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    font-family: "Archivo", sans-serif; font-weight: 900;
+    font-size: 22px; letter-spacing: 0.24em; text-transform: uppercase;
+    transform: rotate(-2deg);
+    box-shadow: inset 0 0 0 4px rgba(229,55,43,0.06), 0 10px 24px rgba(0,0,0,0.45);
+  }
+  .finale-stamp .pulse {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(229,55,43,0.7);
+    animation: finalePulse 1.6s ease-out infinite;
+  }
+  @keyframes finalePulse {
+    0% { box-shadow: 0 0 0 0 rgba(229,55,43,0.7); }
+    100% { box-shadow: 0 0 0 18px rgba(229,55,43,0); }
+  }
+
+  .finale-right { position: relative; display: flex; flex-direction: column; align-items: flex-end; }
+  .finale-age {
+    position: relative;
+    display: flex; align-items: baseline; gap: 18px;
+    font-family: "Archivo", sans-serif; font-weight: 900; line-height: 0.85;
+  }
+  .finale-age .past {
+    display: inline-flex; gap: 14px; font-size: 78px;
+    color: var(--muted); opacity: 0.35;
+  }
+  .finale-age .past s { text-decoration-thickness: 4px; text-decoration-color: var(--accent); }
+  .finale-age .now {
+    font-size: 420px; color: var(--accent);
+    letter-spacing: -0.05em;
+    text-shadow: 0 0 60px rgba(229,55,43,0.35);
+    position: relative;
+  }
+  .finale-age .now::after {
+    content: "YEARS"; position: absolute; right: -6px; bottom: 18px;
+    font-size: 22px; letter-spacing: 0.3em; color: var(--ink);
+    opacity: 0.7; text-shadow: none; transform: rotate(-90deg); transform-origin: right bottom;
+  }
+  .finale-stat-row {
+    margin-top: 24px; display: grid; grid-template-columns: repeat(3, auto);
+    gap: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    width: 100%;
+  }
+  .finale-stat {
+    padding: 14px 18px; border-right: 1px solid var(--line);
+  }
+  .finale-stat:last-child { border-right: 0; }
+  .finale-stat .k {
+    display: block; font-family: "Archivo", sans-serif; font-weight: 700;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+  }
+  .finale-stat .v {
+    display: block; margin-top: 6px; font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 22px; color: var(--ink); letter-spacing: -0.01em;
+  }
+  .finale-stat .v.good { color: #3fb56a; }
+  .finale-stat .v.red { color: var(--accent); }
+
+  .finale-qa {
+    position: absolute; left: var(--pad-x); right: var(--pad-x); bottom: 70px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    z-index: 2;
+  }
+  .finale-q {
+    border: 1px solid var(--line); padding: 16px 18px;
+    background: rgba(15,15,18,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: border-color .2s, transform .2s;
+  }
+  .finale-q:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .finale-q .qm { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 0.24em; color: var(--accent); }
+  .finale-q .qt { margin: 8px 0 6px; font-family: "Archivo", sans-serif; font-weight: 700; font-size: 18px; line-height: 1.25; color: var(--ink); }
+  .finale-q .qa-line { font-family: "Source Serif 4", Georgia, serif; font-style: italic; font-size: 16px; color: var(--muted); line-height: 1.35; }
+  .finale-q .qa-line b { color: var(--ink); font-style: normal; font-weight: 600; }
+
+  .finale-signoff {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+    background: var(--accent); color: #0a0a0c;
+    padding: 14px var(--pad-x);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .finale-signoff .brand b { color: #0a0a0c; }
+  .finale-signoff .vol { font-family: "Source Serif 4", Georgia, serif; font-style: italic; font-weight: 600; letter-spacing: 0; text-transform: none; font-size: 17px; opacity: 0.85; }
+
   /* ===== interactive risk explorer (The Data) ===== */
   .ix-mount { flex: 1; display: flex; flex-direction: column; margin-top: 22px; }
   .ix { display: flex; flex-direction: column; flex: 1; }
@@ -1338,8 +1503,8 @@
   .pm-stat .l { font-size: 21px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-top: 4px; }
   .pm-globe-wrap { position: absolute; z-index: 1; top: 50%; left: 64%; transform: translate(-50%, -50%); width: 1800px; height: 1800px; pointer-events: none; }
   .pm-globe { position: absolute; inset: 0; pointer-events: auto; }
-  .pm-canvas { position: absolute; inset: 0; cursor: grab; }
-  .pm-canvas canvas { display: block; }
+  .pm-canvas { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+  .pm-canvas canvas { display: block; touch-action: none; }
   .pm-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -100%); pointer-events: none; opacity: 0; transition: opacity .25s; will-change: left, top; }
   .pm-label .box { background: var(--accent); color: var(--ink); padding: 8px 14px; font-size: 21px; font-weight: 800; white-space: nowrap; line-height: 1.15; display: flex; flex-direction: column; letter-spacing: 0.02em; }
   .pm-label .box span { font-weight: 600; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.9; margin-top: 2px; }
@@ -1380,6 +1545,7 @@
     background: var(--accent); color: #0a0a0c;
     padding: 10px 14px;
     cursor: grab;
+    touch-action: none;
     border-bottom: 1px solid rgba(0,0,0,0.18);
   }
   .pm-popup.shane .topbar { background: #5286cc; }
@@ -1792,7 +1958,7 @@
       <div class="findings-grid anim d2">
         <div class="finding"><span class="k">Subject</span><span class="v">S. Bruess</span></div>
         <div class="finding"><span class="k">Origin</span><span class="v">Hailey, Idaho · 1993</span></div>
-        <div class="finding"><span class="k">Risk factors present</span><span class="v">All five. Plus several new ones.</span></div>
+        <div class="finding"><span class="k">Threat factors of Five?</span><span class="v">Five+... Threat level: BAD DRAGON.</span></div>
         <div class="finding"><span class="k">Status</span><span class="v">Married · risk declining</span></div>
         <div class="finding"><span class="k">Peak risk index</span><span class="v red">+98.4 · eve of wedding</span></div>
         <div class="finding"><span class="k">Current trajectory</span><span class="v good">Reducing by 12 points on average annually.</span></div>
@@ -1831,37 +1997,84 @@
     </div>
   </section>
 
-  <!-- ============ 14 · Q&A ============ -->
+  <!-- ============ 14 · Q&A · FINALE ============ -->
   <section data-label="Q&amp;A">
     <div class="frame" data-screen-label="Q&amp;A">
-      <p class="eyebrow anim">Q &amp; A</p>
-      <h2 class="title anim d1">Thank you for coming to my talk.</h2>
-      <div class="qa-list">
-        <div class="qa anim d2">
-          <div class="q-mark">Q</div>
-          <div>
-            <p class="q">So… is Shane actually a furry?</p>
-            <p class="a">The research is ongoing. <span>The risk, mercifully, is receding.</span></p>
+      <div class="finale-bg"></div>
+      <div class="finale-grid"></div>
+
+      <div class="finale-ticker anim d1">
+        <div class="finale-ticker-track">
+          <span>Subject: <span class="r">S. Bruess</span></span><span class="sep">◆</span>
+          <span>Origin: Hailey, ID</span><span class="sep">◆</span>
+          <span>Threat level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
+          <span>Peak risk: <span class="r">+98.4</span></span><span class="sep">◆</span>
+          <span>Status: Married</span><span class="sep">◆</span>
+          <span>Trajectory: <span class="r">↓ 12 / yr</span></span><span class="sep">◆</span>
+          <span>Verdict: <span class="r">Past peak</span></span><span class="sep">◆</span>
+          <!-- duplicate for seamless loop -->
+          <span>Subject: <span class="r">S. Bruess</span></span><span class="sep">◆</span>
+          <span>Origin: Hailey, ID</span><span class="sep">◆</span>
+          <span>Threat level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
+          <span>Peak risk: <span class="r">+98.4</span></span><span class="sep">◆</span>
+          <span>Status: Married</span><span class="sep">◆</span>
+          <span>Trajectory: <span class="r">↓ 12 / yr</span></span><span class="sep">◆</span>
+          <span>Verdict: <span class="r">Past peak</span></span><span class="sep">◆</span>
+        </div>
+      </div>
+
+      <div class="finale-stage">
+        <div class="finale-left">
+          <p class="finale-eyebrow anim d2">Case file · closed (for now)</p>
+          <h2 class="finale-jp anim d2" lang="ja">
+            <span class="a">お誕生日</span>
+            <span class="b">おめでとう</span>
+            <span class="c">シェーン</span>
+            <span class="romaji">Otanjōbi omedetō, Shēn · Happy birthday, Shane</span>
+          </h2>
+          <p class="finale-sub anim d3">
+            Subject reports clinically receding risk. <b>Long live the Bruess.</b>
+            Thank you for coming to my talk.
+          </p>
+          <div class="finale-stamp anim d4">
+            <span class="pulse"></span>Case closed
           </div>
         </div>
-        <div class="qa anim d3">
-          <div class="q-mark">Q</div>
-          <div>
-            <p class="q">Should we be worried about him?</p>
-            <p class="a">We were. <span>Less every year, now.</span></p>
+
+        <div class="finale-right anim d3">
+          <div class="finale-age">
+            <span class="past"><s>30</s><s>31</s><s>32</s></span>
+            <span class="now">33</span>
           </div>
-        </div>
-        <div class="qa anim d4">
-          <div class="q-mark">Q</div>
-          <div>
-            <p class="q">Why are we all here, then?</p>
-            <p class="a">Because it is June 3rd, the subject just turned 33, <span>and someone made slides.</span></p>
+          <div class="finale-stat-row">
+            <div class="finale-stat"><span class="k">Peak risk</span><span class="v red">+98.4</span></div>
+            <div class="finale-stat"><span class="k">Today</span><span class="v">−25 / yr</span></div>
+            <div class="finale-stat"><span class="k">Trend</span><span class="v good">↓ Receding</span></div>
           </div>
         </div>
       </div>
-      <div class="signoff anim d4">
-        <span class="brand"><b>PROXIMITY</b> · Vol. 24</span>
-        <span>The verdict: we're past peak risk, and the chances drop every year. Happy birthday, Shane.</span>
+
+      <div class="finale-qa">
+        <div class="finale-q anim d4">
+          <div class="qm">Q · 01</div>
+          <p class="qt">So… is Shane actually a furry?</p>
+          <p class="qa-line">The research is ongoing. <b>The risk, mercifully, is receding.</b></p>
+        </div>
+        <div class="finale-q anim d4">
+          <div class="qm">Q · 02</div>
+          <p class="qt">Should we be worried about him?</p>
+          <p class="qa-line">We were. <b>Less every year, now.</b></p>
+        </div>
+        <div class="finale-q anim d4">
+          <div class="qm">Q · 03</div>
+          <p class="qt">Why are we all here, then?</p>
+          <p class="qa-line">It's June 3rd, the subject just turned 33, <b>and someone made slides.</b></p>
+        </div>
+      </div>
+
+      <div class="finale-signoff">
+        <span class="brand"><b>PROXIMITY</b> &nbsp;·&nbsp; Vol. 24 · Session 03</span>
+        <span class="vol">Past peak. Numbers coming down. Happy birthday, Shane.</span>
       </div>
     </div>
   </section>
