@@ -2261,25 +2261,36 @@
         (u) => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
         (u) => 'https://cors.eu.org/' + u,
       ];
-      const tryNext = (i) => {
-        if (cancelled) return;
-        if (i >= proxies.length) {
-          setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c));
-          return;
-        }
-        fetch(proxies[i](target))
-          .then((r) => (r.ok ? r.text() : Promise.reject()))
-          .then((html) => {
-            if (cancelled) return;
-            const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
-            const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
-            const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
-            if (!img) return Promise.reject();
-            setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
-          })
-          .catch(() => tryNext(i + 1));
+      const parseAndApply = (html, winnerIdx) => {
+        const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
+        const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
+        const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
+        if (!img) throw new Error('no og:image');
+        if (winnerIdx != null) window.__furtrackProxyIdx = winnerIdx;
+        setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
       };
-      tryNext(0);
+      const tryOne = (idx) =>
+        fetch(proxies[idx](target))
+          .then((r) => (r.ok ? r.text() : Promise.reject()))
+          .then((html) => ({ html, idx }));
+      // If we've already discovered a working proxy this session, use it directly.
+      const cached = window.__furtrackProxyIdx;
+      if (cached != null) {
+        tryOne(cached).then(({ html }) => { if (!cancelled) parseAndApply(html, cached); })
+          .catch(() => {
+            // cached proxy failed; invalidate and fall back to racing
+            window.__furtrackProxyIdx = null;
+            if (cancelled) return;
+            Promise.any(proxies.map((_, i) => tryOne(i)))
+              .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
+              .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
+          });
+      } else {
+        // First call: race all proxies in parallel, fastest wins.
+        Promise.any(proxies.map((_, i) => tryOne(i)))
+          .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
+          .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
+      }
       return () => { cancelled = true; };
     }, [clicked && clicked.id, clicked && clicked.kind]);
     const onCardDown = (e) => {
