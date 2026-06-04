@@ -1365,35 +1365,44 @@
   .pm-rotate-btn.off { border-color: rgba(255,255,255,0.30); color: var(--muted); }
   .pm-rotate-btn .ic { font-size: 14px; }
   .pm-popup {
-    position: absolute; top: 22%; right: 15%; z-index: 6; pointer-events: auto;
-    display: flex; flex-direction: column; gap: 4px;
-    min-width: 280px; width: 320px;
+    position: absolute; top: 18%; right: 12%; z-index: 6; pointer-events: auto;
+    display: flex; flex-direction: column;
+    width: 440px;
     background: rgba(15,15,18,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--accent);
-    padding: 14px 16px 14px; text-decoration: none;
-    box-shadow: 0 14px 30px rgba(0,0,0,0.55);
-    cursor: grab; user-select: none;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.55);
+    user-select: none;
     will-change: transform;
   }
-  .pm-popup.dragging { cursor: grabbing; }
   .pm-popup.shane { border-color: #5286cc; }
-  .pm-popup .lbl { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-  .pm-popup .val { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.1; margin-top: 2px; word-break: break-word; }
-  .pm-popup .meta { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.35; max-height: 3.6em; overflow: hidden; }
-  .pm-popup .cta { display: inline-block; font-size: 13px; color: var(--accent); margin-top: 12px; font-weight: 700; letter-spacing: 0.06em; text-decoration: none; cursor: pointer; }
+  .pm-popup .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--accent); color: #0a0a0c;
+    padding: 10px 14px;
+    cursor: grab;
+    border-bottom: 1px solid rgba(0,0,0,0.18);
+  }
+  .pm-popup.shane .topbar { background: #5286cc; }
+  .pm-popup.dragging .topbar { cursor: grabbing; }
+  .pm-popup .topbar .grip-l { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+  .pm-popup .topbar .grip-l .dots { font-size: 18px; opacity: 0.7; line-height: 1; }
+  .pm-popup .topbar .x { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; font-size: 18px; line-height: 1; color: #0a0a0c; cursor: pointer; border: 1px solid rgba(0,0,0,0.35); background: transparent; }
+  .pm-popup .topbar .x:hover { background: rgba(0,0,0,0.18); }
+  .pm-popup .body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .pm-popup .lbl { font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .pm-popup .val { font-size: 28px; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.15; margin-top: 4px; word-break: break-word; }
+  .pm-popup .meta { font-size: 15px; color: var(--muted); margin-top: 10px; line-height: 1.4; max-height: 5.6em; overflow: hidden; }
+  .pm-popup .cta { display: inline-block; font-size: 17px; color: var(--accent); margin-top: 16px; font-weight: 800; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; }
   .pm-popup .cta:hover { text-decoration: underline; }
   .pm-popup.shane .cta { color: #5286cc; }
-  .pm-popup .x { position: absolute; top: 6px; right: 10px; font-size: 18px; color: var(--muted); cursor: pointer; line-height: 1; padding: 4px; z-index: 2; }
-  .pm-popup .x:hover { color: var(--ink); }
   .pm-popup .img {
-    width: 100%; aspect-ratio: 4 / 3; margin-bottom: 10px;
+    width: 100%; aspect-ratio: 4 / 3; margin-bottom: 14px;
     background: #0a0a0c; border: 1px solid rgba(255,255,255,0.08);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; position: relative;
   }
   .pm-popup .img img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-  .pm-popup .img .ph { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
-  .pm-popup .grip { position: absolute; top: 6px; left: 10px; font-size: 14px; color: var(--muted); letter-spacing: 0.04em; line-height: 1; padding: 4px; pointer-events: none; }
+  .pm-popup .img .ph { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
   .pm-line { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
   .pm-line line { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0.85; }
   .pm-line line.shane { stroke: #5286cc; }
@@ -2046,6 +2055,7 @@
     }, [clicked && clicked.id, clicked && clicked.kind]);
     const onCardDown = (e) => {
       if (e.target.closest('.x, .cta')) return;
+      if (!e.target.closest('.topbar')) return;
       e.preventDefault();
       e.stopPropagation();
       const startX = e.clientX, startY = e.clientY;
@@ -2219,7 +2229,7 @@
       let dist = 8, targetDist = 8;
       const dom = renderer.domElement;
       dom.style.cursor = 'grab';
-      const down = (e) => { if (zoomRef.current) return; dragging = true; dom.style.cursor = 'grabbing'; lx = e.clientX; downX = e.clientX; downY = e.clientY; e.stopPropagation(); };
+      const down = (e) => { downX = e.clientX; downY = e.clientY; if (zoomRef.current) return; dragging = true; dom.style.cursor = 'grabbing'; lx = e.clientX; e.stopPropagation(); };
       const move = (e) => { if (!dragging) return; yaw += (e.clientX - lx) * 0.006; lx = e.clientX; };
       const up = () => { dragging = false; dom.style.cursor = 'grab'; };
       const wheel = (e) => { e.preventDefault(); e.stopPropagation(); targetDist = Math.max(4.5, Math.min(13, targetDist + e.deltaY * 0.006)); };
@@ -2404,24 +2414,28 @@
                    ref={cardRef}
                    style={{ transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)` }}
                    onPointerDown={onCardDown}>
-                <span className="grip">⋮⋮</span>
-                <span className="x" onPointerDown={stop} onClick={(e) => { stop(e); setClicked(null); }}>✕</span>
-                {clicked.kind === 'furry' && (
-                  <div className="img">
-                    {clicked.imgUrl === undefined && <span className="ph">Loading preview…</span>}
-                    {clicked.imgUrl === null && <span className="ph">No preview available</span>}
-                    {clicked.imgUrl && <img src={clicked.imgUrl} alt="" referrerPolicy="no-referrer" onError={(e) => { e.target.parentNode.innerHTML = '<span class="ph">Preview unavailable</span>'; }} />}
-                  </div>
-                )}
-                <span className="lbl">{clicked.sub}</span>
-                <span className="val">{clicked.title || clicked.label}</span>
-                {clicked.kind === 'furry' && clicked.title && (
-                  <span className="lbl" style={{ marginTop: '6px' }}>Post {clicked.label}</span>
-                )}
-                {clicked.desc && <span className="meta">{clicked.desc}</span>}
-                <a className="cta" href={clicked.url} target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>
-                  {clicked.kind === 'shane' ? 'Open Facebook ↗' : 'Open furtrack.com ↗'}
-                </a>
+                <div className="topbar">
+                  <span className="grip-l"><span className="dots">⋮⋮</span>{clicked.kind === 'shane' ? 'Subject' : 'Furtrack'}</span>
+                  <span className="x" onPointerDown={stop} onClick={(e) => { stop(e); setClicked(null); }}>✕</span>
+                </div>
+                <div className="body">
+                  {clicked.kind === 'furry' && (
+                    <div className="img">
+                      {clicked.imgUrl === undefined && <span className="ph">Loading preview…</span>}
+                      {clicked.imgUrl === null && <span className="ph">No preview available</span>}
+                      {clicked.imgUrl && <img src={clicked.imgUrl} alt="" referrerPolicy="no-referrer" onError={(e) => { e.target.parentNode.innerHTML = '<span class="ph">Preview unavailable</span>'; }} />}
+                    </div>
+                  )}
+                  <span className="lbl">{clicked.sub}</span>
+                  <span className="val">{clicked.title || clicked.label}</span>
+                  {clicked.kind === 'furry' && clicked.title && (
+                    <span className="lbl" style={{ marginTop: '8px' }}>Post {clicked.label}</span>
+                  )}
+                  {clicked.desc && <span className="meta">{clicked.desc}</span>}
+                  <a className="cta" href={clicked.url} target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>
+                    {clicked.kind === 'shane' ? 'Open Facebook ↗' : 'Open furtrack.com ↗'}
+                  </a>
+                </div>
               </div>
             )}
           </div>
@@ -2443,6 +2457,11 @@
             <span className="ic">{zoom ? '◉' : '◯'}</span>
             {zoom ? 'Following Shane · Seattle' : 'Zoom to Shane'}
           </button>
+          {zoom && (
+            <p style={{ marginTop: '14px', fontSize: '20px', lineHeight: 1.35, color: 'var(--accent)', fontWeight: 700, maxWidth: '32ch' }}>
+              As you can see, he is in a <span style={{ textTransform: 'uppercase', letterSpacing: '0.04em' }}>hot hot</span> spot for the Furry community.
+            </p>
+          )}
         </div>
       </div>
     );
