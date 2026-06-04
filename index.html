@@ -537,6 +537,85 @@
   .cover .speaker .name { font-weight: 700; letter-spacing: 0.02em; }
   .cover .speaker .sep { color: var(--faint); }
   .cover .speaker .meta { color: var(--muted); font-weight: 500; }
+  .cover .deck-sub .red { color: var(--accent); font-weight: 600; }
+
+  /* "Who's that furry?" silhouette reveal (cover, right side) */
+  .poke-wrap {
+    position: absolute;
+    right: var(--pad-x);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .poke {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    background: url("assets/asset-025.jpg") center / cover no-repeat;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .poke img {
+    grid-area: 1 / 1;
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    transition: opacity 700ms ease;
+  }
+  .poke-color { opacity: 0; }
+  .poke-sil { filter: brightness(0); opacity: 1; }
+  .poke-q {
+    grid-area: 1 / 1;
+    align-self: center;
+    justify-self: center;
+    font-family: "Archivo", sans-serif;
+    font-weight: 900;
+    font-size: 250px;
+    line-height: 1;
+    color: #fff;
+    z-index: 2;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.85), 0 0 24px rgba(0, 0, 0, 0.7), 0 6px 18px rgba(0, 0, 0, 0.5);
+    transition: opacity 600ms ease;
+  }
+  .poke-cap {
+    position: absolute;
+    top: calc(100% + 22px);
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: opacity 500ms ease;
+  }
+  .poke-diag {
+    position: absolute;
+    top: calc(100% + 18px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 560px;
+    max-width: 560px;
+    text-align: center;
+    font-size: 23px;
+    font-weight: 500;
+    line-height: 1.34;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+  .poke-diag b { color: var(--accent); font-weight: 700; }
+  .poke-wrap.revealed .poke-color { opacity: 1; }
+  .poke-wrap.revealed .poke-sil { opacity: 0; }
+  .poke-wrap.revealed .poke-q { opacity: 0; }
+  .poke-wrap.revealed .poke-cap { opacity: 0; }
+  .poke-wrap.revealed .poke-diag { opacity: 1; }
 
   /* ================= SLIDE 2 - PREMISE ================= */
   .two-col {
@@ -739,20 +818,35 @@
     gap: 44px;
     margin-top: 4px;
   }
-  .eq-row { display: flex; align-items: flex-start; justify-content: center; gap: 26px; }
+  .eq-row { display: flex; align-items: center; justify-content: center; gap: 26px; perspective: 1300px; }
   .eq-op {
     font-size: 84px;
     font-weight: 800;
     color: var(--faint);
     line-height: 1;
-    margin-top: 150px;
+    align-self: center;
   }
-  .eq-card { width: 372px; display: flex; flex-direction: column; }
+  .eq-card {
+    width: 372px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 14px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, #1c1c23, #111116);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 160ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    will-change: transform;
+  }
+  .eq-card:hover { box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55); border-color: rgba(255, 255, 255, 0.22); }
   .eq-pic {
     position: relative;
-    height: 384px;
+    height: 360px;
     background: var(--panel);
     border: 1px solid var(--line);
+    border-radius: 11px;
     overflow: hidden;
   }
   .eq-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -760,6 +854,34 @@
   .eq-name { font-size: 32px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
   .eq-pts { font-size: 42px; font-weight: 900; color: var(--accent); letter-spacing: -0.02em; white-space: nowrap; }
   .eq-cap { font-family: "Source Serif 4", serif; font-style: italic; font-size: 24px; color: var(--muted); margin-top: 8px; line-height: 1.3; }
+  .eq-back {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(120% 90% at 50% 0%, rgba(229, 55, 43, 0.22), transparent 55%),
+                repeating-linear-gradient(45deg, #15151b 0 14px, #1b1b22 14px 28px);
+    font-family: "Archivo", sans-serif;
+    font-weight: 900;
+    font-size: 150px;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
+    transition: opacity 480ms ease;
+  }
+  .eq-card.revealed .eq-back { opacity: 0; pointer-events: none; }
+  .eq-glare {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0) 45%);
+    opacity: 0;
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .eq-card:hover .eq-glare { opacity: 1; }
   .eq-tally {
     display: flex;
     align-items: center;
@@ -771,6 +893,7 @@
     padding-top: 30px;
   }
   .eq-tally b { color: var(--ink); font-weight: 700; }
+  .eq-tally b.good { color: #3fb56a; }
   .eq-tally .net { color: var(--accent); font-weight: 800; }
 
   /* ================= SLIDE 9 - FINDINGS ================= */
@@ -963,6 +1086,34 @@
     text-transform: uppercase;
   }
   .risk-chip b { color: var(--ink); font-weight: 800; }
+
+  /* slide 7: frameless image + draggable "same image" gag */
+  .lsr-text { max-width: 660px; position: relative; z-index: 3; }
+  .lsr-main { position: absolute; right: var(--pad-x); bottom: 96px; height: 700px; width: auto; object-fit: contain; z-index: 1; }
+  .lsr-link { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 1; }
+  .lsr-link line { stroke: rgba(255, 255, 255, 0.85); stroke-width: 2.5; stroke-dasharray: 9 9; }
+  .lsr-drag {
+    position: absolute;
+    height: 286px;
+    width: auto;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: none;
+    z-index: 2;
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.6));
+  }
+  .lsr-drag:active { cursor: grabbing; }
+  #dragHot { left: 610px; top: 630px; }
+  #dragUgly { left: 905px; top: 170px; }
+  .lsr-label {
+    position: absolute; left: 0; top: 0;
+    transform: translate(-50%, -50%);
+    z-index: 4; pointer-events: none;
+    background: var(--accent); color: var(--ink);
+    font-size: 22px; font-weight: 800; letter-spacing: 0.02em;
+    padding: 9px 16px; white-space: nowrap;
+  }
   .risk-chip.down { border-color: #3fb56a; color: #3fb56a; }
   .risk-chip.down b { color: #3fb56a; }
 
@@ -992,13 +1143,94 @@
   .life-val.muted { fill: var(--muted); font-weight: 700; font-size: 25px; }
   .life-cap { fill: var(--muted); font-family: "Archivo", sans-serif; font-weight: 600; font-size: 26px; letter-spacing: 0.14em; }
   .life-prlab { fill: var(--accent); font-family: "Archivo", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.18em; }
+  .areveal { opacity: 0; transition: opacity 220ms ease; }
+  #ppTitle { opacity: 0; transition: opacity 400ms ease; }
+  #ageHandle { cursor: grab; }
+  #ageHandle:active { cursor: grabbing; }
 
   /* ===== twist slide ===== */
-  .twist-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr); gap: 70px; flex: 1; align-items: center; margin-top: 6px; }
+  .twist-wrap { display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: 50px; flex: 1; align-items: center; margin-top: 6px; }
   .twist-text { min-width: 0; }
   .twist-img { min-width: 0; }
-  .twist-text .body { max-width: 32ch; }
-  .twist-img img { width: 100%; height: auto; max-height: 560px; object-fit: contain; border: 1px solid var(--line); display: block; }
+  .twist-text .body { max-width: 30ch; }
+  .twist-img img { width: 100%; height: auto; max-height: 780px; object-fit: contain; border: 1px solid var(--line); display: block; }
+  .bc-btn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 17px 32px 17px 37px;
+    color: #eaf2ff !important;
+    text-decoration: none;
+    font-family: "Archivo", sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.005em;
+    border-radius: 7px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 180% at 0% 0%, rgba(120,180,255,0.55) 0%, rgba(120,180,255,0) 55%),
+      linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 100%),
+      linear-gradient(180deg, #1f3358 0%, #0f1d3a 100%);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.10) inset,
+      0 0 0 1px rgba(255,255,255,0.06) inset,
+      0 12px 28px rgba(20,40,90,0.45),
+      0 0 24px rgba(82,134,204,0.18);
+    transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms ease, background 220ms ease;
+  }
+  /* gradient hairline border */
+  .bc-btn::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(120,180,255,0.25) 40%, rgba(255,255,255,0.05) 70%, rgba(120,180,255,0.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* shimmer sweep */
+  .bc-btn::after {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.18) 48%, rgba(255,255,255,0) 60%);
+    transform: translateX(-120%);
+    transition: transform 700ms cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .bc-btn > span:first-child { position: relative; z-index: 3; }
+  .bc-btn:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.14) inset,
+      0 0 0 1px rgba(255,255,255,0.08) inset,
+      0 18px 36px rgba(20,40,90,0.55),
+      0 0 36px rgba(95,161,255,0.30);
+  }
+  .bc-btn:hover::after { transform: translateX(120%); }
+  .bc-btn:active { transform: translateY(0); }
+  .bc-coupon {
+    display: inline-flex; flex-direction: column; align-items: flex-start; line-height: 1;
+    padding: 8px 16px 10px; border-left: 2px dashed rgba(82,134,204,0.55);
+  }
+  .bc-coupon-label {
+    font-family: "Archivo", sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .bc-coupon-code {
+    font-family: "Archivo", sans-serif;
+    font-size: 28px; font-weight: 900; letter-spacing: 0.18em;
+    color: #5286cc;
+  }
 
   /* ================= SLIDE 10 - Q&A ================= */
   .qa-list {
@@ -1062,8 +1294,8 @@
   .ix-seg { display: inline-flex; border: 1px solid var(--line); }
   .ix-seg button { background: transparent; color: var(--muted); border: 0; padding: 12px 26px; font-family: inherit; font-size: 26px; font-weight: 700; cursor: pointer; transition: background .15s, color .15s; }
   .ix-seg button + button { border-left: 1px solid var(--line); }
-  .ix-seg button.on { background: #3b82f6; color: var(--ink); }
-  .ix-age input[type="range"] { width: 300px; accent-color: #3b82f6; cursor: pointer; }
+  .ix-seg button.on { background: #5286cc; color: var(--ink); }
+  .ix-age input[type="range"] { width: 300px; accent-color: #5286cc; cursor: pointer; }
   .ix-age .val { font-size: 30px; font-weight: 800; color: var(--ink); min-width: 3ch; }
   .ix-legend { display: flex; gap: 36px; margin: 0 0 16px; font-size: 22px; color: var(--muted); }
   .ix-legend span { display: inline-flex; align-items: center; gap: 12px; }
@@ -1074,15 +1306,107 @@
   .ix-bars { display: flex; flex-direction: column; gap: 9px; }
   .ix-bar { display: grid; grid-template-columns: 78px 1fr 92px; align-items: center; gap: 18px; }
   .ix-tag { font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--faint); }
-  .ix-tag.avg { color: #3b82f6; }
+  .ix-tag.avg { color: #5286cc; }
   .ix-tag.shane { color: var(--accent); }
   .ix-track { height: 25px; background: rgba(255,255,255,0.05); position: relative; overflow: hidden; }
   .ix-fill { height: 100%; transition: width .4s cubic-bezier(.2,.7,.2,1); }
-  .ix-fill.avg { background: #3b82f6; }
+  .ix-fill.avg { background: #5286cc; }
   .ix-fill.shane { background: var(--accent); }
   .ix-pct { font-size: 26px; font-weight: 800; text-align: right; }
-  .ix-pct.avg { color: #3b82f6; }
+  .ix-pct.avg { color: #5286cc; }
   .ix-pct.shane { color: var(--accent); }
+
+  /* ===== premise: population estimate + 3D globe ===== */
+  section[data-label="The Premise"] { overflow: visible; }
+  section[data-label="The Premise"] .eyebrow { position: relative; z-index: 2; }
+  section[data-label="The Premise"] .cite,
+  section[data-label="The Premise"] .folio { z-index: 2; }
+  .premise-mount { flex: 1; display: flex; margin-top: 6px; }
+  .pm { flex: 1; position: relative; display: block; }
+  .pm-left { position: relative; z-index: 2; max-width: 600px; padding-top: 36px; }
+  .pm-title { font-size: 58px; font-weight: 800; line-height: 1.02; letter-spacing: -0.022em; margin: 0; max-width: 15ch; }
+  .pm-caveat { font-size: 25px; color: var(--muted); line-height: 1.4; margin: 22px 0 0; max-width: 38ch; }
+  .pm-controls { display: flex; align-items: center; gap: 40px; margin: 32px 0 30px; flex-wrap: wrap; }
+  .pm-rate { display: flex; align-items: center; gap: 16px; }
+  .pm-rate input[type="range"] { width: 220px; accent-color: var(--accent); cursor: pointer; }
+  .pm-rate .rv { font-size: 26px; font-weight: 800; color: var(--ink); min-width: 4ch; }
+  .pm-figure { display: flex; align-items: center; gap: 26px; }
+  .pm-big { font-size: 120px; font-weight: 900; line-height: 0.86; letter-spacing: -0.04em; color: var(--accent); }
+  .pm-big-cap { font-size: 24px; color: var(--muted); max-width: 16ch; line-height: 1.3; }
+  .pm-sub { display: flex; gap: 50px; margin-top: 30px; }
+  .pm-stat .n { font-size: 46px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .pm-stat .l { font-size: 21px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-top: 4px; }
+  .pm-globe-wrap { position: absolute; z-index: 1; top: 50%; left: 64%; transform: translate(-50%, -50%); width: 1800px; height: 1800px; pointer-events: none; }
+  .pm-globe { position: absolute; inset: 0; pointer-events: auto; }
+  .pm-canvas { position: absolute; inset: 0; cursor: grab; }
+  .pm-canvas canvas { display: block; }
+  .pm-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -100%); pointer-events: none; opacity: 0; transition: opacity .25s; will-change: left, top; }
+  .pm-label .box { background: var(--accent); color: var(--ink); padding: 8px 14px; font-size: 21px; font-weight: 800; white-space: nowrap; line-height: 1.15; display: flex; flex-direction: column; letter-spacing: 0.02em; }
+  .pm-label .box span { font-weight: 600; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.9; margin-top: 2px; }
+  .pm-label .stem { width: 2px; height: 22px; background: var(--accent); margin: 0 auto; }
+  .pm-label .dot { width: 13px; height: 13px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 6px rgba(229,55,43,0.30); margin: -6px auto 0; }
+  .pm-cities { display: flex; flex-direction: column; margin-top: 28px; border-top: 1px solid var(--line); max-width: 32ch; }
+  .pm-city { display: grid; grid-template-columns: 44px 1fr auto; align-items: baseline; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .pm-city .rk { color: var(--accent); font-weight: 800; font-size: 23px; }
+  .pm-city .cn { font-size: 27px; font-weight: 600; color: var(--ink); }
+  .pm-city .cv { font-size: 22px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .pm-zoom { margin-top: 28px; display: inline-flex; align-items: center; gap: 14px; background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 16px 26px; font-family: inherit; font-size: 25px; font-weight: 700; letter-spacing: 0.03em; cursor: pointer; transition: background .15s, color .15s; }
+  .pm-zoom .ic { font-size: 20px; }
+  .pm-zoom.on { background: var(--accent); color: var(--ink); }
+  .pm-rotate-btn {
+    position: absolute; bottom: 28%; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: auto;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(15,15,18,0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(229,55,43,0.55); color: var(--accent);
+    padding: 10px 16px; font-family: inherit; font-size: 16px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer; transition: background .15s, border-color .15s, color .15s;
+  }
+  .pm-rotate-btn:hover { background: rgba(229,55,43,0.18); }
+  .pm-rotate-btn.off { border-color: rgba(255,255,255,0.30); color: var(--muted); }
+  .pm-rotate-btn .ic { font-size: 14px; }
+  .pm-popup {
+    position: absolute; top: 22%; right: 15%; z-index: 6; pointer-events: auto;
+    display: flex; flex-direction: column; gap: 4px;
+    min-width: 280px; width: 320px;
+    background: rgba(15,15,18,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--accent);
+    padding: 14px 16px 14px; text-decoration: none;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+    cursor: grab; user-select: none;
+    will-change: transform;
+  }
+  .pm-popup.dragging { cursor: grabbing; }
+  .pm-popup.shane { border-color: #5286cc; }
+  .pm-popup .lbl { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .pm-popup .val { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.1; margin-top: 2px; word-break: break-word; }
+  .pm-popup .meta { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.35; max-height: 3.6em; overflow: hidden; }
+  .pm-popup .cta { display: inline-block; font-size: 13px; color: var(--accent); margin-top: 12px; font-weight: 700; letter-spacing: 0.06em; text-decoration: none; cursor: pointer; }
+  .pm-popup .cta:hover { text-decoration: underline; }
+  .pm-popup.shane .cta { color: #5286cc; }
+  .pm-popup .x { position: absolute; top: 6px; right: 10px; font-size: 18px; color: var(--muted); cursor: pointer; line-height: 1; padding: 4px; z-index: 2; }
+  .pm-popup .x:hover { color: var(--ink); }
+  .pm-popup .img {
+    width: 100%; aspect-ratio: 4 / 3; margin-bottom: 10px;
+    background: #0a0a0c; border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .pm-popup .img img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .pm-popup .img .ph { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .pm-popup .grip { position: absolute; top: 6px; left: 10px; font-size: 14px; color: var(--muted); letter-spacing: 0.04em; line-height: 1; padding: 4px; pointer-events: none; }
+  .pm-line { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+  .pm-line line { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0.85; }
+  .pm-line line.shane { stroke: #5286cc; }
+  .pm-hover {
+    position: absolute; z-index: 7; pointer-events: none;
+    transform: translate(14px, -50%);
+    background: rgba(15,15,18,0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--accent); color: var(--ink);
+    padding: 6px 12px; font-family: inherit; font-size: 16px; font-weight: 800; letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .pm-hover.shane { border-color: #5286cc; }
+  .pm-hover .sub { display: block; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 2px; }
 </style>
 </head>
 <body>
@@ -1101,7 +1425,16 @@
       <div class="cover-mid">
         <p class="kicker anim d1">A 15-year research project by Morgan Blair</p>
         <h1 class="anim d2">It could have happened to <span class="red">any of us.</span></h1>
-        <p class="deck-sub anim d3">We all carry the risk factors for being a furry, this room in particular. This is the story of one particularly egregious case, and why the danger, at last, is passing.</p>
+        <p class="deck-sub anim d3">We all carry the risk factors for being ... different. This room, in particular, has numerous high risk signals. This is the story of one particularly egregious case, <span class="red">Shane Bruess</span>.</p>
+      </div>
+      <div class="poke-wrap" id="pokeReveal">
+        <div class="poke">
+          <img class="poke-color" src="assets/asset-024.png" alt="The subject, revealed">
+          <img class="poke-sil" src="assets/asset-024.png" alt="">
+          <div class="poke-q">?</div>
+        </div>
+        <div class="poke-cap">Who's that pokemon?!</div>
+        <div class="poke-diag"><b>Dx:</b> Subject Shane Bruess presents clear clinical signs of furry onset.</div>
       </div>
       <div class="speaker anim d4">
         <span class="name">Morgan Blair</span>
@@ -1115,17 +1448,8 @@
   <section data-label="The Premise">
     <div class="frame" data-screen-label="The Premise">
       <p class="eyebrow anim">01 · The Premise</p>
-      <div class="two-col">
-        <div>
-          <h2 class="title anim d1">Everyone assumes it happens to someone else.</h2>
-          <p class="body anim d2" style="margin-top: 38px;">It doesn't. Every person in this room carries the risk factors (a collection here, a permanent tattoo there) usually <span class="hl">without ever noticing</span>. The question was never whether you have them. It is how many, and how fast they stack.</p>
-        </div>
-        <div class="statcard anim d3">
-          <div class="big">0&nbsp;in&nbsp;1</div>
-          <div class="cap">people in this room carry zero risk factors. We checked.</div>
-        </div>
-      </div>
-      <p class="cite">Bruess, S. et al. (2026). <span style="font-style:normal;">Proximity to the Threshold: A Longitudinal Self-Study.</span> J. Applied Furriness, Vol. 24.</p>
+      <div id="premise-root" class="premise-mount"></div>
+      <p class="cite">No census counts furries; every figure is a self-report estimate (FurScience / IARP). Seattle and the Pacific Northwest skew high: a historic hub (RainFurrest, Furlandia).</p>
       <div class="folio"><b>01</b> / 15</div>
     </div>
   </section>
@@ -1180,7 +1504,7 @@
       <p class="eyebrow anim">03 · The Data</p>
       <h2 class="title anim d1" style="max-width: 40ch;">How common is each risk factor?</h2>
       <div id="risk-ix-root" class="ix-mount"></div>
-      <p class="cite">Pick a population with the controls. Blue bars are that group's average; the red bars are Shane.</p>
+      <p class="cite">* <a href="https://www.vice.com/en/article/how-one-highly-fuckable-tortoise-saved-the-entire-species-from-extinction-vgtrn/" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: underline;">How one highly fuckable tortoise saved the entire species from extinction (Vice)</a></p>
       <div class="folio"><b>03</b> / 15</div>
     </div>
   </section>
@@ -1220,7 +1544,7 @@
         </div>
         <div class="col-text">
           <h2 class="title anim d1">The Second Skin</h2>
-          <p class="body anim d2" style="margin-top: 30px;">The subject voluntarily entered a full-body dermal layer and accessorized it with formalwear. Note the bowtie: <span class="hl">evidence of intent, not accident.</span> The risk factor escalates sharply here. The body rehearses the suit long before the mind admits it wants one.</p>
+          <p class="body anim d2" style="margin-top: 30px;">The subject voluntarily entered a full-body dermal layer and accessorized it with formalwear. Note the bowtie: <span class="hl">evidence of intent, not accident.</span> The risk factor escalates sharply here. The body rehearses the suit long before the mind admits it wants one. The bowtie is the tell.</p>
           <p class="case-cap anim d3">Exhibit B · Subject, photographed for cover (Vol. 24). Identity-concealing second skin with decorative neckwear.</p>
           <div class="risk-chip anim d3">▲&nbsp;Risk factor <b>+29</b></div>
         </div>
@@ -1235,7 +1559,7 @@
       <p class="eyebrow anim">06 · Case Study III</p>
       <div class="split img-right">
         <div class="col-text">
-          <h2 class="title anim d1">A clear demonstration of low self-respect.</h2>
+          <h2 class="title anim d1">A clear demonstration of ZERO self-respect.</h2>
           <p class="body anim d2" style="margin-top: 30px;">No costume. No occasion. No reason. The subject, photographed at home in a soaked undershirt, demonstrates the single most reliable marker in the entire study: <span class="hl">a complete and untroubled absence of self-respect.</span> The body had simply stopped asking questions.</p>
           <p class="case-cap anim d3">Exhibit C · Subject at home. No event. No explanation. No notes.</p>
           <div class="risk-chip anim d3">▲&nbsp;Risk factor <b>+44</b></div>
@@ -1258,17 +1582,22 @@
       <div class="split img-right" style="margin-top: 14px;">
         <div class="col-text">
           <div class="dq-mark anim">“</div>
-          <blockquote class="dq anim d1">It's just about the art.</blockquote>
+          <blockquote class="dq anim d1">"It's just about the art."</blockquote>
           <p class="dq-attrib anim d2">The “I read it for the articles” of the millennial generation</p>
-          <p class="dq-note anim d3">Anime figurines aren't just a great way to waste money; they're also a great way to ward off any friends or family who might lead the subject back into <span style="color:var(--ink);">god's light.</span> Like a mouse infected with <span style="color:var(--ink);">Toxoplasma gondii</span>, fearless of the cat, he is then eaten (non-vore).</p>
+          <p class="dq-note anim d3">Dispite appearances, Anime figurines aren't a waste money. As Satan consumes your soul, he repels friends and family through a shrine to sin. This shrine wards off anyone with a clear enough mind to lead the subject back into <span style="color:var(--ink);">god's light.</span> Parallels to mice infected with <span style="color:var(--ink);">Toxoplasma gondii</span>. Will be eaten by the cat. (non-vore)</p>
           <div class="risk-chip anim d3">▲&nbsp;Risk factor <b>+38</b></div>
         </div>
         <div class="col-img anim d2">
-          <div class="panel tall" style="display:flex; align-items:center; justify-content:center; background:#0a0a0c;">
-            <img src="assets/asset-023.png" alt="Case file 47A-K9: the subject in an animal-print fur coat, surrounded by anime figurines" style="object-fit: contain;">
+          <div class="panel tall" style="display:flex; align-items:center; justify-content:center; background:#0a0a0c; width: fit-content; margin-left: auto;">
+            <img src="assets/asset-023.png" alt="Case file 47A-K9: the subject in an animal-print fur coat, surrounded by anime figurines" style="height: 100%; width: auto; display: block;">
           </div>
         </div>
       </div>
+      <svg class="lsr-link" viewBox="0 0 1920 1080" preserveAspectRatio="none"><line id="lsrLine" x1="0" y1="0" x2="0" y2="0"></line></svg>
+      <img class="lsr-drag" id="dragHot" src="assets/asset-026.png" alt="One Piece figure, sculpted hot" draggable="false" data-href="https://yesgk.com/products/one-piece-young-big-mom-bb016-statue-dragon-studio">
+      <img class="lsr-drag" id="dragUgly" src="assets/asset-027.png" alt="One Piece figure, sculpted ugly" draggable="false" data-href="https://www.orzgk.com/product/bt-studio-one-piece-big-mom-pre-order/">
+      <div class="lsr-label" id="lsrLabel">Character development, not porn*</div>
+      <p class="cite">* Living in this split reality has MANY parallels to living as a Furry. Inviting parents to see your titty shrine at dinner with a straight face = attending your mom's funeral in a Fursona. </p>
       <div class="folio"><b>07</b> / 15</div>
     </div>
   </section>
@@ -1280,18 +1609,23 @@
       <div class="split img-right">
         <div class="col-text">
           <h2 class="title anim d1">He got a girlfriend!</h2>
-          <p class="body anim d2" style="margin-top: 30px;">We should have been happy. Right? For one beautiful quarter the index <span class="hl">plunged</span>, the single largest risk drop ever recorded. The institute celebrated. Prematurely.</p>
-          <div class="anim d3" style="margin-top: 38px; display: flex; align-items: baseline; gap: 22px;">
-            <span style="font-size: 132px; font-weight: 900; line-height: 0.9; color: #3fb56a; letter-spacing: -0.04em;">−25</span>
-            <span style="font-size: 25px; color: var(--muted); max-width: 18ch; line-height: 1.3;">risk factor. The largest single drop on record.</span>
-          </div>
+          <p class="body anim d2" style="margin-top: 30px;">For one beautiful quarter the index <span class="hl">plunged</span>, the single largest risk drop ever recorded. I celebrated. Prematurely. We should have been happy.</p>
+          <h2 class="title anim d3" style="margin-top: 38px;">Right?</h2>
         </div>
         <div class="col-img anim d2">
           <div class="panel wide">
+            <span class="exhibit-tag">Exhibit D</span>
             <img src="assets/asset-022.png" alt="The subject and his girlfriend" style="object-fit: cover; object-position: center;">
+          </div>
+          <p class="case-cap anim d3">Exhibit D · Subject, photographed with confirmed romantic partner. Field conditions: ordinary.</p>
+          <div class="anim d3" style="margin-top: 18px; display: flex; align-items: baseline; gap: 18px; font-size: 25px;">
+            <span style="font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);">Hope appears</span>
+            <span style="font-weight: 900; color: #3fb56a; letter-spacing: -0.02em;">−25</span>
+            <span style="color: var(--muted);">risk factor*</span>
           </div>
         </div>
       </div>
+      <p class="cite">* The largest single drop on record.</p>
       <div class="folio"><b>08</b> / 15</div>
     </div>
   </section>
@@ -1307,64 +1641,63 @@
   <section data-label="Then We Met Her">
     <div class="frame" data-screen-label="Then We Met Her">
       <p class="eyebrow anim">09 · Then We Met Her</p>
+      <h2 class="title anim d1" style="margin-bottom: 6px;">Girlfriend? Or is she a...</h2>
       <div class="eq-wrap">
         <div class="eq-row anim d2">
-          <div class="eq-card">
-            <div class="eq-pic"><img src="assets/asset-003.png" alt="Girlfriend in a bunny costume" style="object-position: center 20%;"></div>
+          <div class="eq-card" data-pts="6">
+            <div class="eq-pic">
+              <img src="assets/asset-003.png" alt="Girlfriend in a bunny costume" style="object-position: center 20%;">
+              <div class="eq-back">?</div>
+            </div>
             <div class="eq-head"><span class="eq-name">Rabbit</span><span class="eq-pts">+6</span></div>
             <div class="eq-cap">Fuckable rabbit. Understandable.</div>
+            <div class="eq-glare"></div>
           </div>
           <div class="eq-op">+</div>
-          <div class="eq-card">
-            <div class="eq-pic"><img src="assets/asset-001.png" alt="Girlfriend in a Bowsette costume" style="object-position: center 18%;"></div>
+          <div class="eq-card" data-pts="14">
+            <div class="eq-pic">
+              <img src="assets/asset-001.png" alt="Girlfriend in a Bowsette costume" style="object-position: center 18%;">
+              <div class="eq-back">?</div>
+            </div>
             <div class="eq-head"><span class="eq-name">Turtle</span><span class="eq-pts">+14</span></div>
             <div class="eq-cap">Fuckable turtle. Come on.</div>
+            <div class="eq-glare"></div>
           </div>
           <div class="eq-op">+</div>
-          <div class="eq-card">
-            <div class="eq-pic"><img src="assets/asset-005.png" alt="Girlfriend in an elf costume" style="object-position: center 8%;"></div>
-            <div class="eq-head"><span class="eq-name">Gay</span><span class="eq-pts">+22</span></div>
-            <div class="eq-cap">Literally just gay. ±0 alone, but +22 with the animal stuff.</div>
+          <div class="eq-card" data-pts="22">
+            <div class="eq-pic">
+              <img src="assets/asset-005.png" alt="Girlfriend in an elf costume" style="object-position: center 8%;">
+              <div class="eq-back">?</div>
+            </div>
+            <div class="eq-head"><span class="eq-name">DUDE</span><span class="eq-pts">+22</span></div>
+            <div class="eq-cap">Gayyyyyyyyy*</div>
+            <div class="eq-glare"></div>
           </div>
         </div>
         <div class="eq-tally anim d3">
           <span>Girlfriend <b class="good">−25</b></span>
           <span>+</span>
-          <span>Confounds <b style="color: var(--accent);">+42</b></span>
+          <span>Confounds <b id="eqConf" style="color: var(--muted);">+0</b></span>
           <span>=</span>
-          <span class="net" style="font-size: 48px;">Net +17 risk</span>
+          <span class="net" id="eqNet" style="font-size: 48px; color: #3fb56a;">Net −25 Furry risk</span>
         </div>
       </div>
+      <p class="cite" id="dudeFoot" style="opacity: 0; transition: opacity 400ms ease;">* Gay alone obviously isn't furry... but the research shows that when we take away the <b style="color: var(--ink);">fat ass</b> and <b style="color: var(--ink);">juicy tits</b>, from <a href="https://www.deviantart.com/tag/judy_hopps" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: underline; font-style: normal;">Judy Hopps</a> , it becomes WAY more furry when I beat it her feet.</p>
       <div class="folio"><b>09</b> / 15</div>
-    </div>
-  </section>
-
-  <!-- ============ 11 · FINDINGS ============ -->
-  <section data-label="Findings">
-    <div class="frame" data-screen-label="Findings">
-      <p class="eyebrow anim">10 · Findings</p>
-      <h2 class="title anim d1">An egregious case, with a hopeful end.</h2>
-      <div class="findings-grid anim d2">
-        <div class="finding"><span class="k">Subject</span><span class="v">S. Bruess</span></div>
-        <div class="finding"><span class="k">Origin</span><span class="v">Hailey, Idaho · 1993</span></div>
-        <div class="finding"><span class="k">Risk factors present</span><span class="v">All five. Plus several new ones.</span></div>
-        <div class="finding"><span class="k">Status</span><span class="v">Married · risk declining</span></div>
-        <div class="finding"><span class="k">Peak risk index</span><span class="v red">+98.4 · eve of wedding</span></div>
-        <div class="finding"><span class="k">Current trajectory</span><span class="v good">Reducing by 12 points on average annually.</span></div>
-      </div>
-      <p class="conclude anim d3">The subject is not an outlier. <b>He is the egregious far end of a spectrum we all sit on.</b> The reassuring part: for the first time on record, the numbers are coming down.</p>
-      <div class="folio"><b>10</b> / 15</div>
     </div>
   </section>
 
   <!-- ============ 10 · PRESENT READING ============ -->
   <section data-label="Present Reading">
     <div class="frame" data-screen-label="Present Reading">
-      <p class="eyebrow anim">11 · Present Reading</p>
-      <h2 class="title anim d1">We're past peak.</h2>
+      <p class="eyebrow anim">10 · Present Reading</p>
+      <h2 class="title" id="ppTitle">We're past peak.</h2>
       <div class="life-body">
         <div class="lifechart anim d2">
-          <svg viewBox="0 0 1200 490" role="img" aria-label="Risk factor by age, from 0 to 33">
+          <svg id="lifeSvg" viewBox="0 0 1200 500" role="img" aria-label="Risk factor by age, from 0 to 33">
+            <defs>
+              <clipPath id="ageClip"><rect id="ageClipRect" x="90" y="0" width="20" height="420"></rect></clipPath>
+            </defs>
             <line class="life-grid" x1="90" y1="30" x2="1170" y2="30"></line>
             <line class="life-grid" x1="90" y1="125" x2="1170" y2="125"></line>
             <line class="life-grid" x1="90" y1="220" x2="1170" y2="220"></line>
@@ -1376,45 +1709,61 @@
             <text class="life-cap" x="74" y="228" text-anchor="end">50%</text>
             <text class="life-cap" x="74" y="323" text-anchor="end">25%</text>
             <text class="life-cap" x="74" y="416" text-anchor="end">0%</text>
-            <text id="lifePrLabel" class="life-prlab" x="110" y="22">POINT OF NO RETURN</text>
-            <!-- area "glass": red where risk rises, green where it falls -->
-            <path id="lifeAreaUp1" class="life-area" d="M110,410 L220,364 L330,287 L330,410 Z"></path>
-            <path id="lifeAreaDown1" class="life-area down" d="M330,410 L330,287 L440,306 L550,323 L550,410 Z"></path>
-            <path id="lifeAreaUp2" class="life-area" d="M550,410 L550,323 L660,302 L770,281 L880,254 L990,171 L1100,36 L1100,410 Z"></path>
-            <path id="lifeAreaDown2" class="life-area down" d="M1100,410 L1100,36 L1150,83 L1150,410 Z"></path>
-            <!-- line segments -->
-            <polyline id="lifeLineUp1" class="lifeLine" points="110,410 220,364 330,287"></polyline>
-            <polyline id="lifeLineDown1" class="lifeLine down" points="330,287 440,306 550,323"></polyline>
-            <polyline id="lifeLineUp2" class="lifeLine" points="550,323 660,302 770,281 880,254 990,171 1100,36"></polyline>
-            <polyline id="lifeLineDown2" class="lifeLine down" points="1100,36 1150,83"></polyline>
-            <circle class="life-dot" cx="110" cy="410" r="7"></circle>
-            <circle class="life-dot" cx="220" cy="364" r="7"></circle>
-            <circle class="life-dot down" cx="330" cy="287" r="7"></circle>
-            <text class="life-val" x="330" y="232" text-anchor="middle" style="font-size: 21px;">JOINED A FRATERNITY</text>
-            <text class="life-val muted" x="330" y="258" text-anchor="middle" style="font-size: 21px; font-style: italic; font-family: 'Source Serif 4', Georgia, serif;">→ very cool</text>
-            <circle class="life-dot down" cx="440" cy="306" r="7"></circle>
-            <circle class="life-dot" cx="550" cy="323" r="7"></circle>
-            <circle class="life-dot" cx="660" cy="302" r="7"></circle>
-            <circle class="life-dot" cx="770" cy="281" r="7"></circle>
-            <text class="life-val" x="770" y="234" text-anchor="middle" style="font-size: 21px;">MET CORI</text>
-            <circle class="life-dot" cx="880" cy="254" r="7"></circle>
-            <circle class="life-dot" cx="990" cy="171" r="7"></circle>
-            <circle id="lifePeakDot" class="life-dot down" cx="1100" cy="36" r="11"></circle>
-            <circle id="lifeNowDot" class="life-dot down" cx="1150" cy="83" r="11"></circle>
-            <text id="lifePeakLab" class="life-val" x="1107" y="20" text-anchor="end">98.4% · WEDDING</text>
-            <text id="lifeNowLab" class="life-val" x="1150" y="121" text-anchor="end">86.1% · TODAY</text>
-            <text class="life-cap" x="110" y="440" text-anchor="middle">0</text>
-            <text class="life-cap" x="167" y="436" text-anchor="middle" style="letter-spacing: 0.35em;">. . .</text>
-            <text class="life-cap" x="220" y="440" text-anchor="middle">16</text>
-            <text class="life-cap" x="330" y="440" text-anchor="middle">18</text>
-            <text class="life-cap" x="440" y="440" text-anchor="middle">20</text>
-            <text class="life-cap" x="550" y="440" text-anchor="middle">22</text>
-            <text class="life-cap" x="660" y="440" text-anchor="middle">24</text>
-            <text class="life-cap" x="770" y="440" text-anchor="middle">26</text>
-            <text class="life-cap" x="880" y="440" text-anchor="middle">28</text>
-            <text class="life-cap" x="990" y="440" text-anchor="middle">30</text>
-            <text class="life-cap" x="1100" y="440" text-anchor="middle">32</text>
-            <text class="life-cap" x="630" y="478" text-anchor="middle">A G E</text>
+            <text class="life-cap" x="20" y="220" text-anchor="middle" transform="rotate(-90 20 220)" style="letter-spacing: 0.16em; font-size: 19px;">FURRY RISK</text>
+            <!-- line + area, progressively revealed by the AGE scrubber -->
+            <g clip-path="url(#ageClip)">
+              <path id="lifeAreaUp1" class="life-area" d="M110,410 L220,364 L330,287 L330,410 Z"></path>
+              <path id="lifeAreaDown1" class="life-area down" d="M330,410 L330,287 L440,306 L550,323 L550,410 Z"></path>
+              <path id="lifeAreaUp2" class="life-area" d="M550,410 L550,323 L660,302 L770,281 L880,254 L990,171 L1100,36 L1100,410 Z"></path>
+              <path id="lifeAreaDown2" class="life-area down" d="M1100,410 L1100,36 L1150,83 L1150,410 Z"></path>
+              <polyline id="lifeLineUp1" class="lifeLine" points="110,410 220,364 330,287"></polyline>
+              <polyline id="lifeLineDown1" class="lifeLine down" points="330,287 440,306 550,323"></polyline>
+              <polyline id="lifeLineUp2" class="lifeLine" points="550,323 660,302 770,281 880,254 990,171 1100,36"></polyline>
+              <polyline id="lifeLineDown2" class="lifeLine down" points="1100,36 1150,83"></polyline>
+            </g>
+            <!-- dots + callouts, each revealed when the scrubber passes its age -->
+            <circle class="life-dot areveal" data-ax="110" cx="110" cy="410" r="7"></circle>
+            <circle class="life-dot areveal" data-ax="220" cx="220" cy="364" r="7"></circle>
+            <text class="life-val areveal" data-ax="220" x="226" y="332" text-anchor="middle" style="font-size: 21px;">LOLA BUNNY</text>
+            <circle class="life-dot down areveal" data-ax="330" cx="330" cy="287" r="7"></circle>
+            <text class="life-val areveal" data-ax="330" x="330" y="232" text-anchor="middle" style="font-size: 21px;">JOINED A FRATERNITY</text>
+            <text class="life-val muted areveal" data-ax="330" x="330" y="258" text-anchor="middle" style="font-size: 21px; font-style: italic; font-family: 'Source Serif 4', Georgia, serif;">→ very cool</text>
+            <circle class="life-dot down areveal" data-ax="440" cx="440" cy="306" r="7"></circle>
+            <circle class="life-dot areveal" data-ax="550" cx="550" cy="323" r="7"></circle>
+            <text class="life-val areveal" data-ax="550" x="550" y="266" text-anchor="middle" style="font-size: 21px;">MOVES TO SEATTLE</text>
+            <text class="life-val muted areveal" data-ax="550" x="550" y="290" text-anchor="middle" style="font-size: 21px; font-style: italic; font-family: 'Source Serif 4', Georgia, serif;">builds a pc.</text>
+            <circle class="life-dot areveal" data-ax="660" cx="660" cy="302" r="7"></circle>
+            <circle class="life-dot areveal" data-ax="770" cx="770" cy="281" r="7"></circle>
+            <text class="life-val areveal" data-ax="770" x="770" y="234" text-anchor="middle" style="font-size: 21px;">MET CORI</text>
+            <text class="life-val muted areveal" data-ax="770" x="770" y="258" text-anchor="middle" style="font-size: 18px; font-style: italic; font-family: 'Source Serif 4', Georgia, serif;">(furry convention, or whatever)</text>
+            <circle class="life-dot areveal" data-ax="880" cx="880" cy="254" r="7"></circle>
+            <circle class="life-dot areveal" data-ax="990" cx="990" cy="171" r="7"></circle>
+            <text class="life-val areveal" data-ax="990" x="990" y="210" text-anchor="middle" style="font-size: 21px;">KNOT-CURIOSITY DEVELOPS</text>
+            <text class="life-val muted areveal" data-ax="990" x="990" y="234" text-anchor="middle" style="font-size: 18px; font-style: italic; font-family: 'Source Serif 4', Georgia, serif;">began musk-maxxing</text>
+            <circle id="lifePeakDot" class="life-dot down areveal" data-ax="1100" cx="1100" cy="36" r="11"></circle>
+            <circle id="lifeNowDot" class="life-dot down areveal" data-ax="1150" cx="1150" cy="83" r="11"></circle>
+            <text id="lifePeakLab" class="life-val areveal" data-ax="1100" x="1107" y="20" text-anchor="end">MARRIED</text>
+            <text id="lifePeakSub" class="life-val muted areveal" data-ax="1100" x="1107" y="42" text-anchor="end" style="font-style: italic; font-family: 'Source Serif 4', Georgia, serif; font-size: 18px;">peak risk</text>
+            <text id="lifeNowLab" class="life-val areveal" data-ax="1150" x="1150" y="121" text-anchor="end">TODAY</text>
+            <!-- age ticks, revealed as the scrubber passes -->
+            <text class="life-cap areveal" data-ax="110" x="110" y="440" text-anchor="middle">0</text>
+            <text class="life-cap areveal" data-ax="167" x="167" y="436" text-anchor="middle" style="letter-spacing: 0.35em;">. . .</text>
+            <text class="life-cap areveal" data-ax="220" x="220" y="440" text-anchor="middle">16</text>
+            <text class="life-cap areveal" data-ax="330" x="330" y="440" text-anchor="middle">18</text>
+            <text class="life-cap areveal" data-ax="440" x="440" y="440" text-anchor="middle">20</text>
+            <text class="life-cap areveal" data-ax="550" x="550" y="440" text-anchor="middle">22</text>
+            <text class="life-cap areveal" data-ax="660" x="660" y="440" text-anchor="middle">24</text>
+            <text class="life-cap areveal" data-ax="770" x="770" y="440" text-anchor="middle">26</text>
+            <text class="life-cap areveal" data-ax="880" x="880" y="440" text-anchor="middle">28</text>
+            <text class="life-cap areveal" data-ax="990" x="990" y="440" text-anchor="middle">30</text>
+            <text class="life-cap areveal" data-ax="1100" x="1100" y="440" text-anchor="middle">32</text>
+            <!-- AGE scrubber: thin white track + draggable AGE handle -->
+            <line id="ageTrack" x1="110" y1="470" x2="1150" y2="470" stroke="#ffffff" stroke-width="2" stroke-opacity="0.4" stroke-linecap="round"></line>
+            <rect id="ageHit" x="90" y="452" width="1090" height="40" fill="transparent" style="cursor: pointer;"></rect>
+            <g id="ageHandle" transform="translate(110,0)" style="cursor: grab;">
+              <rect x="-36" y="457" width="72" height="26" rx="13" fill="var(--accent)"></rect>
+              <text x="0" y="475" text-anchor="middle" fill="#fff" style="font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 17px; letter-spacing: 0.16em;">AGE</text>
+            </g>
           </svg>
         </div>
         <div class="now-hopes anim d3">
@@ -1422,6 +1771,24 @@
           <div class="hope-chip"><span class="dn">▼</span> <span><b>Past 30.</b> Risk metabolizes with age.</span></div>
         </div>
       </div>
+      <div class="folio"><b>10</b> / 15</div>
+    </div>
+  </section>
+
+  <!-- ============ 11 · FINDINGS ============ -->
+  <section data-label="Findings">
+    <div class="frame" data-screen-label="Findings">
+      <p class="eyebrow anim">11 · Findings</p>
+      <h2 class="title anim d1">An egregious case.</h2>
+      <div class="findings-grid anim d2">
+        <div class="finding"><span class="k">Subject</span><span class="v">S. Bruess</span></div>
+        <div class="finding"><span class="k">Origin</span><span class="v">Hailey, Idaho · 1993</span></div>
+        <div class="finding"><span class="k">Risk factors present</span><span class="v">All five. Plus several new ones.</span></div>
+        <div class="finding"><span class="k">Status</span><span class="v">Married · risk declining</span></div>
+        <div class="finding"><span class="k">Peak risk index</span><span class="v red">+98.4 · eve of wedding</span></div>
+        <div class="finding"><span class="k">Current trajectory</span><span class="v good">Reducing by 12 points on average annually.</span></div>
+      </div>
+      <p class="conclude anim d3">The subject is not an outlier. <b>He is the egregious far end of a spectrum we all sit on.</b> The reassuring part: for the first time on record, <b>the numbers are coming down.</b></p>
       <div class="folio"><b>11</b> / 15</div>
     </div>
   </section>
@@ -1432,9 +1799,17 @@
       <p class="eyebrow anim">A word from tonight's sponsor</p>
       <div class="twist-wrap">
         <div class="twist-text">
-          <h2 class="title anim d1">This was never a TED talk.</h2>
-          <p class="body anim d2" style="margin-top: 30px;">It was an ad. Ladies, if your husband's chart looks like his, you already know the problem. He is a closeted furry. You are a human woman: <span class="hl">no ears, no shell, no paint, no resin finish.</span> That is a great deal of costume changes, and even then, arousal cannot be guaranteed.</p>
-          <p class="body anim d3" style="margin-top: 22px;">BlueChew helps close the gap, so you can still start a family. The work is yours. The moment, at least, will last.</p>
+          <h2 class="title anim d1">What's a woman to do?</h2>
+          <p class="body anim d2" style="margin-top: 30px;">Ladies, if your husband's chart looks like his, you already know the problem. He is a closeted furry. You are a human woman: <span class="hl">no ears, no shell, no paint, no resin finish.</span> That is a great deal of costume changes, and even then, arousal cannot be guaranteed.</p>
+          <p class="body anim d3" style="margin-top: 22px;">BlueChew helps close the gap, so you can still start a family.</p>
+          <p class="body anim d3" style="margin-top: 16px; color: #5286cc; font-weight: 700; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+            <span>No more yiffing, get your stiffing.</span>
+            <a href="https://bluechew.com" target="_blank" rel="noopener" class="bc-btn"><span>Bluechew.com™</span></a>
+            <span class="bc-coupon">
+              <span class="bc-coupon-label">Coupon code:</span>
+              <span class="bc-coupon-code">MURRSUIT</span>
+            </span>
+          </p>
         </div>
         <div class="twist-img anim d2">
           <img src="assets/asset-002.png" alt="BlueChew advertisement. Confidence lasts. So does the moment.">
@@ -1491,6 +1866,7 @@
 <script src="assets/asset-010.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="assets/asset-011.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="assets/asset-012.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="assets/three.min.js"></script>
 <script type="text/babel" src="assets/asset-008.jsx"></script>
 <script type="text/babel">
   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -1525,8 +1901,9 @@
     set('lifeAreaDown2', el => el.setAttribute('d', 'M1100,410 L' + pk.join(',') + ' L' + nw.join(',') + ' L1150,410 Z'));
     set('lifePeakDot', el => el.setAttribute('cy', pk[1]));
     set('lifeNowDot', el => el.setAttribute('cy', nw[1]));
-    set('lifePeakLab', el => { el.textContent = peak.toFixed(1) + '% · WEDDING'; el.setAttribute('y', Math.max(20, pk[1] - 16)); });
-    set('lifeNowLab', el => { el.textContent = today.toFixed(1) + '% · TODAY'; el.setAttribute('y', nw[1] + 38); });
+    set('lifePeakLab', el => { el.textContent = 'MARRIED'; el.setAttribute('y', Math.max(20, pk[1] - 16)); });
+    set('lifePeakSub', el => { el.setAttribute('y', Math.max(20, pk[1] - 16) + 22); });
+    set('lifeNowLab', el => { el.textContent = 'TODAY'; el.setAttribute('y', nw[1] + 38); });
   }
 
   function App() {
@@ -1562,18 +1939,21 @@
     const [geo, setGeo] = useState('metro');
 
     const FACTORS = [
-      { label: 'Gamer',                  base: 62, male: 14, slope: 0.9, geo: 4, shane: 99, mult: 0.5 },
-      { label: "Doesn't go outside",     base: 48, male: 6,  slope: 0.7, geo: 6, shane: 99, mult: 0.3 },
-      { label: 'Anime lover · figurines', base: 44, male: 12, slope: 0.8, geo: 8, shane: 99, mult: 1.0 },
-      { label: 'Would fuck a turtle',    base: 18, male: 9,  slope: 0.4, geo: 3, shane: 99, mult: 0.1 },
-      { label: 'Hrs/day on Discord',     base: 52, male: 10, slope: 1.1, geo: 5, shane: 99, mult: 0.3 },
+      { label: 'Gamer',                  base: 62, male: 14, slope: 0.9, geo: 4, mult: 0.5, unit: 'pct', max: 100, shane: 93 },
+      { label: "Doesn't go outside",     base: 48, male: 6,  slope: 0.7, geo: 6, mult: 0.3, unit: 'pct', max: 100, shane: 87 },
+      { label: 'Anime · Titty figurines', base: 35, male: 27, slope: 0.8, geo: 8, mult: 1.0, unit: 'pct', max: 100, shane: 93 },
+      { label: 'Would fuck a turtle*',    base: 18, male: 9,  slope: 0.4, geo: 3, mult: 0.1, unit: 'pct', max: 100, shane: 100 },
+      { label: 'Hrs/day on Discord',     base: 1.4, male: 0.3, slope: 0.04, geo: 0.15, mult: 1.0, unit: 'hrs', max: 24, shane: 23 },
     ];
     const avgOf = (f) => {
       const v = (f.base + (sex === 'male' ? f.male : -f.male)
               + (25 - age) * f.slope
               + (geo === 'metro' ? f.geo : -f.geo)) * f.mult;
+      if (f.unit === 'hrs') return Math.max(0, Math.min(f.max, Math.round(v)));
       return Math.max(2, Math.min(90, Math.round(v)));
     };
+    const fmtVal = (f, v) => f.unit === 'hrs' ? v + ' hrs.' : v + '%';
+    const barW = (f, v) => (v / f.max * 100) + '%';
     const stop = (e) => e.stopPropagation();
 
     return (
@@ -1602,7 +1982,7 @@
           </div>
         </div>
         <div className="ix-legend">
-          <span><i style={{ background: '#3b82f6' }}></i> Population · your selection</span>
+          <span><i style={{ background: '#5286cc' }}></i> Population · your selection</span>
           <span><i style={{ background: 'var(--accent)' }}></i> Shane</span>
         </div>
         <div className="ix-chart">
@@ -1614,13 +1994,13 @@
                 <div className="ix-bars">
                   <div className="ix-bar">
                     <span className="ix-tag avg">Avg</span>
-                    <div className="ix-track"><div className="ix-fill avg" style={{ width: a + '%' }}></div></div>
-                    <span className="ix-pct avg">{a}%</span>
+                    <div className="ix-track"><div className="ix-fill avg" style={{ width: barW(f, a) }}></div></div>
+                    <span className="ix-pct avg">{fmtVal(f, a)}</span>
                   </div>
                   <div className="ix-bar">
                     <span className="ix-tag shane">Shane</span>
-                    <div className="ix-track"><div className="ix-fill shane" style={{ width: f.shane + '%' }}></div></div>
-                    <span className="ix-pct shane">{f.shane}%</span>
+                    <div className="ix-track"><div className="ix-fill shane" style={{ width: barW(f, f.shane) }}></div></div>
+                    <span className="ix-pct shane">{fmtVal(f, f.shane)}</span>
                   </div>
                 </div>
               </div>
@@ -1633,6 +2013,637 @@
   (function () {
     const el = document.getElementById('risk-ix-root');
     if (el && window.ReactDOM && ReactDOM.createRoot) ReactDOM.createRoot(el).render(<RiskExplorer />);
+  })();
+</script>
+
+<script type="text/babel">
+  function PremisePanel() {
+    const { useState, useRef, useEffect } = React;
+    const [zoom, setZoom] = useState(false);
+    const [autoRotate, setAutoRotate] = useState(true);
+    const [hoverInfo, setHoverInfo] = useState(null);
+    const [clicked, setClicked] = useState(null);
+    const [cardOffset, setCardOffset] = useState({ x: 0, y: 0 });
+    const [dragging2, setDragging2] = useState(false);
+    const cardOffsetRef = useRef({ x: 0, y: 0 });
+    useEffect(() => { cardOffsetRef.current = cardOffset; }, [cardOffset]);
+    // Reset card offset and fetch preview whenever a new target is clicked
+    useEffect(() => {
+      setCardOffset({ x: 0, y: 0 });
+      if (!clicked || clicked.kind !== 'furry' || clicked.imgUrl !== undefined) return;
+      let cancelled = false;
+      const url = 'https://corsproxy.io/?url=' + encodeURIComponent('https://fxfurtrack.com/p/' + clicked.id);
+      fetch(url).then((r) => r.ok ? r.text() : Promise.reject()).then((html) => {
+        if (cancelled) return;
+        const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
+        const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
+        const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
+        setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
+      }).catch(() => {
+        if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c));
+      });
+      return () => { cancelled = true; };
+    }, [clicked && clicked.id, clicked && clicked.kind]);
+    const onCardDown = (e) => {
+      if (e.target.closest('.x, .cta')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const startX = e.clientX, startY = e.clientY;
+      const base = { x: cardOffsetRef.current.x, y: cardOffsetRef.current.y };
+      let moved = false;
+      const move = (ev) => {
+        if (!moved && Math.hypot(ev.clientX - startX, ev.clientY - startY) > 3) { moved = true; setDragging2(true); }
+        if (moved) setCardOffset({ x: base.x + ev.clientX - startX, y: base.y + ev.clientY - startY });
+      };
+      const up = () => {
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        if (moved) setDragging2(false);
+      };
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', up);
+    };
+    const mountRef = useRef(null);
+    const labelRef = useRef(null);
+    const wrapRef = useRef(null);
+    const cardRef = useRef(null);
+    const lineRef = useRef(null);
+    const zoomRef = useRef(false);
+    const autoRotateRef = useRef(true);
+    const clickedRef = useRef(null);
+    const stop = (e) => e.stopPropagation();
+    useEffect(() => { zoomRef.current = zoom; }, [zoom]);
+    useEffect(() => { autoRotateRef.current = autoRotate; }, [autoRotate]);
+    useEffect(() => { clickedRef.current = clicked; }, [clicked]);
+
+    useEffect(() => {
+      const mount = mountRef.current;
+      const THREE = window.THREE;
+      if (!mount || !THREE) return;
+      const W = 1800, H = 1800;
+      let renderer;
+      try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+      catch (e) { return; }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+      renderer.setSize(W, H);
+      mount.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
+      camera.position.set(0, 0, 8);
+
+      const axis = new THREE.Group();
+      axis.rotation.x = 0.6;           // tip north pole toward the camera
+      axis.rotation.z = Math.PI / 4;   // fixed 45 deg lean
+      scene.add(axis);
+      const earth = new THREE.Group();
+      earth.rotation.order = 'YXZ';
+      axis.add(earth);
+
+      const R = 1.62;
+      earth.add(new THREE.Mesh(
+        new THREE.SphereGeometry(R * 0.984, 48, 32),
+        new THREE.MeshBasicMaterial({ color: 0x09090b })));
+      earth.add(new THREE.LineSegments(
+        new THREE.WireframeGeometry(new THREE.SphereGeometry(R * 0.997, 30, 20)),
+        new THREE.LineBasicMaterial({ color: 0xe5372b, transparent: true, opacity: 0.11 })));
+
+      const sprite = (() => {
+        const c = document.createElement('canvas'); c.width = c.height = 64;
+        const g = c.getContext('2d');
+        const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grd.addColorStop(0, 'rgba(255,255,255,1)');
+        grd.addColorStop(0.45, 'rgba(255,255,255,0.85)');
+        grd.addColorStop(1, 'rgba(255,255,255,0)');
+        g.fillStyle = grd; g.fillRect(0, 0, 64, 64);
+        return new THREE.CanvasTexture(c);
+      })();
+
+      const toVec = (lat, lon, r) => {
+        const phi = (90 - lat) * Math.PI / 180, theta = (lon + 180) * Math.PI / 180;
+        return new THREE.Vector3(
+          -r * Math.sin(phi) * Math.cos(theta),
+          r * Math.cos(phi),
+          r * Math.sin(phi) * Math.sin(theta));
+      };
+
+      const SEA = [47.6, -122.33];
+      const seattle = new THREE.Group();
+      seattle.position.copy(toVec(SEA[0], SEA[1], R * 1.012));
+      seattle.add(new THREE.Mesh(new THREE.SphereGeometry(0.0125, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xffffff })));
+      const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: sprite, color: 0xff3b2f, transparent: true, opacity: 0.95,
+        blending: THREE.AdditiveBlending, depthWrite: false }));
+      halo.scale.setScalar(0.085); seattle.add(halo);
+      earth.add(seattle);
+
+      const gauss = () => {
+        let u = 0, v = 0;
+        while (!u) u = Math.random();
+        while (!v) v = Math.random();
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+      };
+      let furryPoints = null;
+      const buildFurry = (isLit) => {
+        const pos = [];
+        const push = (lat, lon) => pos.push(...toVec(lat, lon, R * 1.01).toArray());
+        const CITIES = [[34.05, -118.24], [37.77, -122.42], [47.6, -122.33]];
+        CITIES.forEach(([la, lo]) => {
+          for (let i = 0; i < 230; i++)
+            push(la + gauss() * 1.0, lo + gauss() * 1.3 / Math.cos(la * Math.PI / 180));
+        });
+        let n = 0, guard = 0;
+        while (n < 650 && guard < 40000) { guard++;
+          const la = 25 + Math.random() * 24, lo = -125 + Math.random() * 58;
+          if (isLit(la, lo)) { push(la, lo); n++; } }
+        n = 0; guard = 0;
+        while (n < 480 && guard < 60000) { guard++;
+          const la = -55 + Math.random() * 125, lo = -180 + Math.random() * 360;
+          if (isLit(la, lo)) { push(la, lo); n++; } }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        const mat = new THREE.PointsMaterial({
+          size: 0.052, map: sprite, color: 0xff4133, transparent: true,
+          depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+        furryPoints = new THREE.Points(geo, mat);
+        earth.add(furryPoints);
+      };
+
+      const buildEarth = (img) => {
+        const cw = 2048, ch = 1024;
+        const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+        const cx = cv.getContext('2d'); cx.drawImage(img, 0, 0, cw, ch);
+        const data = cx.getImageData(0, 0, cw, ch).data;
+        const at = (lat, lon) => {
+          const u = (lon + 180) / 360, v = (90 - lat) / 180;
+          const px = Math.min(cw - 1, Math.max(0, Math.floor(u * cw)));
+          const py = Math.min(ch - 1, Math.max(0, Math.floor(v * ch)));
+          const i = (py * cw + px) * 4;
+          return [data[i], data[i + 1], data[i + 2]];
+        };
+        const isLit = (lat, lon) => {
+          const c = at(lat, lon);
+          return (c[0] + c[1] + c[2]) / 3 > 14;
+        };
+        const N = 32000, off = 2 / N, inc = Math.PI * (3 - Math.sqrt(5));
+        const pos = [], col = [];
+        for (let k = 0; k < N; k++) {
+          const y = k * off - 1 + off / 2;
+          const rr = Math.sqrt(1 - y * y), ph = k * inc;
+          const x = Math.cos(ph) * rr, z = Math.sin(ph) * rr;
+          const lat = Math.asin(y) * 180 / Math.PI, lon = Math.atan2(z, x) * 180 / Math.PI;
+          const c = at(lat, lon);
+          if ((c[0] + c[1] + c[2]) / 3 <= 14) continue;
+          const v = toVec(lat, lon, R);
+          pos.push(v.x, v.y, v.z);
+          const t = Math.min(1, ((c[0] + c[1] + c[2]) / 3) / 115);
+          col.push(0.95 * t + 0.06, 0.84 * t + 0.05, 0.5 * t + 0.03);
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+        const mat = new THREE.PointsMaterial({
+          size: 0.032, map: sprite, vertexColors: true, transparent: true,
+          depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+        earth.add(new THREE.Points(geo, mat));
+        buildFurry(isLit);
+      };
+
+      const img = new Image();
+      img.onload = () => buildEarth(img);
+      img.onerror = () => buildFurry(() => true);
+      img.src = 'assets/earth-night.jpg';
+
+      let yaw = -0.7, dragging = false, lx = 0, downX = 0, downY = 0;
+      let dist = 8, targetDist = 8;
+      const dom = renderer.domElement;
+      dom.style.cursor = 'grab';
+      const down = (e) => { if (zoomRef.current) return; dragging = true; dom.style.cursor = 'grabbing'; lx = e.clientX; downX = e.clientX; downY = e.clientY; e.stopPropagation(); };
+      const move = (e) => { if (!dragging) return; yaw += (e.clientX - lx) * 0.006; lx = e.clientX; };
+      const up = () => { dragging = false; dom.style.cursor = 'grab'; };
+      const wheel = (e) => { e.preventDefault(); e.stopPropagation(); targetDist = Math.max(4.5, Math.min(13, targetDist + e.deltaY * 0.006)); };
+      dom.addEventListener('pointerdown', down);
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+      dom.addEventListener('wheel', wheel, { passive: false });
+
+      // hover detection: raycast against furry points + projected distance to Shane
+      const ray = new THREE.Raycaster();
+      ray.params.Points = { threshold: 0.045 };
+      const ndc = new THREE.Vector2();
+      let lastHoverKey = null;
+      let lastHoverInfo = null; // mirror for click-to-pin
+      let hoverThrottle = 0;
+      const hitTest = (clientX, clientY) => {
+        const rect = dom.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
+        const cx = clientX - rect.left, cy = clientY - rect.top;
+        ndc.x = (cx / rect.width) * 2 - 1;
+        ndc.y = -((cy / rect.height) * 2 - 1);
+        ray.setFromCamera(ndc, camera);
+        const sp = sw.clone().project(camera);
+        const sx = (sp.x * 0.5 + 0.5) * rect.width;
+        const sy = (-sp.y * 0.5 + 0.5) * rect.height;
+        const sd = Math.hypot(cx - sx, cy - sy);
+        const facing = sw.clone().normalize().dot(dir);
+        if (sd < 70 && facing > 0.1) return { kind: 'shane', cx, cy };
+        if (furryPoints) {
+          const hits = ray.intersectObject(furryPoints, false);
+          if (hits.length) {
+            const idx = hits[0].index;
+            const arr = furryPoints.geometry.attributes.position.array;
+            return { kind: 'furry', idx, lp: [arr[idx*3], arr[idx*3+1], arr[idx*3+2]], cx, cy };
+          }
+        }
+        return null;
+      };
+      const hover = (e) => {
+        if (dragging) return;
+        const now = performance.now();
+        if (now - hoverThrottle < 50) return;
+        hoverThrottle = now;
+        const hit = hitTest(e.clientX, e.clientY);
+        if (!hit) {
+          if (lastHoverKey !== null) { lastHoverKey = null; lastHoverInfo = null; setHoverInfo(null); }
+          return;
+        }
+        if (hit.kind === 'shane') {
+          if (lastHoverKey !== 'shane') {
+            lastHoverKey = 'shane';
+            lastHoverInfo = { kind: 'shane', label: 'Shane Bruess', sub: 'Subject', url: 'https://www.facebook.com/shane.bruess' };
+          }
+          setHoverInfo({ ...lastHoverInfo, x: hit.cx, y: hit.cy });
+        } else {
+          const key = 'furry:' + hit.idx;
+          if (lastHoverKey !== key) {
+            lastHoverKey = key;
+            const id = 1000000 + Math.floor(Math.random() * 1000000);
+            lastHoverInfo = { kind: 'furry', id, lp: hit.lp, label: '#' + id, sub: 'Furtrack post', url: 'https://www.furtrack.com/p/' + id };
+          }
+          setHoverInfo({ ...lastHoverInfo, x: hit.cx, y: hit.cy });
+        }
+      };
+      const leave = () => { lastHoverKey = null; lastHoverInfo = null; setHoverInfo(null); };
+      const onPointerUp = (e) => {
+        // treat as click only if the cursor barely moved between down and up
+        if (Math.hypot((e.clientX || downX) - downX, (e.clientY || downY) - downY) > 6) return;
+        const hit = hitTest(e.clientX, e.clientY);
+        if (!hit) return;
+        if (hit.kind === 'shane') {
+          setClicked({ kind: 'shane', label: 'Shane Bruess', sub: 'Subject contact', url: 'https://www.facebook.com/shane.bruess' });
+        } else {
+          const id = (lastHoverInfo && lastHoverInfo.kind === 'furry' && lastHoverInfo.id) || (1000000 + Math.floor(Math.random() * 1000000));
+          setClicked({ kind: 'furry', id, lp: hit.lp, label: '#' + id, sub: 'Furtrack post', url: 'https://www.furtrack.com/p/' + id });
+        }
+      };
+      dom.addEventListener('pointermove', hover);
+      dom.addEventListener('pointerleave', leave);
+      dom.addEventListener('pointerup', onPointerUp);
+
+      const sw = new THREE.Vector3(), dir = new THREE.Vector3(0, 0, 1), tdir = new THREE.Vector3();
+      let raf;
+      const tick = () => {
+        raf = requestAnimationFrame(tick);
+        if (!dragging && !zoomRef.current && autoRotateRef.current) yaw += 0.0021;
+        earth.rotation.y = yaw; earth.rotation.x = 0;
+        seattle.getWorldPosition(sw);
+        if (zoomRef.current) tdir.copy(sw).normalize();
+        else tdir.set(0, 0, 1);
+        dir.lerp(tdir, 0.05); dir.normalize();
+        dist += (targetDist - dist) * 0.12;
+        camera.position.copy(dir).multiplyScalar(dist);
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+        const lbl = labelRef.current;
+        if (lbl) {
+          const facing = sw.clone().normalize().dot(dir);
+          const p = sw.clone().project(camera);
+          lbl.style.left = ((p.x * 0.5 + 0.5) * W) + 'px';
+          lbl.style.top = ((-p.y * 0.5 + 0.5) * H) + 'px';
+          lbl.style.opacity = facing > 0.1 ? '1' : '0';
+        }
+        // connector line: clicked dot -> popup card
+        const c = clickedRef.current;
+        const lineEl = lineRef.current && lineRef.current.firstChild;
+        if (lineEl) {
+          if (c && cardRef.current && wrapRef.current) {
+            let wp = null;
+            if (c.kind === 'shane') wp = sw.clone();
+            else if (c.lp) {
+              earth.updateMatrixWorld();
+              wp = new THREE.Vector3(c.lp[0], c.lp[1], c.lp[2]).applyMatrix4(earth.matrixWorld);
+            }
+            if (wp) {
+              const facing2 = wp.clone().normalize().dot(dir);
+              const p2 = wp.clone().project(camera);
+              const dx2 = (p2.x * 0.5 + 0.5) * W;
+              const dy2 = (-p2.y * 0.5 + 0.5) * H;
+              const wrapRect = wrapRef.current.getBoundingClientRect();
+              const cardRect = cardRef.current.getBoundingClientRect();
+              const sx = ((cardRect.left - wrapRect.left) / wrapRect.width) * W;
+              const sy = ((cardRect.top + cardRect.height - wrapRect.top) / wrapRect.height) * H;
+              lineEl.setAttribute('x1', sx);
+              lineEl.setAttribute('y1', sy);
+              lineEl.setAttribute('x2', dx2);
+              lineEl.setAttribute('y2', dy2);
+              lineEl.setAttribute('class', c.kind === 'shane' ? 'shane' : '');
+              lineEl.style.opacity = facing2 > 0 ? 1 : 0;
+            } else {
+              lineEl.style.opacity = 0;
+            }
+          } else {
+            lineEl.style.opacity = 0;
+          }
+        }
+      };
+      tick();
+
+      return () => {
+        cancelAnimationFrame(raf);
+        dom.removeEventListener('pointerdown', down);
+        dom.removeEventListener('wheel', wheel);
+        dom.removeEventListener('pointermove', hover);
+        dom.removeEventListener('pointerleave', leave);
+        dom.removeEventListener('pointerup', onPointerUp);
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        renderer.dispose();
+        if (dom.parentNode) dom.parentNode.removeChild(dom);
+      };
+    }, []);
+
+    return (
+      <div className="pm">
+        <div className="pm-globe-wrap" ref={wrapRef}>
+          <div className="pm-globe">
+            <div className="pm-canvas" ref={mountRef}></div>
+            <div className="pm-label" ref={labelRef}>
+              <div className="box"><b>SHANE</b><span>Seattle, WA</span></div>
+              <div className="stem"></div>
+              <div className="dot"></div>
+            </div>
+            <svg className="pm-line" ref={lineRef} viewBox="0 0 1800 1800" preserveAspectRatio="none">
+              <line x1="0" y1="0" x2="0" y2="0" style={{ opacity: 0 }} />
+            </svg>
+            <button className={'pm-rotate-btn' + (autoRotate ? '' : ' off')}
+                    onPointerDown={stop}
+                    onClick={(e) => { stop(e); setAutoRotate((r) => !r); }}>
+              <span className="ic">{autoRotate ? '●' : '○'}</span>
+              {autoRotate ? 'Auto-rotate' : 'Paused'}
+            </button>
+            {hoverInfo && (
+              <div className={'pm-hover ' + hoverInfo.kind}
+                   style={{ left: hoverInfo.x + 'px', top: hoverInfo.y + 'px' }}>
+                <span className="sub">{hoverInfo.sub}</span>
+                {hoverInfo.label}
+              </div>
+            )}
+            {clicked && (
+              <div className={'pm-popup ' + clicked.kind + (dragging2 ? ' dragging' : '')}
+                   ref={cardRef}
+                   style={{ transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)` }}
+                   onPointerDown={onCardDown}>
+                <span className="grip">⋮⋮</span>
+                <span className="x" onPointerDown={stop} onClick={(e) => { stop(e); setClicked(null); }}>✕</span>
+                {clicked.kind === 'furry' && (
+                  <div className="img">
+                    {clicked.imgUrl === undefined && <span className="ph">Loading preview…</span>}
+                    {clicked.imgUrl === null && <span className="ph">No preview available</span>}
+                    {clicked.imgUrl && <img src={clicked.imgUrl} alt="" referrerPolicy="no-referrer" onError={(e) => { e.target.parentNode.innerHTML = '<span class="ph">Preview unavailable</span>'; }} />}
+                  </div>
+                )}
+                <span className="lbl">{clicked.sub}</span>
+                <span className="val">{clicked.title || clicked.label}</span>
+                {clicked.kind === 'furry' && clicked.title && (
+                  <span className="lbl" style={{ marginTop: '6px' }}>Post {clicked.label}</span>
+                )}
+                {clicked.desc && <span className="meta">{clicked.desc}</span>}
+                <a className="cta" href={clicked.url} target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>
+                  {clicked.kind === 'shane' ? 'Open Facebook ↗' : 'Open furtrack.com ↗'}
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="pm-left">
+          <h2 className="pm-title">It couldn't happen to me, right?</h2>
+          <p className="pm-caveat">Believe it or not, furries ARE real people... and they maintain 96% of our global networking infrastructure.</p>
+          <div className="pm-figure">
+            <div className="pm-big">~2M</div>
+            <div className="pm-big-cap" style={{ color: 'var(--accent)' }}>afflicted worldwide. 70% of those striken live in the U.S.A.</div>
+          </div>
+          <div className="pm-cities">
+            <div className="pm-city"><span className="rk">01</span><span className="cn">Los Angeles</span><span className="cv">~9,000</span></div>
+            <div className="pm-city"><span className="rk">02</span><span className="cn">San Francisco</span><span className="cv">~7,500</span></div>
+            <div className="pm-city"><span className="rk">03</span><span className="cn">Seattle</span><span className="cv">~6,000 · +1 Shane</span></div>
+          </div>
+          <button className={'pm-zoom' + (zoom ? ' on' : '')} onPointerDown={stop}
+                  onClick={(e) => { stop(e); setZoom((z) => !z); }}>
+            <span className="ic">{zoom ? '◉' : '◯'}</span>
+            {zoom ? 'Following Shane · Seattle' : 'Zoom to Shane'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+  (function () {
+    const el = document.getElementById('premise-root');
+    if (el && window.ReactDOM && ReactDOM.createRoot) ReactDOM.createRoot(el).render(<PremisePanel />);
+  })();
+</script>
+
+<script>
+  // Blur the upcoming (future) thumbnails in the deck rail, keep past + current sharp.
+  // The rail lives in deck-stage's open shadow root and marks the active thumb with
+  // [data-current], so `[data-current] ~ .thumb` is exactly the slides ahead of it.
+  (function () {
+    function inject() {
+      var deck = document.querySelector('deck-stage');
+      if (!deck || !deck.shadowRoot) return false;
+      if (deck.shadowRoot.getElementById('__future-blur')) return true;
+      var st = document.createElement('style');
+      st.id = '__future-blur';
+      st.textContent =
+        '.thumb .frame{ transition: filter 280ms ease, opacity 280ms ease; }' +
+        '.thumb[data-current] ~ .thumb .frame{ filter: blur(9px); opacity: 0.78; }';
+      deck.shadowRoot.appendChild(st);
+      return true;
+    }
+    var n = 0;
+    var timer = setInterval(function () { if (inject() || ++n > 60) clearInterval(timer); }, 100);
+    if (window.customElements && customElements.whenDefined) {
+      customElements.whenDefined('deck-stage').then(function () { inject(); });
+    }
+  })();
+</script>
+
+<script>
+  // AGE scrubber on the Present Reading chart: drag the "AGE" handle along the
+  // white track to progressively reveal the line, dots and labels by age.
+  (function () {
+    var X0 = 110, X1 = 1150, VIEW = 1200;
+    function init() {
+      var svg = document.getElementById('lifeSvg');
+      if (!svg) return false;
+      var rect = svg.querySelector('#ageClipRect');
+      var handle = svg.querySelector('#ageHandle');
+      var hit = svg.querySelector('#ageHit');
+      var reveals = svg.querySelectorAll('.areveal');
+      var ppTitle = document.getElementById('ppTitle');
+      if (!rect || !handle || !hit) return false;
+      var scrub = X0, dragging = false;
+      function apply() {
+        rect.setAttribute('width', Math.max(0, scrub - 90));
+        handle.setAttribute('transform', 'translate(' + scrub + ',0)');
+        for (var i = 0; i < reveals.length; i++) {
+          var ax = parseFloat(reveals[i].getAttribute('data-ax'));
+          reveals[i].style.opacity = (ax <= scrub + 0.5) ? '1' : '0';
+        }
+        if (ppTitle) ppTitle.style.opacity = (scrub >= X1 - 4) ? '1' : '0';
+      }
+      function xFrom(e) {
+        var b = svg.getBoundingClientRect();
+        var x = ((e.clientX - b.left) / b.width) * VIEW;
+        return Math.max(X0, Math.min(X1, x));
+      }
+      function down(e) { dragging = true; scrub = xFrom(e); apply(); e.preventDefault(); e.stopPropagation(); }
+      function move(e) { if (!dragging) return; scrub = xFrom(e); apply(); }
+      function up() { dragging = false; }
+      hit.addEventListener('pointerdown', down);
+      handle.addEventListener('pointerdown', down);
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+      apply();
+      return true;
+    }
+    var n = 0;
+    var timer = setInterval(function () { if (init() || ++n > 80) clearInterval(timer); }, 100);
+  })();
+</script>
+
+<script>
+  // "Who's that furry?" silhouette reveal on the cover: click to cross-fade
+  // the black silhouette + ? out and the full-colour subject in.
+  (function () {
+    function wire() {
+      var w = document.querySelector('.poke-wrap');
+      if (!w) return false;
+      if (w.__wired) return true;
+      w.__wired = true;
+      w.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+      w.addEventListener('click', function (e) { e.stopPropagation(); w.classList.toggle('revealed'); });
+      return true;
+    }
+    var n = 0;
+    var timer = setInterval(function () { if (wire() || ++n > 80) clearInterval(timer); }, 100);
+  })();
+</script>
+
+<script>
+  // Slide 11 "Then We Met Her": 3D-tilt mystery cards. Each card's image is
+  // hidden until clicked; revealing it folds its points into the running math.
+  (function () {
+    var SEL = 'section[data-label="Then We Met Her"]';
+    function init() {
+      var sec = document.querySelector(SEL);
+      if (!sec) return false;
+      var cards = sec.querySelectorAll('.eq-card');
+      if (!cards.length) return false;
+      if (cards[0].__wired) return true;
+      var conf = sec.querySelector('#eqConf');
+      var net = sec.querySelector('#eqNet');
+      var foot = sec.querySelector('#dudeFoot');
+      var dude = sec.querySelector('.eq-card[data-pts="22"]');
+      function update() {
+        var sum = 0;
+        sec.querySelectorAll('.eq-card.revealed').forEach(function (c) { sum += parseInt(c.getAttribute('data-pts'), 10) || 0; });
+        var nv = -25 + sum;
+        if (conf) { conf.textContent = '+' + sum; conf.style.color = sum > 0 ? 'var(--accent)' : 'var(--muted)'; }
+        if (net) { net.textContent = 'Net ' + (nv < 0 ? '−' : '+') + Math.abs(nv) + ' Furry risk'; net.style.color = nv < 0 ? '#3fb56a' : 'var(--accent)'; }
+        if (foot) foot.style.opacity = (dude && dude.classList.contains('revealed')) ? '1' : '0';
+      }
+      cards.forEach(function (card) {
+        card.__wired = true;
+        var nameEl = card.querySelector('.eq-name'), ptsEl = card.querySelector('.eq-pts'), capEl = card.querySelector('.eq-cap');
+        var realName = nameEl.textContent, realPts = ptsEl.textContent, realCap = capEl.textContent;
+        function applyText() {
+          var on = card.classList.contains('revealed');
+          nameEl.textContent = on ? realName : '???';
+          ptsEl.textContent = on ? realPts : '';
+          capEl.textContent = on ? realCap : '';
+        }
+        applyText();
+        card.addEventListener('pointermove', function (e) {
+          var b = card.getBoundingClientRect();
+          var px = (e.clientX - b.left) / b.width, py = (e.clientY - b.top) / b.height;
+          card.style.transform = 'rotateX(' + ((0.5 - py) * 15) + 'deg) rotateY(' + ((px - 0.5) * 15) + 'deg) scale(1.04)';
+          card.style.setProperty('--gx', (px * 100) + '%');
+          card.style.setProperty('--gy', (py * 100) + '%');
+        });
+        card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+        card.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+        card.addEventListener('click', function (e) { e.stopPropagation(); card.classList.toggle('revealed'); applyText(); update(); });
+      });
+      update();
+      return true;
+    }
+    var n = 0;
+    var timer = setInterval(function () { if (init() || ++n > 80) clearInterval(timer); }, 100);
+  })();
+</script>
+
+<script>
+  // Slide 7: drag the two One Piece figures; a dashed line + label connects them.
+  (function () {
+    var SEL = 'section[data-label="Denial Mechanism"]';
+    function init() {
+      var sec = document.querySelector(SEL);
+      if (!sec) return false;
+      var frame = sec.querySelector('.frame');
+      var hot = sec.querySelector('#dragHot'), ugly = sec.querySelector('#dragUgly');
+      var line = sec.querySelector('#lsrLine'), label = sec.querySelector('#lsrLabel');
+      if (!hot || !ugly || !line || !label || !hot.offsetWidth) return false;
+      if (sec.__lsr) return true;
+      sec.__lsr = true;
+      function center(el) { return { x: el.offsetLeft + el.offsetWidth / 2, y: el.offsetTop + el.offsetHeight / 2 }; }
+      function draw() {
+        var a = center(hot), b = center(ugly);
+        line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+        line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+        label.style.left = ((a.x + b.x) / 2) + 'px';
+        label.style.top = ((a.y + b.y) / 2) + 'px';
+      }
+      function toDesign(e) {
+        var fr = frame.getBoundingClientRect();
+        return { x: (e.clientX - fr.left) / (fr.width / 1920), y: (e.clientY - fr.top) / (fr.height / 1080) };
+      }
+      [hot, ugly].forEach(function (el) {
+        var dragging = false, ox = 0, oy = 0, sx = 0, sy = 0, moved = false;
+        el.addEventListener('pointerdown', function (e) {
+          dragging = true; moved = false; try { el.setPointerCapture(e.pointerId); } catch (_) {}
+          var d = toDesign(e); ox = d.x - el.offsetLeft; oy = d.y - el.offsetTop; sx = e.clientX; sy = e.clientY;
+          el.style.cursor = 'grabbing'; el.style.zIndex = 6;
+          e.preventDefault(); e.stopPropagation();
+        });
+        el.addEventListener('pointermove', function (e) {
+          if (!dragging) return;
+          if (!moved && (Math.abs(e.clientX - sx) > 4 || Math.abs(e.clientY - sy) > 4)) moved = true;
+          var d = toDesign(e);
+          el.style.left = (d.x - ox) + 'px'; el.style.top = (d.y - oy) + 'px';
+          draw();
+        });
+        el.addEventListener('pointerup', function (e) {
+          dragging = false; el.style.cursor = 'grab'; try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+          if (!moved) { var href = el.getAttribute('data-href'); if (href) window.open(href, '_blank', 'noopener'); }
+        });
+        el.addEventListener('dragstart', function (e) { e.preventDefault(); });
+      });
+      draw();
+      return true;
+    }
+    var n = 0;
+    var timer = setInterval(function () { if (init() || ++n > 90) clearInterval(timer); }, 100);
   })();
 </script>
 
