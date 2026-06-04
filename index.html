@@ -2254,16 +2254,32 @@
       setCardOffset({ x: 0, y: 0 });
       if (!clicked || clicked.kind !== 'furry' || clicked.imgUrl !== undefined) return;
       let cancelled = false;
-      const url = 'https://corsproxy.io/?url=' + encodeURIComponent('https://fxfurtrack.com/p/' + clicked.id);
-      fetch(url).then((r) => r.ok ? r.text() : Promise.reject()).then((html) => {
+      const target = 'https://fxfurtrack.com/p/' + clicked.id;
+      const proxies = [
+        (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+        (u) => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
+        (u) => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
+        (u) => 'https://cors.eu.org/' + u,
+      ];
+      const tryNext = (i) => {
         if (cancelled) return;
-        const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
-        const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
-        const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
-        setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
-      }).catch(() => {
-        if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c));
-      });
+        if (i >= proxies.length) {
+          setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c));
+          return;
+        }
+        fetch(proxies[i](target))
+          .then((r) => (r.ok ? r.text() : Promise.reject()))
+          .then((html) => {
+            if (cancelled) return;
+            const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
+            const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
+            const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
+            if (!img) return Promise.reject();
+            setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
+          })
+          .catch(() => tryNext(i + 1));
+      };
+      tryNext(0);
       return () => { cancelled = true; };
     }, [clicked && clicked.id, clicked && clicked.kind]);
     const onCardDown = (e) => {
