@@ -803,6 +803,7 @@
     color: var(--ink);
   }
   .finding .v.red { color: var(--accent); }
+  .finding .v.good { color: #3fb56a; }
   .conclude {
     font-size: var(--type-subtitle);
     font-weight: 400;
@@ -940,12 +941,12 @@
     align-items: center;
     gap: 14px;
     padding: 16px 22px;
-    border: 1px solid var(--line);
+    border: 1px solid rgba(63, 181, 106, 0.5);
     font-size: 26px;
     color: var(--muted);
   }
-  .hope-chip .dn { color: var(--ink); font-weight: 800; font-size: 30px; }
-  .hope-chip b { color: var(--ink); font-weight: 700; }
+  .hope-chip .dn { color: #3fb56a; font-weight: 800; font-size: 30px; }
+  .hope-chip b { color: #3fb56a; font-weight: 700; }
 
   /* risk-factor chip (case studies) */
   .risk-chip {
@@ -981,8 +982,11 @@
   .life-axis { stroke: var(--line); stroke-width: 1.5; }
   .life-grid { stroke: rgba(255,255,255,0.10); stroke-width: 1.5; stroke-dasharray: 6 9; }
   .life-area { fill: var(--accent); opacity: 0.13; }
+  .life-area.down { fill: #3fb56a; }
   .lifeLine { fill: none; stroke: var(--accent); stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: round; }
+  .lifeLine.down { stroke: #3fb56a; }
   .life-dot { fill: var(--accent); }
+  .life-dot.down { fill: #3fb56a; }
   .life-dot.ghost { fill: var(--bg); stroke: var(--accent); stroke-width: 4; }
   .life-val { fill: var(--ink); font-family: "Archivo", sans-serif; font-weight: 800; font-size: 28px; }
   .life-val.muted { fill: var(--muted); font-weight: 700; font-size: 25px; }
@@ -1048,6 +1052,37 @@
   }
   .signoff .brand { font-size: 25px; }
   .signoff b { color: var(--ink); }
+
+  /* ===== interactive risk explorer (The Data) ===== */
+  .ix-mount { flex: 1; display: flex; flex-direction: column; margin-top: 22px; }
+  .ix { display: flex; flex-direction: column; flex: 1; }
+  .ix-controls { display: flex; align-items: center; gap: 48px; flex-wrap: wrap; margin-bottom: 24px; }
+  .ix-ctrl { display: flex; align-items: center; gap: 16px; }
+  .ix-cap { font-size: 22px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .ix-seg { display: inline-flex; border: 1px solid var(--line); }
+  .ix-seg button { background: transparent; color: var(--muted); border: 0; padding: 12px 26px; font-family: inherit; font-size: 26px; font-weight: 700; cursor: pointer; transition: background .15s, color .15s; }
+  .ix-seg button + button { border-left: 1px solid var(--line); }
+  .ix-seg button.on { background: #3b82f6; color: var(--ink); }
+  .ix-age input[type="range"] { width: 300px; accent-color: #3b82f6; cursor: pointer; }
+  .ix-age .val { font-size: 30px; font-weight: 800; color: var(--ink); min-width: 3ch; }
+  .ix-legend { display: flex; gap: 36px; margin: 0 0 16px; font-size: 22px; color: var(--muted); }
+  .ix-legend span { display: inline-flex; align-items: center; gap: 12px; }
+  .ix-legend i { width: 28px; height: 14px; display: inline-block; }
+  .ix-chart { display: flex; flex-direction: column; gap: 15px; }
+  .ix-group { display: grid; grid-template-columns: 360px 1fr; align-items: center; gap: 0 30px; }
+  .ix-name { font-size: 28px; font-weight: 600; color: var(--ink); }
+  .ix-bars { display: flex; flex-direction: column; gap: 9px; }
+  .ix-bar { display: grid; grid-template-columns: 78px 1fr 92px; align-items: center; gap: 18px; }
+  .ix-tag { font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--faint); }
+  .ix-tag.avg { color: #3b82f6; }
+  .ix-tag.shane { color: var(--accent); }
+  .ix-track { height: 25px; background: rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+  .ix-fill { height: 100%; transition: width .4s cubic-bezier(.2,.7,.2,1); }
+  .ix-fill.avg { background: #3b82f6; }
+  .ix-fill.shane { background: var(--accent); }
+  .ix-pct { font-size: 26px; font-weight: 800; text-align: right; }
+  .ix-pct.avg { color: #3b82f6; }
+  .ix-pct.shane { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -1066,7 +1101,7 @@
       <div class="cover-mid">
         <p class="kicker anim d1">A 15-year research project by Morgan Blair</p>
         <h1 class="anim d2">It could have happened to <span class="red">any of us.</span></h1>
-        <p class="deck-sub anim d3">We all carry the risk factors. This is the story of one particularly egregious case, and why the danger, at last, is passing.</p>
+        <p class="deck-sub anim d3">We all carry the risk factors for being a furry, this room in particular. This is the story of one particularly egregious case, and why the danger, at last, is passing.</p>
       </div>
       <div class="speaker anim d4">
         <span class="name">Morgan Blair</span>
@@ -1110,28 +1145,28 @@
         <div class="nodes">
           <div class="node">
             <div class="n">01</div>
-            <h3>The Collection</h3>
-            <p>Owns figurines. Insists it is "about the artistry."</p>
+            <h3>Gamer</h3>
+            <p>Logs more hours in a headset than in daylight.</p>
           </div>
           <div class="node">
             <div class="n">02</div>
-            <h3>The Long Watch</h3>
-            <p>Has wept openly during a 1,000-episode anime.</p>
+            <h3>Doesn't Go Outside</h3>
+            <p>Considers the front porch a vacation.</p>
           </div>
           <div class="node">
             <div class="n">03</div>
-            <h3>The Ink</h3>
-            <p>Permanent cartoon tattoo. A tiger, perhaps. On the calf.</p>
+            <h3>Anime &amp; Figurines</h3>
+            <p>Owns the figurines. Insists it is about the artistry.</p>
           </div>
           <div class="node">
             <div class="n">04</div>
-            <h3>The Pull East</h3>
-            <p>Speaks of "moving to Japan" with unusual certainty.</p>
+            <h3>Would Fuck a Turtle</h3>
+            <p>Has strong, specific opinions about Bowsette.</p>
           </div>
           <div class="node">
             <div class="n">05</div>
-            <h3>The Second Skin</h3>
-            <p>Has worn a full-body suit. For any reason whatsoever.</p>
+            <h3>Hrs/Day on Discord</h3>
+            <p>Primary habitat. Measured in hours, not minutes.</p>
           </div>
         </div>
       </div>
@@ -1139,14 +1174,25 @@
     </div>
   </section>
 
-  <!-- ============ 4 · FIRST HINTS ============ -->
+  <!-- ============ 4 · THE DATA ============ -->
+  <section data-label="The Data">
+    <div class="frame" data-screen-label="The Data">
+      <p class="eyebrow anim">03 · The Data</p>
+      <h2 class="title anim d1" style="max-width: 40ch;">How common is each risk factor?</h2>
+      <div id="risk-ix-root" class="ix-mount"></div>
+      <p class="cite">Pick a population with the controls. Blue bars are that group's average; the red bars are Shane.</p>
+      <div class="folio"><b>03</b> / 15</div>
+    </div>
+  </section>
+
+  <!-- ============ 5 · FIRST HINTS ============ -->
   <section data-label="First Hints">
     <div class="frame" data-screen-label="First Hints">
-      <p class="eyebrow anim">03 · First Hints</p>
+      <p class="eyebrow anim">04 · First Hints</p>
       <div class="split img-right">
         <div class="col-text">
           <h2 class="title anim d1">The first hints I saw.</h2>
-          <p class="body anim d2" style="margin-top: 30px;">This is the photograph that started the study. Two subjects, one blanket, a shared carton of lo mein, slippers kicked off for warmth. Nothing alarming on its own. But it was the first time I looked and thought: <span class="hl">someone should be writing this down.</span> So I started.</p>
+          <p class="body anim d2" style="margin-top: 30px;">This is the photograph that started the study. A man wanted to climb into my wool. Nothing alarming on its own. But it was the first time I looked and thought: <span class="hl">someone should be writing this down.</span> So I started.</p>
           <p class="case-cap anim d3">Exhibit A · The first data point. Field photograph, the day the study began.</p>
           <div class="risk-chip anim d3">▲&nbsp;Risk factor <b>+6</b></div>
         </div>
@@ -1157,43 +1203,6 @@
           </div>
         </div>
       </div>
-      <div class="folio"><b>03</b> / 15</div>
-    </div>
-  </section>
-
-  <!-- ============ 5 · THE DATA ============ -->
-  <section data-label="The Data">
-    <div class="frame" data-screen-label="The Data">
-      <p class="eyebrow anim">04 · The Data</p>
-      <h2 class="title anim d1" style="max-width: 40ch;">How common is each risk factor?</h2>
-      <div class="chart">
-        <div class="bar-row anim d1">
-          <div class="lab">Owns figurines "for the art"</div>
-          <div class="bar-track"><div class="bar-fill" style="width: 71%;"></div></div>
-          <div class="pct">71%</div>
-        </div>
-        <div class="bar-row anim d2">
-          <div class="lab">Has cried at One Piece</div>
-          <div class="bar-track"><div class="bar-fill b2" style="width: 83%;"></div></div>
-          <div class="pct">83%</div>
-        </div>
-        <div class="bar-row anim d3">
-          <div class="lab">Has a permanent cartoon tattoo</div>
-          <div class="bar-track"><div class="bar-fill b3" style="width: 64%;"></div></div>
-          <div class="pct">64%</div>
-        </div>
-        <div class="bar-row anim d4">
-          <div class="lab">Has worn a full-body suit (any reason)</div>
-          <div class="bar-track"><div class="bar-fill b4" style="width: 38%;"></div></div>
-          <div class="pct">38%</div>
-        </div>
-        <div class="bar-row anim d4">
-          <div class="lab">Would move to Japan if invited</div>
-          <div class="bar-track"><div class="bar-fill b5" style="width: 92%;"></div></div>
-          <div class="pct">92%</div>
-        </div>
-      </div>
-      <p class="cite">Share of the general population exhibiting each risk factor. You, almost certainly, are somewhere on this chart.</p>
       <div class="folio"><b>04</b> / 15</div>
     </div>
   </section>
@@ -1256,7 +1265,7 @@
         </div>
         <div class="col-img anim d2">
           <div class="panel tall" style="display:flex; align-items:center; justify-content:center; background:#0a0a0c;">
-            <img src="assets/asset-006.png" alt="Case file: last known photo of the subject in an animal-print fur coat, surrounded by anime figurines" style="object-fit: contain;">
+            <img src="assets/asset-023.png" alt="Case file 47A-K9: the subject in an animal-print fur coat, surrounded by anime figurines" style="object-fit: contain;">
           </div>
         </div>
       </div>
@@ -1340,8 +1349,8 @@
         <div class="finding"><span class="k">Origin</span><span class="v">Hailey, Idaho · 1993</span></div>
         <div class="finding"><span class="k">Risk factors present</span><span class="v">All five. Plus several new ones.</span></div>
         <div class="finding"><span class="k">Status</span><span class="v">Married · risk declining</span></div>
-        <div class="finding"><span class="k">Peak risk index</span><span class="v">98.4% · eve of wedding</span></div>
-        <div class="finding"><span class="k">Current trajectory</span><span class="v red">Past peak, and falling</span></div>
+        <div class="finding"><span class="k">Peak risk index</span><span class="v red">+98.4 · eve of wedding</span></div>
+        <div class="finding"><span class="k">Current trajectory</span><span class="v good">Reducing by 12 points on average annually.</span></div>
       </div>
       <p class="conclude anim d3">The subject is not an outlier. <b>He is the egregious far end of a spectrum we all sit on.</b> The reassuring part: for the first time on record, the numbers are coming down.</p>
       <div class="folio"><b>10</b> / 15</div>
@@ -1368,15 +1377,34 @@
             <text class="life-cap" x="74" y="323" text-anchor="end">25%</text>
             <text class="life-cap" x="74" y="416" text-anchor="end">0%</text>
             <text id="lifePrLabel" class="life-prlab" x="110" y="22">POINT OF NO RETURN</text>
-            <path id="lifeArea" class="life-area" d="M110,410 L110,399 L220,342 L330,258 L440,212 L550,315 L660,190 L770,144 L880,106 L990,68 L1100,36 L1150,83 L1150,410 Z"></path>
-            <polyline id="lifeLine" class="lifeLine" points="110,399 220,342 330,258 440,212 550,315 660,190 770,144 880,106 990,68 1100,36 1150,83"></polyline>
-            <circle class="life-dot ghost" cx="440" cy="212" r="8"></circle>
-            <circle class="life-dot ghost" cx="550" cy="315" r="8"></circle>
-            <circle id="lifePeakDot" class="life-dot" cx="1100" cy="36" r="11"></circle>
-            <circle id="lifeNowDot" class="life-dot" cx="1150" cy="83" r="11"></circle>
+            <!-- area "glass": red where risk rises, green where it falls -->
+            <path id="lifeAreaUp1" class="life-area" d="M110,410 L220,364 L330,287 L330,410 Z"></path>
+            <path id="lifeAreaDown1" class="life-area down" d="M330,410 L330,287 L440,306 L550,323 L550,410 Z"></path>
+            <path id="lifeAreaUp2" class="life-area" d="M550,410 L550,323 L660,302 L770,281 L880,254 L990,171 L1100,36 L1100,410 Z"></path>
+            <path id="lifeAreaDown2" class="life-area down" d="M1100,410 L1100,36 L1150,83 L1150,410 Z"></path>
+            <!-- line segments -->
+            <polyline id="lifeLineUp1" class="lifeLine" points="110,410 220,364 330,287"></polyline>
+            <polyline id="lifeLineDown1" class="lifeLine down" points="330,287 440,306 550,323"></polyline>
+            <polyline id="lifeLineUp2" class="lifeLine" points="550,323 660,302 770,281 880,254 990,171 1100,36"></polyline>
+            <polyline id="lifeLineDown2" class="lifeLine down" points="1100,36 1150,83"></polyline>
+            <circle class="life-dot" cx="110" cy="410" r="7"></circle>
+            <circle class="life-dot" cx="220" cy="364" r="7"></circle>
+            <circle class="life-dot down" cx="330" cy="287" r="7"></circle>
+            <text class="life-val" x="330" y="232" text-anchor="middle" style="font-size: 21px;">JOINED A FRATERNITY</text>
+            <text class="life-val muted" x="330" y="258" text-anchor="middle" style="font-size: 21px; font-style: italic; font-family: 'Source Serif 4', Georgia, serif;">→ very cool</text>
+            <circle class="life-dot down" cx="440" cy="306" r="7"></circle>
+            <circle class="life-dot" cx="550" cy="323" r="7"></circle>
+            <circle class="life-dot" cx="660" cy="302" r="7"></circle>
+            <circle class="life-dot" cx="770" cy="281" r="7"></circle>
+            <text class="life-val" x="770" y="234" text-anchor="middle" style="font-size: 21px;">MET CORI</text>
+            <circle class="life-dot" cx="880" cy="254" r="7"></circle>
+            <circle class="life-dot" cx="990" cy="171" r="7"></circle>
+            <circle id="lifePeakDot" class="life-dot down" cx="1100" cy="36" r="11"></circle>
+            <circle id="lifeNowDot" class="life-dot down" cx="1150" cy="83" r="11"></circle>
             <text id="lifePeakLab" class="life-val" x="1107" y="20" text-anchor="end">98.4% · WEDDING</text>
             <text id="lifeNowLab" class="life-val" x="1150" y="121" text-anchor="end">86.1% · TODAY</text>
             <text class="life-cap" x="110" y="440" text-anchor="middle">0</text>
+            <text class="life-cap" x="167" y="436" text-anchor="middle" style="letter-spacing: 0.35em;">. . .</text>
             <text class="life-cap" x="220" y="440" text-anchor="middle">16</text>
             <text class="life-cap" x="330" y="440" text-anchor="middle">18</text>
             <text class="life-cap" x="440" y="440" text-anchor="middle">20</text>
@@ -1484,13 +1512,17 @@
     const today = Number(t.today);
     const peak = Number(t.peak);
     const lifeY = (r) => 410 - (r / 100) * 380;
-    const base = [[110,399],[220,342],[330,258],[440,212],[550,315],[660,190],[770,144],[880,106],[990,68]];
+    const base = [[110,410],[220,364],[330,287],[440,306],[550,323],[660,302],[770,281],[880,254],[990,171]];
     const pk = [1100, lifeY(peak)];
     const nw = [1150, lifeY(today)];
-    const all = base.concat([pk, nw]);
     const set = (id, fn) => { const el = document.getElementById(id); if (el) fn(el); };
-    set('lifeLine', el => el.setAttribute('points', all.map(p => p.join(',')).join(' ')));
-    set('lifeArea', el => el.setAttribute('d', 'M110,410 L' + all.map(p => p.join(',')).join(' L') + ' L1150,410 Z'));
+    const pts = a => a.map(p => p.join(',')).join(' ');
+    // ages 22..32 rise (red); 32..today falls (green). Only these two touch the dynamic peak/today.
+    const up2 = base.slice(4).concat([pk]);
+    set('lifeLineUp2', el => el.setAttribute('points', pts(up2)));
+    set('lifeAreaUp2', el => el.setAttribute('d', 'M550,410 L' + up2.map(p => p.join(',')).join(' L') + ' L1100,410 Z'));
+    set('lifeLineDown2', el => el.setAttribute('points', pts([pk, nw])));
+    set('lifeAreaDown2', el => el.setAttribute('d', 'M1100,410 L' + pk.join(',') + ' L' + nw.join(',') + ' L1150,410 Z'));
     set('lifePeakDot', el => el.setAttribute('cy', pk[1]));
     set('lifeNowDot', el => el.setAttribute('cy', nw[1]));
     set('lifePeakLab', el => { el.textContent = peak.toFixed(1) + '% · WEDDING'; el.setAttribute('y', Math.max(20, pk[1] - 16)); });
@@ -1521,5 +1553,87 @@
   ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<App />);
 </script>
 
+
+<script type="text/babel">
+  function RiskExplorer() {
+    const { useState } = React;
+    const [sex, setSex] = useState('male');
+    const [age, setAge] = useState(22);
+    const [geo, setGeo] = useState('metro');
+
+    const FACTORS = [
+      { label: 'Gamer',                  base: 62, male: 14, slope: 0.9, geo: 4, shane: 99, mult: 0.5 },
+      { label: "Doesn't go outside",     base: 48, male: 6,  slope: 0.7, geo: 6, shane: 99, mult: 0.3 },
+      { label: 'Anime lover · figurines', base: 44, male: 12, slope: 0.8, geo: 8, shane: 99, mult: 1.0 },
+      { label: 'Would fuck a turtle',    base: 18, male: 9,  slope: 0.4, geo: 3, shane: 99, mult: 0.1 },
+      { label: 'Hrs/day on Discord',     base: 52, male: 10, slope: 1.1, geo: 5, shane: 99, mult: 0.3 },
+    ];
+    const avgOf = (f) => {
+      const v = (f.base + (sex === 'male' ? f.male : -f.male)
+              + (25 - age) * f.slope
+              + (geo === 'metro' ? f.geo : -f.geo)) * f.mult;
+      return Math.max(2, Math.min(90, Math.round(v)));
+    };
+    const stop = (e) => e.stopPropagation();
+
+    return (
+      <div className="ix">
+        <div className="ix-controls" onPointerDown={stop} onClick={stop}>
+          <div className="ix-ctrl">
+            <span className="ix-cap">Sex</span>
+            <div className="ix-seg">
+              <button className={sex === 'male' ? 'on' : ''} onClick={() => setSex('male')}>Male</button>
+              <button className={sex === 'female' ? 'on' : ''} onClick={() => setSex('female')}>Female</button>
+            </div>
+          </div>
+          <div className="ix-ctrl ix-age">
+            <span className="ix-cap">Age</span>
+            <input type="range" min="13" max="60" value={age}
+                   onKeyDown={stop}
+                   onChange={(e) => setAge(Number(e.target.value))} />
+            <span className="val">{age}</span>
+          </div>
+          <div className="ix-ctrl">
+            <span className="ix-cap">Area</span>
+            <div className="ix-seg">
+              <button className={geo === 'metro' ? 'on' : ''} onClick={() => setGeo('metro')}>Metropolitan</button>
+              <button className={geo === 'rural' ? 'on' : ''} onClick={() => setGeo('rural')}>Rural</button>
+            </div>
+          </div>
+        </div>
+        <div className="ix-legend">
+          <span><i style={{ background: '#3b82f6' }}></i> Population · your selection</span>
+          <span><i style={{ background: 'var(--accent)' }}></i> Shane</span>
+        </div>
+        <div className="ix-chart">
+          {FACTORS.map((f) => {
+            const a = avgOf(f);
+            return (
+              <div className="ix-group" key={f.label}>
+                <div className="ix-name">{f.label}</div>
+                <div className="ix-bars">
+                  <div className="ix-bar">
+                    <span className="ix-tag avg">Avg</span>
+                    <div className="ix-track"><div className="ix-fill avg" style={{ width: a + '%' }}></div></div>
+                    <span className="ix-pct avg">{a}%</span>
+                  </div>
+                  <div className="ix-bar">
+                    <span className="ix-tag shane">Shane</span>
+                    <div className="ix-track"><div className="ix-fill shane" style={{ width: f.shane + '%' }}></div></div>
+                    <span className="ix-pct shane">{f.shane}%</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+  (function () {
+    const el = document.getElementById('risk-ix-root');
+    if (el && window.ReactDOM && ReactDOM.createRoot) ReactDOM.createRoot(el).render(<RiskExplorer />);
+  })();
+</script>
 
 </body></html>
