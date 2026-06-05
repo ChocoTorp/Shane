@@ -2379,9 +2379,8 @@
     const [dragging2, setDragging2] = useState(false);
     const cardOffsetRef = useRef({ x: 0, y: 0 });
     useEffect(() => { cardOffsetRef.current = cardOffset; }, [cardOffset]);
-    // Reset card offset and fetch preview whenever a new target is clicked
+    // Fetch preview whenever a new furry target is clicked (keep card position)
     useEffect(() => {
-      setCardOffset({ x: 0, y: 0 });
       if (!clicked || clicked.kind !== 'furry' || clicked.imgUrl !== undefined) return;
       let cancelled = false;
       const target = 'https://fxfurtrack.com/p/' + clicked.id;
