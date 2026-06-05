@@ -518,23 +518,65 @@
   #stage .pm-caveat,
   #stage .pm-figure,
   #stage .pm-cities { display: none !important; }
-  /* Float the kept controls as overlays. */
+  /* .pm-left is just a host now — its children are placed individually below. */
   #stage .pm-left {
-    position: absolute; left: 22px; bottom: 22px; top: auto;
-    max-width: 360px; padding-top: 0; z-index: 5;
+    position: fixed; left: 22px; bottom: 150px; top: auto;
+    max-width: 280px; padding: 0; z-index: 60;
   }
-  /* Card never wider than the screen, and (on phones) it can scroll. */
-  .pm-popup { width: min(440px, 92vw); }
+
+  /* Risk tracker: full-width, minimal-height strip directly under the header. */
+  #stage .pm-legend {
+    position: fixed; top: 58px; left: 0; right: 0; width: 100%;
+    box-sizing: border-box; margin: 0; max-width: none;
+    flex-direction: row; align-items: center; gap: 20px;
+    padding: 5px 22px;
+    background: rgba(0, 0, 0, 0.8); border: 0; border-bottom: 1px solid var(--line);
+    z-index: 90; pointer-events: none;
+  }
+  #stage .pm-legend .lg-strip { flex: 0 1 300px; }
+  #stage .pm-legend .lg-row { margin-left: auto; }
+
+  /* Find Highest risk + Auto-rotate: identical UI, stacked bottom-left. */
+  #stage .pm-zoom,
+  #stage .pm-rotate-btn {
+    position: fixed; left: 22px; z-index: 60; margin: 0;
+    width: 264px; box-sizing: border-box;
+    display: inline-flex; align-items: center; justify-content: flex-start; gap: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--accent); color: var(--accent); border-radius: 0;
+    padding: 14px 20px; transform: none;
+    font-family: "Archivo", system-ui, sans-serif;
+    font-size: 19px; font-weight: 700; letter-spacing: 0.04em; text-transform: none;
+    cursor: pointer; transition: background 0.15s, color 0.15s; white-space: nowrap;
+  }
+  #stage .pm-zoom { bottom: 86px; }
+  #stage .pm-rotate-btn { bottom: 22px; }
+  #stage .pm-zoom .ic, #stage .pm-rotate-btn .ic { font-size: 18px; }
+  #stage .pm-zoom:hover, #stage .pm-rotate-btn:hover { background: var(--accent); color: var(--ink); }
+  #stage .pm-zoom.on { background: var(--accent); color: var(--ink); }
+  #stage .pm-rotate-btn.off { background: rgba(0, 0, 0, 0.8); border-color: var(--accent); color: var(--accent); }
+
+  /* Cards render dead-centre, above everything, and scroll if tall. */
+  .pm-popup {
+    width: min(440px, 92vw);
+    left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
+    max-height: 92vh; z-index: 500;
+  }
+  .pm-popup .body { min-height: 0; max-height: none !important; overflow-y: auto; }
 
   /* ---- W.H.I.S.K.R. wordmark (looks like the running software) ---- */
   .whiskr-logo {
-    position: fixed; top: 18px; left: 22px; z-index: 60;
+    position: fixed; top: 0; left: 0; right: 0; width: 100%; box-sizing: border-box;
+    height: 58px; display: flex; flex-direction: column; justify-content: center; gap: 1px;
+    padding: 0 22px;
+    background: rgba(0, 0, 0, 0.8); border-bottom: 1px solid var(--line);
+    z-index: 100;
     font-family: ui-monospace, "SF Mono", "Menlo", Consolas, monospace;
     user-select: none; pointer-events: none;
   }
   .whiskr-logo .wk-mark {
     display: flex; align-items: center; gap: 12px;
-    font-size: 30px; font-weight: 800; letter-spacing: 0.16em;
+    font-size: 24px; font-weight: 800; letter-spacing: 0.16em; line-height: 1;
     color: var(--ink); text-shadow: 0 0 22px rgba(229, 55, 43, 0.55);
   }
   .whiskr-logo .wk-mark .ax { color: var(--accent); }
@@ -544,8 +586,8 @@
   }
   .whiskr-logo .wk-cursor { color: var(--accent); animation: wk-blink 1.1s step-end infinite; }
   .whiskr-logo .wk-sub {
-    display: block; margin-top: 5px; margin-left: 23px;
-    font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted);
+    display: block; margin-top: 2px; margin-left: 22px;
+    font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted);
   }
   @keyframes wk-pulse {
     0%   { box-shadow: 0 0 0 0 rgba(229, 55, 43, 0.6); }
@@ -557,15 +599,15 @@
     .whiskr-logo .wk-dot, .whiskr-logo .wk-cursor { animation: none; }
   }
 
-  /* ---- music player (single fixed, draggable, autoplay) ---- */
+  /* ---- music player: vertical pill, bottom-right (volume up top, play at bottom) ---- */
   .deck-audio {
-    position: fixed; top: 22px; right: 22px; z-index: 60;
-    display: flex; align-items: center; gap: 14px;
-    padding: 10px 18px 10px 12px;
-    background: rgba(22, 22, 27, 0.74);
+    position: fixed; bottom: 22px; right: 22px; top: auto; left: auto; z-index: 80;
+    display: flex; flex-direction: column-reverse; align-items: center; gap: 14px;
+    padding: 16px 12px;
+    background: rgba(0, 0, 0, 0.8);
     border: 1px solid var(--line); border-radius: 999px;
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
     font-family: "Archivo", system-ui, sans-serif;
     user-select: none; cursor: grab; touch-action: none;
     animation: da-pop 360ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
@@ -587,12 +629,11 @@
   .deck-audio .da-toggle .da-pause { display: none; }
   .deck-audio.is-playing .da-toggle .da-play { display: none; }
   .deck-audio.is-playing .da-toggle .da-pause { display: block; }
-  .deck-audio .da-meta { display: flex; flex-direction: column; line-height: 1.05; margin-right: 2px; }
-  .deck-audio .da-track { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
-  .deck-audio .da-artist { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .deck-audio .da-meta { display: none; }
   .deck-audio .da-vol {
     -webkit-appearance: none; appearance: none;
-    width: 110px; height: 4px; border-radius: 999px;
+    writing-mode: vertical-lr; direction: rtl;
+    width: 6px; height: 120px; border-radius: 999px;
     background: var(--faint); cursor: pointer; outline: none;
   }
   .deck-audio .da-vol::-webkit-slider-thumb {
@@ -608,18 +649,18 @@
 
   /* ---- phone tuning ---- */
   @media (max-width: 640px) {
-    .deck-audio { top: 12px; right: 12px; gap: 10px; padding: 8px 12px 8px 8px; }
-    .deck-audio .da-meta { display: none; }
-    .deck-audio .da-vol { width: 70px; }
-    .whiskr-logo { top: 12px; left: 14px; }
-    .whiskr-logo .wk-mark { font-size: 20px; gap: 9px; }
+    .whiskr-logo { height: 50px; padding: 0 14px; }
+    .whiskr-logo .wk-mark { font-size: 17px; gap: 9px; }
     .whiskr-logo .wk-dot { width: 9px; height: 9px; }
-    .whiskr-logo .wk-sub { font-size: 8px; letter-spacing: 0.2em; margin-left: 18px; }
-    #stage .pm-left { left: 12px; bottom: 12px; max-width: 64vw; }
-    .pm-zoom { font-size: 16px; padding: 11px 16px; }
-    .pm-zoom .ic { font-size: 14px; }
-    .pm-legend { font-size: 10px; max-width: 64vw; }
-    .pm-popup .body { max-height: 60vh; overflow-y: auto; }
+    .whiskr-logo .wk-sub { font-size: 7px; letter-spacing: 0.16em; margin-left: 16px; }
+    #stage .pm-legend { top: 50px; gap: 10px; padding: 4px 12px; font-size: 10px; }
+    #stage .pm-legend .lg-title { display: none; }
+    #stage .pm-legend .lg-strip { flex: 0 1 150px; }
+    #stage .pm-zoom, #stage .pm-rotate-btn { left: 12px; width: 210px; font-size: 15px; padding: 11px 15px; }
+    #stage .pm-zoom { bottom: 66px; }
+    #stage .pm-rotate-btn { bottom: 12px; }
+    .deck-audio { bottom: 12px; right: 12px; padding: 13px 10px; gap: 12px; }
+    .deck-audio .da-vol { height: 96px; }
   }
 </style>
 </head>
@@ -1680,6 +1721,8 @@
           lbl.style.left = ((p.x * 0.5 + 0.5) * W) + 'px';
           lbl.style.top = ((-p.y * 0.5 + 0.5) * H) + 'px';
           lbl.style.opacity = facing > 0.1 ? '1' : '0';
+          // Nearer labels paint over farther ones (p.z: -1 near .. 1 far).
+          lbl.style.zIndex = Math.round(10 + (1 - p.z) * 20);
         }
         // Update each extra subject's label position
         Object.keys(extraLabelRefs).forEach((sid) => {
@@ -1691,6 +1734,7 @@
           el.style.left = ((p.x * 0.5 + 0.5) * W) + 'px';
           el.style.top = ((-p.y * 0.5 + 0.5) * H) + 'px';
           el.style.opacity = fac > 0.1 ? '1' : '0';
+          el.style.zIndex = Math.round(10 + (1 - p.z) * 20);
         });
         // connector line: clicked dot -> popup card
         const c = clickedRef.current;
@@ -1800,7 +1844,7 @@
             {clicked && (
               <div className={'pm-popup ' + clicked.kind + (dragging2 ? ' dragging' : '')}
                    ref={cardRef}
-                   style={{ transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)` }}
+                   style={{ transform: `translate(calc(-50% + ${cardOffset.x}px), calc(-50% + ${cardOffset.y}px))` }}
                    onPointerDown={onCardDown}>
                 <div className="topbar">
                   <span className="grip-l"><span className="dots">⋮⋮</span>{clicked.kind === 'furry' ? 'Furtrack' : 'Subject'}</span>
@@ -2192,7 +2236,8 @@
       dragging = true; box.classList.add('dragging');
       var r = box.getBoundingClientRect();
       bl = r.left; bt = r.top; sx = e.clientX; sy = e.clientY;
-      box.style.right = 'auto'; box.style.left = bl + 'px'; box.style.top = bt + 'px';
+      box.style.right = 'auto'; box.style.bottom = 'auto';
+      box.style.left = bl + 'px'; box.style.top = bt + 'px';
       try { box.setPointerCapture(e.pointerId); } catch (_) {}
       e.preventDefault();
     });
