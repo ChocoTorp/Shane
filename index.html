@@ -1688,6 +1688,16 @@
   }
   .pm-hover.shane { border-color: var(--accent); }
   .pm-hover .sub { display: block; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 2px; }
+
+  /* Draggable QR on slide 2 -> the audience scans it to open Whiskr (/whiskr). */
+  .slide-qr {
+    position: absolute; top: 250px; right: 96px; z-index: 8;
+    width: 248px; padding: 16px; background: #fff;
+    border: 3px solid var(--accent); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+    cursor: grab; touch-action: none;
+  }
+  .slide-qr.dragging { cursor: grabbing; }
+  .slide-qr img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
 </style>
 </head>
 <body>
@@ -1730,6 +1740,7 @@
     <div class="frame" data-screen-label="The Premise">
       <p class="eyebrow anim">01 · The Premise</p>
       <div id="premise-root" class="premise-mount"></div>
+      <div class="slide-qr" id="whiskrQR" title="Scan to open Whiskr"><img id="whiskrQRImg" alt="Scan to open Whiskr on your phone"></div>
       <p class="cite">No census counts furries; every figure is a self-report estimate (FurScience / IARP). Seattle and the Pacific Northwest skew high: a historic hub (RainFurrest, Furlandia).</p>
       <div class="folio"><b>01</b> / 15</div>
     </div>
@@ -4425,6 +4436,13 @@
     audio.addEventListener('ended', syncPlay);
     audio.addEventListener('volumechange', syncVol);
 
+    // Mute when the tab loses focus; resume if it was playing when you return.
+    var wasPlaying = false;
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { wasPlaying = !audio.paused; audio.pause(); }
+      else if (wasPlaying) { audio.play().catch(function () {}); }
+    });
+
     // Auto-play: try immediately; if the browser blocks unmuted autoplay, start
     // on the first user interaction anywhere (clicking through the deck counts).
     function tryAutoplay() {
@@ -4483,6 +4501,54 @@
     if (window.customElements && customElements.whenDefined) {
       customElements.whenDefined('deck-stage').then(function () { inject(); hideInRail(); });
     }
+  })();
+</script>
+
+<script>
+  // Slide-2 QR -> the deployed /whiskr page. Encodes the live origin so it works
+  // wherever this deck is hosted. Draggable within the slide (design-space aware).
+  (function () {
+    function init() {
+      var qr = document.getElementById('whiskrQR');
+      if (!qr) return false;
+      var img = document.getElementById('whiskrQRImg');
+      var url = location.origin + '/whiskr';
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=12&data=' + encodeURIComponent(url);
+
+      // Convert screen-space drag to the slide's 1920-wide design space.
+      var scaleOf = function () {
+        var sec = qr.closest('section');
+        if (!sec) return 1;
+        var w = sec.offsetWidth || 1920;
+        return (sec.getBoundingClientRect().width || w) / w;
+      };
+      var dragging = false, sx = 0, sy = 0, bl = 0, bt = 0, scale = 1;
+      qr.addEventListener('pointerdown', function (e) {
+        dragging = true; qr.classList.add('dragging');
+        scale = scaleOf();
+        bl = qr.offsetLeft; bt = qr.offsetTop;
+        sx = e.clientX; sy = e.clientY;
+        qr.style.right = 'auto'; qr.style.left = bl + 'px'; qr.style.top = bt + 'px';
+        try { qr.setPointerCapture(e.pointerId); } catch (_) {}
+        e.preventDefault(); e.stopPropagation();
+      });
+      qr.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        qr.style.left = (bl + (e.clientX - sx) / scale) + 'px';
+        qr.style.top = (bt + (e.clientY - sy) / scale) + 'px';
+      });
+      function end(e) {
+        if (!dragging) return;
+        dragging = false; qr.classList.remove('dragging');
+        try { qr.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+      qr.addEventListener('pointerup', end);
+      qr.addEventListener('pointercancel', end);
+      qr.addEventListener('click', function (e) { e.stopPropagation(); });
+      return true;
+    }
+    var n = 0;
+    var timer = setInterval(function () { if (init() || ++n > 90) clearInterval(timer); }, 100);
   })();
 </script>
 
