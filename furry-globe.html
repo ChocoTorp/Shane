@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Furry Tracker · Live Globe</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<style>
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-013.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-014.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-015.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-013.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-014.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-015.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-013.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-014.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-015.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-013.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-014.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-015.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-013.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-014.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-015.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-013.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-014.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("assets/asset-015.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/asset-016.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/asset-017.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/asset-018.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/asset-019.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/asset-020.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/asset-021.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/asset-016.woff2") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/asset-017.woff2") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/asset-018.woff2") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/asset-019.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/asset-020.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("assets/asset-021.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+  :root {
+    /* Type scale (1920×1080) */
+    --type-mega: 150px;
+    --type-display: 96px;
+    --type-title: 70px;
+    --type-subtitle: 40px;
+    --type-body: 31px;
+    --type-small: 25px;
+    --type-eyebrow: 24px;
+    --type-cite: 24px;
+
+    /* Spacing */
+    --pad-x: 120px;
+    --pad-y: 92px;
+    --gap-title: 34px;
+
+    /* Color */
+    --bg: #0c0c0e;
+    --panel: #16161b;
+    --ink: #f2f0ec;
+    --muted: #8c8c93;
+    --faint: #5a5a61;
+    --line: rgba(255, 255, 255, 0.13);
+    --accent: #e5372b;
+    --accent-soft: rgba(229, 55, 43, 0.16);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    font-family: "Archivo", system-ui, sans-serif;
+  }
+
+  deck-stage:not(:defined) { visibility: hidden; }
+
+  section {
+    background: var(--bg);
+    color: var(--ink);
+    overflow: hidden;
+  }
+  /* ===== premise: population estimate + 3D globe ===== */
+  section[data-label="The Premise"] { overflow: visible; }
+  section[data-label="The Premise"] .eyebrow { position: relative; z-index: 2; }
+  section[data-label="The Premise"] .cite,
+  section[data-label="The Premise"] .folio { z-index: 2; }
+  .premise-mount { flex: 1; display: flex; margin-top: 6px; }
+  .pm { flex: 1; position: relative; display: block; }
+  .pm-left { position: relative; z-index: 2; max-width: 600px; padding-top: 36px; }
+  .pm-title { font-size: 58px; font-weight: 800; line-height: 1.02; letter-spacing: -0.022em; margin: 0; max-width: 15ch; }
+  .pm-caveat { font-size: 25px; color: var(--muted); line-height: 1.4; margin: 22px 0 0; max-width: 38ch; }
+  .pm-controls { display: flex; align-items: center; gap: 40px; margin: 32px 0 30px; flex-wrap: wrap; }
+  .pm-rate { display: flex; align-items: center; gap: 16px; }
+  .pm-rate input[type="range"] { width: 220px; accent-color: var(--accent); cursor: pointer; }
+  .pm-rate .rv { font-size: 26px; font-weight: 800; color: var(--ink); min-width: 4ch; }
+  .pm-figure { display: flex; align-items: center; gap: 26px; }
+  .pm-big { font-size: 120px; font-weight: 900; line-height: 0.86; letter-spacing: -0.04em; color: var(--accent); }
+  .pm-big-cap { font-size: 24px; color: var(--muted); max-width: 16ch; line-height: 1.3; }
+  .pm-sub { display: flex; gap: 50px; margin-top: 30px; }
+  .pm-stat .n { font-size: 46px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .pm-stat .l { font-size: 21px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-top: 4px; }
+  .pm-globe-wrap { position: absolute; z-index: 1; top: 50%; left: 64%; transform: translate(-50%, -50%); width: 1800px; height: 1800px; pointer-events: none; }
+  .pm-globe { position: absolute; inset: 0; pointer-events: auto; }
+  .pm-canvas { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+  .pm-canvas canvas { display: block; touch-action: none; }
+  .pm-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -100%); pointer-events: none; opacity: 0; transition: opacity .25s; will-change: left, top; }
+  .pm-label .box { background: var(--accent); color: var(--ink); padding: 8px 14px; font-size: 21px; font-weight: 800; white-space: nowrap; line-height: 1.15; display: flex; flex-direction: column; letter-spacing: 0.02em; }
+  .pm-label .box span { font-weight: 600; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.9; margin-top: 2px; }
+  .pm-label .stem { width: 2px; height: 22px; background: var(--accent); margin: 0 auto; }
+  .pm-label .dot { width: 13px; height: 13px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 6px rgba(229,55,43,0.30); margin: -6px auto 0; }
+  .pm-label.sub .box { background: #ff8a3b; color: #1b0f06; padding: 6px 11px; font-size: 15px; }
+  .pm-label.sub .box span { font-size: 11px; }
+  .pm-label.sub .stem { height: 16px; background: #ff8a3b; }
+  .pm-label.sub .dot { width: 10px; height: 10px; box-shadow: 0 0 0 4px rgba(255,138,59,0.35); margin: -5px auto 0; }
+  .pm-cities { display: flex; flex-direction: column; margin-top: 28px; border-top: 1px solid var(--line); max-width: 32ch; }
+  .pm-city { display: grid; grid-template-columns: 44px 1fr auto; align-items: baseline; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .pm-city .rk { color: var(--accent); font-weight: 800; font-size: 23px; }
+  .pm-city .cn { font-size: 27px; font-weight: 600; color: var(--ink); }
+  .pm-city .cv { font-size: 22px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .pm-zoom { margin-top: 28px; display: inline-flex; align-items: center; gap: 14px; background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 16px 26px; font-family: inherit; font-size: 25px; font-weight: 700; letter-spacing: 0.03em; cursor: pointer; transition: background .15s, color .15s; }
+  .pm-zoom .ic { font-size: 20px; }
+  .pm-zoom.on { background: var(--accent); color: var(--ink); }
+  .pm-rotate-btn {
+    position: absolute; bottom: 28%; left: 50%; transform: translateX(-50%); z-index: 5; pointer-events: auto;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(15,15,18,0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(229,55,43,0.55); color: var(--accent);
+    padding: 10px 16px; font-family: inherit; font-size: 16px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer; transition: background .15s, border-color .15s, color .15s;
+  }
+  .pm-rotate-btn:hover { background: rgba(229,55,43,0.18); }
+  .pm-rotate-btn.off { border-color: rgba(255,255,255,0.30); color: var(--muted); }
+  .pm-rotate-btn .ic { font-size: 14px; }
+  .pm-legend {
+    margin-top: 22px;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 10px 14px;
+    background: rgba(15,15,18,0.55);
+    border: 1px solid rgba(255,255,255,0.14);
+    font-family: inherit; color: var(--ink); max-width: 36ch;
+  }
+  .pm-legend .lg-title { font-size: 10px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .pm-legend .lg-row { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; color: var(--ink); letter-spacing: 0.04em; }
+  .pm-legend .lg-strip { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.04em; }
+  .pm-legend .lg-bar { display: flex; flex: 1; height: 10px; border: 1px solid rgba(255,255,255,0.20); }
+  .pm-legend .lg-bar > span { flex: 1; display: block; }
+  .pm-legend .lg-dot {
+    width: 12px; height: 12px; border-radius: 50%; flex: none;
+    background: #ff4133; box-shadow: 0 0 8px 2px rgba(255,65,51,0.65);
+  }
+  .pm-popup {
+    position: absolute; top: 18%; right: 12%; z-index: 6; pointer-events: auto;
+    display: flex; flex-direction: column;
+    width: 440px;
+    background: rgba(15,15,18,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--accent);
+    box-shadow: 0 18px 38px rgba(0,0,0,0.55);
+    user-select: none;
+    will-change: transform;
+  }
+  .pm-popup.shane, .pm-popup.subject { border-color: var(--accent); }
+  .pm-popup .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--accent); color: #0a0a0c;
+    padding: 10px 14px;
+    cursor: grab;
+    touch-action: none;
+    border-bottom: 1px solid rgba(0,0,0,0.18);
+  }
+  .pm-popup.shane .topbar { background: var(--accent); }
+  .pm-popup.dragging .topbar { cursor: grabbing; }
+  .pm-popup .topbar .grip-l { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+  .pm-popup .topbar .grip-l .dots { font-size: 18px; opacity: 0.7; line-height: 1; }
+  .pm-popup .topbar .x { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; font-size: 18px; line-height: 1; color: #0a0a0c; cursor: pointer; border: 1px solid rgba(0,0,0,0.35); background: transparent; }
+  .pm-popup .topbar .x:hover { background: rgba(0,0,0,0.18); }
+  .pm-popup .body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .pm-popup .lbl { font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .pm-popup .val { font-size: 28px; font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.15; margin-top: 4px; word-break: break-word; }
+  .pm-popup .meta { font-size: 15px; color: var(--muted); margin-top: 10px; line-height: 1.4; max-height: 5.6em; overflow: hidden; }
+  .pm-popup .cta { display: inline-block; font-size: 17px; color: var(--accent); margin-top: 16px; font-weight: 800; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; }
+  .pm-popup .cta:hover { text-decoration: underline; }
+  .pm-popup.shane .cta { color: var(--accent); }
+  .pm-popup .img {
+    width: 100%; aspect-ratio: 4 / 3; margin-bottom: 14px;
+    background: #0a0a0c; border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .pm-popup .img img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .pm-popup .img .ph { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .pm-popup.shane .body, .pm-popup.subject .body { max-height: 72vh; overflow-y: auto; }
+  .pm-popup .dossier-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px;
+    margin-top: 14px; padding: 12px 14px;
+    border: 1px solid var(--line); background: rgba(229,55,43,0.06);
+  }
+  .pm-popup .dossier-grid .dk { display: block; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .pm-popup .dossier-grid .dv { display: block; margin-top: 2px; font-size: 16px; color: var(--ink); font-weight: 700; }
+  .pm-popup .ds-section { margin-top: 14px; }
+  .pm-popup .ds-title { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); font-weight: 800; margin-bottom: 6px; }
+  .pm-popup .ds-list { list-style: none; margin: 0; padding: 0; }
+  .pm-popup .ds-list li { font-size: 14px; line-height: 1.4; color: var(--ink); padding: 6px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; }
+  .pm-popup .ds-list li:last-child { border-bottom: 0; }
+  .pm-popup .ds-list b { font-weight: 800; }
+  .pm-popup .ds-list b.red { color: var(--accent); }
+  .pm-popup .ds-list b.good { color: #3fb56a; }
+  .pm-popup .ds-links { display: flex; flex-direction: column; }
+  .pm-popup .ds-links a { font-size: 14px; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: color .12s; }
+  .pm-popup .ds-links a:last-child { border-bottom: 0; }
+  .pm-popup .ds-links a:hover { color: var(--accent); }
+  .pm-popup .ds-links a .src { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .pm-popup .ds-gauge { display: flex; flex-direction: column; align-items: center; padding: 6px 0 2px; }
+  .pm-popup .gauge-svg { width: 100%; max-width: 300px; height: auto; }
+  .pm-popup .gauge-svg .needle { transform-origin: 120px 130px; animation: gaugeHover 3.6s ease-in-out infinite; }
+  @keyframes gaugeHover {
+    0%, 100% { transform: rotate(-0.5deg); }
+    50%      { transform: rotate(0.5deg); }
+  }
+  .pm-line { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+  .pm-line line { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0.85; }
+  .pm-line line.shane { stroke: var(--accent); }
+  .pm-hover {
+    position: absolute; z-index: 7; pointer-events: none;
+    transform: translate(14px, -50%);
+    background: rgba(15,15,18,0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--accent); color: var(--ink);
+    padding: 6px 12px; font-family: inherit; font-size: 16px; font-weight: 800; letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .pm-hover.shane { border-color: var(--accent); }
+  .pm-hover .sub { display: block; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 2px; }
+
+  /* ============ standalone furry-globe page ============ */
+  html, body { width: 100%; height: 100%; margin: 0; background: #000; overflow: hidden; }
+  body { position: relative; }
+
+  /* 1920x1080 design stage, scaled to fit the viewport (same idea as the deck). */
+  #stage {
+    position: fixed; left: 50%; top: 50%;
+    width: 1920px; height: 1080px;
+    transform: translate(-50%, -50%) scale(1);
+    transform-origin: center center;
+    overflow: visible;
+    padding: 92px 120px;
+    display: flex; flex-direction: column;
+    background: var(--bg);
+  }
+
+  /* Keep the globe, dots, cards, auto-rotate, highest-risk + legend.
+     Drop only the slide prose (title / caveat / population figure / cities). */
+  #stage .pm-title,
+  #stage .pm-caveat,
+  #stage .pm-figure,
+  #stage .pm-cities { display: none !important; }
+  #stage .pm-left { padding-top: 0; }
+
+  /* ---- music player (single fixed, draggable, autoplay) ---- */
+  .deck-audio {
+    position: fixed; top: 22px; right: 22px; z-index: 60;
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 18px 10px 12px;
+    background: rgba(22, 22, 27, 0.74);
+    border: 1px solid var(--line); border-radius: 999px;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    font-family: "Archivo", system-ui, sans-serif;
+    user-select: none; cursor: grab; touch-action: none;
+    animation: da-pop 360ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  }
+  .deck-audio.dragging { cursor: grabbing; }
+  @keyframes da-pop {
+    from { opacity: 0; transform: scale(0.7) translateY(-8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .deck-audio .da-toggle {
+    flex: none; width: 44px; height: 44px; border-radius: 50%; border: none;
+    cursor: pointer; background: var(--accent); color: var(--ink);
+    display: flex; align-items: center; justify-content: center; padding: 0;
+    transition: transform 140ms ease;
+  }
+  .deck-audio .da-toggle:hover { transform: scale(1.06); }
+  .deck-audio .da-toggle:active { transform: scale(0.96); }
+  .deck-audio .da-toggle svg { width: 18px; height: 18px; display: block; }
+  .deck-audio .da-toggle .da-pause { display: none; }
+  .deck-audio.is-playing .da-toggle .da-play { display: none; }
+  .deck-audio.is-playing .da-toggle .da-pause { display: block; }
+  .deck-audio .da-meta { display: flex; flex-direction: column; line-height: 1.05; margin-right: 2px; }
+  .deck-audio .da-track { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .deck-audio .da-artist { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .deck-audio .da-vol {
+    -webkit-appearance: none; appearance: none;
+    width: 110px; height: 4px; border-radius: 999px;
+    background: var(--faint); cursor: pointer; outline: none;
+  }
+  .deck-audio .da-vol::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 15px; height: 15px; border-radius: 50%;
+    background: var(--ink); border: 3px solid var(--accent);
+    transition: transform 120ms ease;
+  }
+  .deck-audio .da-vol::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .deck-audio .da-vol::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--ink); border: 3px solid var(--accent); }
+  .deck-audio .da-vol::-moz-range-track { height: 4px; border-radius: 999px; background: var(--faint); }
+  @media (prefers-reduced-motion: reduce) { .deck-audio { animation: none; } }
+
+  /* ---- QR code (for showing on a big screen so the room can scan in) ---- */
+  .qr-card {
+    position: fixed; left: 22px; bottom: 22px; z-index: 60;
+    display: flex; flex-direction: column; align-items: center; gap: 9px;
+    padding: 16px 16px 13px;
+    background: rgba(15, 15, 18, 0.92); border: 1px solid var(--accent);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    font-family: "Archivo", system-ui, sans-serif;
+  }
+  .qr-card img { width: 158px; height: 158px; display: block; background: #fff; border-radius: 4px; }
+  .qr-card .qr-cap { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); text-align: center; line-height: 1.35; }
+  .qr-card .qr-x { position: absolute; top: 5px; right: 7px; width: 22px; height: 22px; border: none; background: transparent; color: var(--muted); font-size: 17px; line-height: 1; cursor: pointer; }
+  .qr-card .qr-x:hover { color: var(--ink); }
+  .qr-card.hidden { display: none; }
+
+  /* Phones are scanning in, not displaying — drop the QR there and slim the player. */
+  @media (max-width: 640px) {
+    .qr-card { display: none; }
+    .deck-audio { top: 14px; right: 14px; gap: 10px; padding: 8px 12px 8px 8px; }
+    .deck-audio .da-meta { display: none; }
+    .deck-audio .da-vol { width: 78px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage"><div id="premise-root" class="premise-mount"></div></div>
+
+<audio id="deckAudio" src="assets/flooded-city.mp3" loop preload="auto"></audio>
+
+<div id="qrCard" class="qr-card">
+  <button class="qr-x" type="button" aria-label="Hide QR code">&times;</button>
+  <img id="qrImg" alt="QR code to open this page">
+  <div class="qr-cap">Scan to open<br>on your phone</div>
+</div>
+
+<script src="assets/asset-010.js"></script>
+<script src="assets/asset-011.js"></script>
+<script src="assets/asset-012.js"></script>
+<script src="assets/three.min.js"></script>
+<script src="https://unpkg.com/topojson-client@3"></script>
+
+<script type="text/babel">
+  function PremisePanel() {
+    const { useState, useRef, useEffect } = React;
+    // Subscribe to global risk tick so the Shane gauge updates every 3s.
+    const [, _bumpRisk] = useState(0);
+    useEffect(() => {
+      const h = () => _bumpRisk((x) => x + 1);
+      window.addEventListener('risk-tick', h);
+      return () => window.removeEventListener('risk-tick', h);
+    }, []);
+    const [zoom, setZoom] = useState(false);
+    const [autoRotate, setAutoRotate] = useState(true);
+    const [hoverInfo, setHoverInfo] = useState(null);
+    const [clicked, setClicked] = useState(null);
+    const [cardOffset, setCardOffset] = useState({ x: 0, y: 0 });
+    const [dragging2, setDragging2] = useState(false);
+    const cardOffsetRef = useRef({ x: 0, y: 0 });
+    useEffect(() => { cardOffsetRef.current = cardOffset; }, [cardOffset]);
+    // Fetch preview whenever a new furry target is clicked (keep card position)
+    useEffect(() => {
+      if (!clicked || clicked.kind !== 'furry' || clicked.imgUrl !== undefined) return;
+      let cancelled = false;
+      const target = 'https://fxfurtrack.com/p/' + clicked.id;
+      const proxies = [
+        (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+        (u) => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
+        (u) => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
+        (u) => 'https://cors.eu.org/' + u,
+      ];
+      const parseAndApply = (html, winnerIdx) => {
+        const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
+        const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
+        const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
+        if (!img) throw new Error('no og:image');
+        if (winnerIdx != null) window.__furtrackProxyIdx = winnerIdx;
+        setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
+      };
+      const tryOne = (idx) =>
+        fetch(proxies[idx](target))
+          .then((r) => (r.ok ? r.text() : Promise.reject()))
+          .then((html) => ({ html, idx }));
+      // If we've already discovered a working proxy this session, use it directly.
+      const cached = window.__furtrackProxyIdx;
+      if (cached != null) {
+        tryOne(cached).then(({ html }) => { if (!cancelled) parseAndApply(html, cached); })
+          .catch(() => {
+            // cached proxy failed; invalidate and fall back to racing
+            window.__furtrackProxyIdx = null;
+            if (cancelled) return;
+            Promise.any(proxies.map((_, i) => tryOne(i)))
+              .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
+              .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
+          });
+      } else {
+        // First call: race all proxies in parallel, fastest wins.
+        Promise.any(proxies.map((_, i) => tryOne(i)))
+          .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
+          .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
+      }
+      return () => { cancelled = true; };
+    }, [clicked && clicked.id, clicked && clicked.kind]);
+    const onCardDown = (e) => {
+      if (e.target.closest('.x, .cta')) return;
+      if (!e.target.closest('.topbar')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const startX = e.clientX, startY = e.clientY;
+      const base = { x: cardOffsetRef.current.x, y: cardOffsetRef.current.y };
+      let moved = false;
+      const move = (ev) => {
+        if (!moved && Math.hypot(ev.clientX - startX, ev.clientY - startY) > 3) { moved = true; setDragging2(true); }
+        if (moved) setCardOffset({ x: base.x + ev.clientX - startX, y: base.y + ev.clientY - startY });
+      };
+      const up = () => {
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        if (moved) setDragging2(false);
+      };
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', up);
+    };
+    const mountRef = useRef(null);
+    const labelRef = useRef(null);
+    const wrapRef = useRef(null);
+    const cardRef = useRef(null);
+    const lineRef = useRef(null);
+    const zoomRef = useRef(false);
+    const autoRotateRef = useRef(true);
+    const clickedRef = useRef(null);
+    const klausLabelRef = useRef(null);
+    const shoneLabelRef = useRef(null);
+    const shaiLabelRef = useRef(null);
+    const anthonyLabelRef = useRef(null);
+    const rafaelLabelRef = useRef(null);
+    const setTargetDistRef = useRef(null);
+    const stop = (e) => e.stopPropagation();
+
+    // Three additional clickable case-file subjects placed around the globe.
+    // Each shares Shane's dossier shape; their live risk tickers come from
+    // window.RiskState[<riskKey>] and drift between 65.3 and 80.3 every 3s.
+    const SUBJECT_DATA = {
+      klaus: {
+        name: 'Lukas Hoffmann',
+        sub: 'Subject · 002 · Berlin',
+        topbar: 'Subject',
+        blurb: 'Sr. Solutions Architect · SAP · Berlin, DE. Eurofurence regular. Still ascending.',
+        riskKey: 'klaus',
+        riskBase: 78.6,
+        lat: 52.520, lon: 13.405,
+        labelName: 'LUKAS', labelCity: 'Berlin, DE',
+        facts: [
+          ['Age', '37'],
+          ['DOB', 'Mar 14, 1989'],
+          ['Origin', 'Hamburg, DE'],
+          ['Current city', 'Berlin · Friedrichshain'],
+          ['Status', 'Single · partnersuche'],
+          ['Employer', 'SAP · Sr. Solutions Architect'],
+          ['Vehicle', 'E-bike + S-Bahn'],
+          ['Tracking vector', 'Vax chip: BNT Mod. EU-21'],
+        ],
+        risk: [
+          ['Risk factors present', '4 of 5', null],
+          ['Peak risk index', '+91.2', 'red'],
+          ['Risk level', 'Wolfgang', 'red'],
+          ['Trajectory', '↑ 3 / yr', 'red'],
+          ['Eurofurence attendance', '15× confirmed', null],
+        ],
+        medical: [
+          ['Bratwurst dependence', 'chronic', null],
+          ['Club-Mate over-consumption', 'self-reported', null],
+          ['Sauna immersion', '4× weekly', null],
+          ['Hydration', 'mate only', null],
+          ['Vaccinated', '2x + 8 boosters', null],
+          ['Backenfreund', 'sehr offen', null],
+        ],
+        education: [['TU Berlin', 'M.Sc. Informatik']],
+        certs: [
+          ['SAP Certified App Associate', 'SAP · 2019', 'good'],
+          ['AWS Solutions Architect — Pro', 'AWS · 2022', 'good'],
+        ],
+        accounts: [
+          { label: 'Eurofurence registry', src: 'eurofurence.org ↗', url: 'https://www.eurofurence.org/' },
+          { label: 'LinkedIn search', src: 'linkedin.com ↗', url: 'https://www.linkedin.com/search/results/people/?keywords=lukas%20hoffmann' },
+          { label: 'Telegram · FurDeutschland', src: 't.me ↗', url: 'https://t.me/s/furdeutschland' },
+          { label: 'XING', src: 'xing.com ↗', url: 'https://www.xing.com/search/members?keywords=lukas+hoffmann' },
+        ],
+        verdict: [
+          ['Still climbing', 'confirmed', 'red'],
+          ['Numbers', 'rising', 'red'],
+        ],
+      },
+      shone: {
+        name: 'Haruki Tanaka (田中 春樹)',
+        sub: 'Subject · 003 · Tokyo',
+        topbar: 'Subject',
+        blurb: 'Localization Engineer · Square Enix · Shibuya, JP. Kemono-curious; trending down.',
+        riskKey: 'shone',
+        riskBase: 71.2,
+        lat: 35.6762, lon: 139.6503,
+        labelName: 'HARUKI', labelCity: 'Tokyo, JP',
+        facts: [
+          ['Age', '29'],
+          ['DOB', 'Sep 9, 1996'],
+          ['Origin', 'Sapporo, JP'],
+          ['Current city', 'Shibuya · Tokyo'],
+          ['Status', 'Married · 陸 (Riku)'],
+          ['Employer', 'Square Enix · Loc. Engineer'],
+          ['Vehicle', 'Shinkansen Green Pass'],
+          ['Tracking vector', 'Vax chip: Pf Mod. JP-22'],
+        ],
+        risk: [
+          ['Risk factors present', '5 of 5', null],
+          ['Peak risk index', '+88.4', 'red'],
+          ['Risk level', 'Kemono Knight', 'red'],
+          ['Trajectory', '↓ 4 / yr', 'good'],
+          ['Mascot-curiosity', 'elevated', null],
+        ],
+        medical: [
+          ['Onigiri-only diet', 'chronic', null],
+          ['Gacha-induced RSI', 'right thumb', null],
+          ['Sentō bathhouse regimen', '6× weekly', 'good'],
+          ['Hydration', 'iced barley tea', 'good'],
+          ['Vaccinated', '3x + 9 boosters', null],
+          ['Bussy', '全開 (zen-kai)', null],
+        ],
+        education: [['Hokkaido University', 'B.Eng. Software Systems']],
+        certs: [
+          ['AWS Cloud Practitioner', 'AWS · 2021', 'good'],
+          ['JLPT N1', 'Japan Foundation', 'good'],
+        ],
+        accounts: [
+          { label: 'X / Twitter', src: 'x.com ↗', url: 'https://x.com/search?q=%22%E3%82%B7%E3%82%A7%E3%83%BC%E3%83%B3%22+%E3%82%B1%E3%83%A2%E3%83%8E' },
+          { label: 'Pixiv', src: 'pixiv.net ↗', url: 'https://www.pixiv.net/en/tags/%E3%82%B1%E3%83%A2%E3%83%8E' },
+          { label: 'FurAffinity', src: 'furaffinity.net ↗', url: 'https://www.furaffinity.net/search/?q=kemono+japan' },
+          { label: 'Niconico', src: 'nicovideo.jp ↗', url: 'https://www.nicovideo.jp/search/%E3%82%B1%E3%83%A2%E3%83%8E' },
+        ],
+        verdict: [
+          ['Cooling slowly', 'confirmed', 'good'],
+          ['Mascot-shame replacing arousal', 'in progress', null],
+        ],
+      },
+      shai: {
+        name: 'Itai Mizrachi (איתי מזרחי)',
+        sub: 'Subject · 004 · Tel Aviv',
+        topbar: 'Subject',
+        blurb: 'Staff Engineer · Wix · Florentin, IL. Post-peak; numbers declining.',
+        riskKey: 'shai',
+        riskBase: 66.4,
+        lat: 32.0853, lon: 34.7818,
+        labelName: 'ITAI', labelCity: 'Tel Aviv, IL',
+        facts: [
+          ['Age', '41'],
+          ['DOB', 'Nov 22, 1984'],
+          ['Origin', 'Haifa, IL'],
+          ['Current city', 'Florentin · Tel Aviv'],
+          ['Status', 'Civil partnership · Yoav'],
+          ['Employer', 'Wix · Staff Engineer'],
+          ['Vehicle', 'Vespa GTS 300'],
+          ['Tracking vector', 'Vax chip: Pf Mod. IL-21'],
+        ],
+        risk: [
+          ['Risk factors present', '3 of 5', null],
+          ['Peak risk index', '+82.6', 'red'],
+          ['Risk level', 'Sabra Husky', 'red'],
+          ['Trajectory', '↓ 8 / yr', 'good'],
+          ['Convention-curiosity', 'moderate', null],
+        ],
+        medical: [
+          ['Hummus-heavy diet', 'chronic', null],
+          ['Beach over-exposure', '5× weekly', null],
+          ['Reservist anxiety', 'flares yearly', null],
+          ['Hydration', 'cafe-hafuch only', null],
+          ['Vaccinated', '4x + 7 boosters', null],
+          ['Tuchus', 'open-minded', null],
+        ],
+        education: [['Technion · Israel Inst. of Tech.', 'B.Sc. Computer Science']],
+        certs: [
+          ['AWS Solutions Architect', 'AWS · 2018', 'good'],
+          ['IDF Unit 8200 alumnus', 'cyber intelligence', 'good'],
+        ],
+        accounts: [
+          { label: 'Facebook', src: 'facebook.com ↗', url: 'https://www.facebook.com/search/people/?q=itai%20mizrachi' },
+          { label: 'LinkedIn', src: 'linkedin.com ↗', url: 'https://www.linkedin.com/search/results/people/?keywords=itai%20mizrachi' },
+          { label: 'Instagram', src: 'google search ↗', url: 'https://www.google.com/search?q=%22itai+mizrachi%22+instagram' },
+          { label: 'X / Twitter', src: 'x.com ↗', url: 'https://x.com/search?q=%22itai+mizrachi%22' },
+        ],
+        verdict: [
+          ['Past peak', 'confirmed', 'good'],
+          ['Numbers', 'coming down', 'good'],
+        ],
+      },
+      anthony: {
+        name: 'Anthony Russo',
+        sub: 'Subject · 005 · New York',
+        topbar: 'Subject',
+        blurb: 'Principal Engineer · Datadog · Brooklyn, NY. Anthrocon attendee. Plateauing.',
+        riskKey: 'anthony',
+        riskBase: 76.8,
+        lat: 40.7128, lon: -74.0060,
+        labelName: 'ANTHONY', labelCity: 'New York, NY',
+        facts: [
+          ['Age', '35'],
+          ['DOB', 'Aug 4, 1990'],
+          ['Origin', 'Staten Island, NY'],
+          ['Current city', 'Williamsburg · Brooklyn'],
+          ['Status', 'Engaged · Marco'],
+          ['Employer', 'Datadog · Principal Engineer'],
+          ['Vehicle', 'MTA unlimited + Citi Bike'],
+          ['Tracking vector', 'Vax chip: Pf Mod. US-21'],
+        ],
+        risk: [
+          ['Risk factors present', '4 of 5', null],
+          ['Peak risk index', '+89.7', 'red'],
+          ['Risk level', 'Borough Husky', 'red'],
+          ['Trajectory', '→ flat / yr', null],
+          ['Anthrocon attendance', '7× confirmed', null],
+        ],
+        medical: [
+          ['Bodega-coffee dependence', 'chronic', null],
+          ['Adderall script', 'active Rx', 'good'],
+          ['Sleep schedule', 'destroyed', null],
+          ['Hydration', 'seltzer only', null],
+          ['Vaccinated', '4x + 10 boosters', null],
+          ['Bussy', 'extremely curated', null],
+        ],
+        education: [['NYU Tandon', 'B.S. Computer Engineering']],
+        certs: [
+          ['AWS DevOps Pro', 'AWS · 2020', 'good'],
+          ['Anthrocon Volunteer Lead', 'Pittsburgh · 2023', 'good'],
+        ],
+        accounts: [
+          { label: 'Instagram', src: 'instagram.com ↗', url: 'https://www.instagram.com/explore/tags/anthroconnyc/' },
+          { label: 'LinkedIn', src: 'linkedin.com ↗', url: 'https://www.linkedin.com/search/results/people/?keywords=anthony%20russo%20brooklyn' },
+          { label: 'X / Twitter', src: 'x.com ↗', url: 'https://x.com/search?q=%22anthony+russo%22+brooklyn' },
+          { label: 'Anthrocon registry', src: 'anthrocon.org ↗', url: 'https://www.anthrocon.org/' },
+        ],
+        verdict: [
+          ['Plateauing', 'confirmed', null],
+          ['Numbers', 'holding steady', null],
+        ],
+      },
+      rafael: {
+        name: 'Rafael Oliveira',
+        sub: 'Subject · 006 · São Paulo',
+        topbar: 'Subject',
+        blurb: 'UX Designer · Nubank · Vila Madalena, BR. Furcon BR co-organizer. Rising fast.',
+        riskKey: 'rafael',
+        riskBase: 73.5,
+        lat: -23.5505, lon: -46.6333,
+        labelName: 'RAFAEL', labelCity: 'São Paulo, BR',
+        facts: [
+          ['Age', '31'],
+          ['DOB', 'Feb 18, 1995'],
+          ['Origin', 'Belo Horizonte, MG'],
+          ['Current city', 'Vila Madalena · São Paulo'],
+          ['Status', 'Namorado · Lucas'],
+          ['Employer', 'Nubank · Sr. UX Designer'],
+          ['Vehicle', '99/Uber · Bicicleta'],
+          ['Tracking vector', 'Vax chip: AstraZeneca Mod. BR-21'],
+        ],
+        risk: [
+          ['Risk factors present', '5 of 5', null],
+          ['Peak risk index', '+86.1', 'red'],
+          ['Risk level', 'Onça Pintada', 'red'],
+          ['Trajectory', '↑ 5 / yr', 'red'],
+          ['Furcon BR involvement', 'co-organizer', null],
+        ],
+        medical: [
+          ['Açaí-only diet', 'chronic', null],
+          ['Caipirinha tolerance', 'lendária', 'good'],
+          ['Carnaval recovery', 'still ongoing', null],
+          ['Hydration', 'guaraná only', null],
+          ['Vaccinated', '3x + 6 boosters', null],
+          ['Bunda', 'aberta', null],
+        ],
+        education: [['Universidade de São Paulo', 'B.A. Design Digital']],
+        certs: [
+          ['Nielsen Norman Group UX', 'NN/g · 2022', 'good'],
+          ['Furcon BR Staff Badge', 'São Paulo · 2024', 'good'],
+        ],
+        accounts: [
+          { label: 'Instagram', src: 'instagram.com ↗', url: 'https://www.instagram.com/explore/tags/furrybrasil/' },
+          { label: 'Twitter / X', src: 'x.com ↗', url: 'https://x.com/search?q=%22rafael+oliveira%22+furry' },
+          { label: 'Telegram · FurryBR', src: 't.me ↗', url: 'https://t.me/s/furrybrasil' },
+          { label: 'LinkedIn', src: 'linkedin.com ↗', url: 'https://www.linkedin.com/search/results/people/?keywords=rafael%20oliveira%20nubank' },
+        ],
+        verdict: [
+          ['Still climbing', 'confirmed', 'red'],
+          ['Numbers', 'rising', 'red'],
+        ],
+      },
+    };
+    useEffect(() => { zoomRef.current = zoom; }, [zoom]);
+    useEffect(() => { autoRotateRef.current = autoRotate; }, [autoRotate]);
+    useEffect(() => { clickedRef.current = clicked; }, [clicked]);
+
+    useEffect(() => {
+      const mount = mountRef.current;
+      const THREE = window.THREE;
+      if (!mount || !THREE) return;
+      const W = 1800, H = 1800;
+      let renderer;
+      try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+      catch (e) { return; }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+      renderer.setSize(W, H);
+      mount.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
+      camera.position.set(0, 0, 8);
+
+      const axis = new THREE.Group();
+      axis.rotation.x = 0.6;           // tip north pole toward the camera
+      axis.rotation.z = Math.PI / 4;   // fixed 45 deg lean
+      scene.add(axis);
+      const earth = new THREE.Group();
+      earth.rotation.order = 'YXZ';
+      axis.add(earth);
+
+      const R = 1.62;
+      earth.add(new THREE.Mesh(
+        new THREE.SphereGeometry(R * 0.965, 48, 32),
+        new THREE.MeshBasicMaterial({ color: 0x09090b })));
+      earth.add(new THREE.LineSegments(
+        new THREE.WireframeGeometry(new THREE.SphereGeometry(R * 0.997, 30, 20)),
+        new THREE.LineBasicMaterial({ color: 0xe5372b, transparent: true, opacity: 0.11 })));
+
+      const sprite = (() => {
+        const c = document.createElement('canvas'); c.width = c.height = 64;
+        const g = c.getContext('2d');
+        const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grd.addColorStop(0, 'rgba(255,255,255,1)');
+        grd.addColorStop(0.45, 'rgba(255,255,255,0.85)');
+        grd.addColorStop(1, 'rgba(255,255,255,0)');
+        g.fillStyle = grd; g.fillRect(0, 0, 64, 64);
+        return new THREE.CanvasTexture(c);
+      })();
+
+      const toVec = (lat, lon, r) => {
+        const phi = (90 - lat) * Math.PI / 180, theta = (lon + 180) * Math.PI / 180;
+        return new THREE.Vector3(
+          -r * Math.sin(phi) * Math.cos(theta),
+          r * Math.cos(phi),
+          r * Math.sin(phi) * Math.sin(theta));
+      };
+
+      const SEA = [47.6, -122.33];
+      const seattle = new THREE.Group();
+      seattle.position.copy(toVec(SEA[0], SEA[1], R * 1.012));
+      seattle.add(new THREE.Mesh(new THREE.SphereGeometry(0.0125, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xffffff })));
+      const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: sprite, color: 0xff3b2f, transparent: true, opacity: 0.95,
+        blending: THREE.AdditiveBlending, depthWrite: false }));
+      halo.scale.setScalar(0.085); seattle.add(halo);
+      earth.add(seattle);
+
+      // Additional clickable subjects (Berlin / Tokyo / Tel Aviv).
+      const extraMarkers = {};
+      Object.keys(SUBJECT_DATA).forEach((sid) => {
+        const sd = SUBJECT_DATA[sid];
+        const grp = new THREE.Group();
+        grp.position.copy(toVec(sd.lat, sd.lon, R * 1.012));
+        grp.add(new THREE.Mesh(new THREE.SphereGeometry(0.0115, 16, 16),
+          new THREE.MeshBasicMaterial({ color: 0xffffff })));
+        const h = new THREE.Sprite(new THREE.SpriteMaterial({
+          map: sprite, color: 0xff8a3b, transparent: true, opacity: 0.92,
+          blending: THREE.AdditiveBlending, depthWrite: false }));
+        h.scale.setScalar(0.075); grp.add(h);
+        earth.add(grp);
+        extraMarkers[sid] = grp;
+      });
+
+      const gauss = () => {
+        let u = 0, v = 0;
+        while (!u) u = Math.random();
+        while (!v) v = Math.random();
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+      };
+      let furryPoints = null;
+      const buildFurry = (isLit) => {
+        const pos = [];
+        const push = (lat, lon) => pos.push(...toVec(lat, lon, R * 1.01).toArray());
+        // -------------------------------------------------------------------
+        // LAYER 1 — Hotspot city clusters (LA/SF/Seattle kept at full volume,
+        // every other cluster halved per request).
+        // [lat, lon, count, scatterScale]
+        const CLUSTERS = [
+          // --- US west (legacy hubs, NOT halved) ---
+          [34.05, -118.24, 230, 1.0], // Los Angeles
+          [37.77, -122.42, 230, 1.0], // San Francisco
+          [47.60, -122.33, 230, 1.0], // Seattle
+          // --- US rest ---
+          [40.71,  -74.00, 110, 1.0], // NYC
+          [41.88,  -87.63,  65, 1.0], // Chicago
+          [42.36,  -71.06,  45, 0.9], // Boston
+          [38.91,  -77.04,  45, 0.9], // DC
+          [33.75,  -84.39,  50, 1.0], // Atlanta
+          [30.27,  -97.74,  40, 0.9], // Austin
+          [29.76,  -95.37,  40, 1.0], // Houston
+          [39.74, -104.99,  40, 0.9], // Denver
+          [45.52, -122.68,  45, 0.9], // Portland
+          [44.98,  -93.27,  30, 0.9], // Minneapolis
+          [32.78,  -96.80,  35, 1.0], // Dallas
+          [25.76,  -80.19,  45, 1.0], // Miami
+          [21.31, -157.86,   7, 0.8], // Honolulu, Hawaii
+          // --- Canada ---
+          [43.65,  -79.38,  55, 1.0], // Toronto
+          [49.28, -123.12,  50, 1.0], // Vancouver
+          [45.50,  -73.57,  45, 1.0], // Montreal
+          // --- UK / Ireland ---
+          [53.48,  -2.24,   28, 0.9], // Manchester
+          [50.82,  -0.14,   23, 0.8], // Brighton
+          [55.95,  -3.19,   20, 0.9], // Edinburgh
+          [53.35,  -6.26,   20, 0.9], // Dublin
+          // --- Western/Northern Europe ---
+          [52.52,  13.40,   45, 0.9], // Berlin
+          [51.51,  -0.13,   50, 0.9], // London
+          [50.94,   6.96,   30, 0.9], // Cologne
+          [52.37,   4.90,   38, 0.9], // Amsterdam
+          [48.85,   2.35,   40, 0.9], // Paris
+          [59.33,  18.07,   28, 0.9], // Stockholm
+          [55.68,  12.57,   25, 0.9], // Copenhagen
+          [48.21,  16.37,   25, 0.9], // Vienna
+          [60.17,  24.94,   18, 0.9], // Helsinki
+          [59.91,  10.75,   18, 0.9], // Oslo
+          [47.37,   8.54,   18, 0.9], // Zurich
+          [40.42,  -3.70,   28, 0.9], // Madrid
+          [41.38,   2.17,   28, 0.9], // Barcelona
+          [41.90,  12.50,   25, 0.9], // Rome
+          [45.46,   9.19,   23, 0.9], // Milan
+          [38.72,  -9.14,   18, 0.9], // Lisbon
+          // --- Eastern Europe ---
+          [52.23,  21.01,   15, 0.9], // Warsaw
+          [50.08,  14.44,   15, 0.9], // Prague
+          [47.50,  19.04,   13, 0.9], // Budapest
+          // --- Latin America ---
+          [-23.55, -46.63,  65, 1.0], // São Paulo
+          [-22.91, -43.17,  45, 1.0], // Rio
+          [-34.60, -58.38,  45, 1.0], // Buenos Aires
+          [-33.45, -70.67,  30, 0.9], // Santiago
+          [19.43,  -99.13,  50, 1.0], // Mexico City
+          [-12.05, -77.04,  18, 0.9], // Lima
+          [ 4.71,  -74.07,  20, 0.9], // Bogotá
+          // --- Oceania ---
+          [-33.87, 151.21,  65, 1.0], // Sydney
+          [-37.81, 144.96,  55, 1.0], // Melbourne
+          [-31.95, 115.86,  23, 0.9], // Perth
+          [-27.47, 153.03,  23, 0.9], // Brisbane
+          [-36.85, 174.76,  30, 0.9], // Auckland
+          [-41.29, 174.78,  18, 0.8], // Wellington
+          // --- East Asia ---
+          [35.68, 139.69,   70, 1.0], // Tokyo
+          [34.69, 135.50,   30, 0.9], // Osaka
+          [25.03, 121.57,   35, 0.9], // Taipei
+          [37.57, 126.98,   28, 0.9], // Seoul
+          [22.32, 114.17,   23, 0.9], // Hong Kong
+          // --- SE Asia ---
+          [13.75, 100.50,   30, 1.0], // Bangkok
+          [14.60, 120.98,   20, 1.0], // Manila
+          [ 1.35, 103.82,   18, 0.8], // Singapore
+          // --- Africa, Israel ---
+          [-33.92,  18.42,  23, 0.9], // Cape Town
+          [-26.20,  28.04,  18, 0.9], // Johannesburg
+          [ 32.07,  34.78,  23, 0.9], // Tel Aviv
+        ];
+        CLUSTERS.forEach(([la, lo, n, s]) => {
+          for (let i = 0; i < n; i++)
+            push(la + gauss() * 0.85 * s, lo + gauss() * 1.1 * s / Math.cos(la * Math.PI / 180));
+        });
+
+        // -------------------------------------------------------------------
+        // LAYER 2 — Country/region diffuse spread, weighted by LGBTQ+ legal
+        // climate. High-acceptance regions get plenty of evenly-spread dots;
+        // restrictive regions get a sparse handful; criminalized regions get
+        // 0-2 token dots. Bounding boxes are rough; isLit filters to land.
+        // [latMin, latMax, lonMin, lonMax, count]
+        const REGIONS = [
+          // --- High acceptance, broad spread ---
+          [25,  49, -125, -67, 360], // USA mainland (away from coastal hubs)
+          [42,  60, -140, -53, 220], // Canada
+          [35,  60,  -10,  20, 260], // Western Europe spread
+          [55,  71,    5,  31,  90], // Scandinavia
+          [50,  55,   -8,   2,  80], // UK + Ireland
+          [-44,-10,  113, 154, 180], // Australia
+          [-47,-34,  166, 179,  60], // New Zealand
+          [-34, -5,  -75, -34, 220], // Brazil/Argentina/Chile/Uruguay/Paraguay
+          [14,  33, -118, -86, 110], // Mexico
+          [30,  46,  128, 146,  90], // Japan
+          [21,  26,  119, 122,  35], // Taiwan
+          [-35,-22,   16,  33,  55], // South Africa
+          [29,  34,   34,  36,  20], // Israel
+          [ 5,  20,   97, 106,  55], // Thailand
+          [ 5,  20,  117, 127,  45], // Philippines
+          // --- Mixed / partial protection ---
+          [36,  55,   13,  41,  70], // Central/Eastern Europe (mixed)
+          [33,  39,  124, 130,  35], // South Korea
+          // --- Restrictive (only a handful) ---
+          [41,  78,   28, 180,  18], // Russia (huge area, very few dots)
+          [22,  45,   75, 135,  18], // China (sparse)
+          [ 8,  35,   68,  90,  14], // India (decriminalized)
+          // --- Criminalized / banned (token presence only) ---
+          [12,  32,   34,  56,   3], // Arabian peninsula
+          [25,  40,   44,  64,   3], // Iran/Iraq
+          [22,  32,   25,  35,   2], // Egypt
+          [ 4,  14,    2,  15,   2], // Nigeria
+          [-2,   5,   28,  42,   2], // Uganda/Kenya
+          [-7,   7,   95, 141,   3], // Indonesia
+          [ 1,   8,  100, 120,   2], // Malaysia
+          [22,  36,   60,  75,   2], // Pakistan
+          [20,  27,   88,  93,   1], // Bangladesh
+        ];
+        REGIONS.forEach(([la0, la1, lo0, lo1, target]) => {
+          let added = 0, tries = 0, cap = target * 80;
+          while (added < target && tries < cap) {
+            tries++;
+            const la = la0 + Math.random() * (la1 - la0);
+            const lo = lo0 + Math.random() * (lo1 - lo0);
+            if (isLit(la, lo)) { push(la, lo); added++; }
+          }
+        });
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        const mat = new THREE.PointsMaterial({
+          size: 0.052, map: sprite, color: 0xff4133, transparent: true,
+          depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+        furryPoints = new THREE.Points(geo, mat);
+        earth.add(furryPoints);
+      };
+
+      const buildEarth = (img) => {
+        const cw = 2048, ch = 1024;
+        const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+        const cx = cv.getContext('2d'); cx.drawImage(img, 0, 0, cw, ch);
+        const data = cx.getImageData(0, 0, cw, ch).data;
+        const at = (lat, lon) => {
+          const u = (lon + 180) / 360, v = (90 - lat) / 180;
+          const px = Math.min(cw - 1, Math.max(0, Math.floor(u * cw)));
+          const py = Math.min(ch - 1, Math.max(0, Math.floor(v * ch)));
+          const i = (py * cw + px) * 4;
+          return [data[i], data[i + 1], data[i + 2]];
+        };
+        const isLit = (lat, lon) => {
+          const c = at(lat, lon);
+          return (c[0] + c[1] + c[2]) / 3 > 14;
+        };
+        const N = 32000, off = 2 / N, inc = Math.PI * (3 - Math.sqrt(5));
+        const pos = [], col = [];
+        for (let k = 0; k < N; k++) {
+          const y = k * off - 1 + off / 2;
+          const rr = Math.sqrt(1 - y * y), ph = k * inc;
+          const x = Math.cos(ph) * rr, z = Math.sin(ph) * rr;
+          const lat = Math.asin(y) * 180 / Math.PI, lon = Math.atan2(z, x) * 180 / Math.PI;
+          const c = at(lat, lon);
+          if ((c[0] + c[1] + c[2]) / 3 <= 14) continue;
+          const v = toVec(lat, lon, R);
+          pos.push(v.x, v.y, v.z);
+          const t = Math.min(1, ((c[0] + c[1] + c[2]) / 3) / 115);
+          col.push(0.95 * t + 0.06, 0.84 * t + 0.05, 0.5 * t + 0.03);
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+        const mat = new THREE.PointsMaterial({
+          size: 0.032, map: sprite, vertexColors: true, transparent: true,
+          depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+        earth.add(new THREE.Points(geo, mat));
+        buildFurry(isLit);
+        buildCountries();
+      };
+
+      // Country outlines + tiered LGBTQ+ legality fills, sourced from world-atlas topojson.
+      // Tiers (ISO 3166-1 numeric / M49 IDs):
+      //   high       — same-sex marriage or near-full equal rights → red @ 25%
+      //   mixed      — civil unions / partial recognition / decriminalized & evolving → red @ 15%
+      //   restrict   — restrictive / hostile but not criminalized → red @ 5%
+      //   criminal   — same-sex acts illegal → no fill
+      const LEGAL_TIERS = {
+        high: [
+          840, // USA
+          124, // Canada
+          826, // United Kingdom
+          372, // Ireland
+          250, // France
+          276, // Germany
+          528, // Netherlands
+           56, // Belgium
+          442, // Luxembourg
+          724, // Spain
+          620, // Portugal
+          380, // Italy (civil unions, trending up)
+           40, // Austria
+          756, // Switzerland
+          208, // Denmark
+          752, // Sweden
+          578, // Norway
+          246, // Finland
+          352, // Iceland
+           36, // Australia
+          554, // New Zealand
+           32, // Argentina
+          858, // Uruguay
+           76, // Brazil
+          152, // Chile
+          484, // Mexico
+          170, // Colombia
+          218, // Ecuador
+          710, // South Africa
+          158, // Taiwan
+          470, // Malta
+        ],
+        mixed: [
+          392, // Japan
+          410, // South Korea
+          376, // Israel
+          203, // Czechia
+          705, // Slovenia
+          191, // Croatia
+          233, // Estonia
+          300, // Greece
+          196, // Cyprus
+          188, // Costa Rica
+          604, // Peru
+           68, // Bolivia
+          862, // Venezuela
+          764, // Thailand
+          608, // Philippines
+          348, // Hungary
+          703, // Slovakia
+          642, // Romania
+          100, // Bulgaria
+          440, // Lithuania
+          428, // Latvia
+          499, // Montenegro
+            8, // Albania
+          807, // North Macedonia
+           70, // Bosnia & Herz.
+          688, // Serbia
+          192, // Cuba
+          591, // Panama
+          704, // Vietnam
+          116, // Cambodia
+          524, // Nepal
+          496, // Mongolia
+        ],
+        restrict: [
+          643, // Russia
+          156, // China
+          356, // India
+          616, // Poland
+          792, // Turkey
+          112, // Belarus
+          804, // Ukraine
+          360, // Indonesia (Aceh excepted)
+          702, // Singapore
+          340, // Honduras
+          600, // Paraguay
+          214, // Dominican Rep.
+          320, // Guatemala
+          398, // Kazakhstan
+          417, // Kyrgyzstan
+          762, // Tajikistan
+          860, // Uzbekistan
+          104, // Myanmar
+          144, // Sri Lanka
+           64, // Bhutan
+          418, // Laos
+          788, // Tunisia
+          422, // Lebanon
+          400, // Jordan
+          504, // Morocco
+          818, // Egypt
+           72, // Botswana
+          516, // Namibia
+          508, // Mozambique
+          450, // Madagascar
+           24, // Angola
+          384, // Côte d'Ivoire
+        ],
+      };
+      const tierOf = (id) => {
+        if (LEGAL_TIERS.high.indexOf(id) >= 0) return 'high';
+        if (LEGAL_TIERS.mixed.indexOf(id) >= 0) return 'mixed';
+        if (LEGAL_TIERS.restrict.indexOf(id) >= 0) return 'restrict';
+        return null; // criminalized / unknown → no fill
+      };
+      const TIER_OPACITY = { high: 0.25, mixed: 0.15, restrict: 0.05 };
+
+      const buildCountries = () => {
+        if (!window.topojson) return;
+        const URL = 'https://unpkg.com/world-atlas@2/countries-110m.json';
+        fetch(URL).then(r => r.json()).then(topo => {
+          // ---- fills ----
+          const RR_FILL = R * 1.002;
+          const tierPos = { high: [], mixed: [], restrict: [] };
+          const features = topojson.feature(topo, topo.objects.countries).features;
+          features.forEach((f) => {
+            const tier = tierOf(+f.id);
+            if (!tier) return;
+            const dest = tierPos[tier];
+            const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+            polys.forEach((rings) => {
+              if (!rings || !rings.length) return;
+              const outer = rings[0].map(([lo, la]) => new THREE.Vector2(lo, la));
+              if (outer.length < 3) return;
+              const shape = new THREE.Shape(outer);
+              for (let h = 1; h < rings.length; h++) {
+                const hole = rings[h].map(([lo, la]) => new THREE.Vector2(lo, la));
+                if (hole.length >= 3) shape.holes.push(new THREE.Path(hole));
+              }
+              let sg;
+              try { sg = new THREE.ShapeGeometry(shape); } catch (e) { return; }
+              const posAttr = sg.attributes.position.array;
+              const idx = sg.index ? sg.index.array : null;
+              if (idx) {
+                for (let i = 0; i < idx.length; i++) {
+                  const k = idx[i] * 3;
+                  const v = toVec(posAttr[k + 1], posAttr[k], RR_FILL);
+                  dest.push(v.x, v.y, v.z);
+                }
+              } else {
+                for (let i = 0; i < posAttr.length; i += 3) {
+                  const v = toVec(posAttr[i + 1], posAttr[i], RR_FILL);
+                  dest.push(v.x, v.y, v.z);
+                }
+              }
+              sg.dispose();
+            });
+          });
+          Object.keys(tierPos).forEach((tier) => {
+            const arr = tierPos[tier];
+            if (!arr.length) return;
+            const g = new THREE.BufferGeometry();
+            g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3));
+            const m = new THREE.MeshBasicMaterial({
+              color: 0xe5372b, transparent: true, opacity: TIER_OPACITY[tier],
+              side: THREE.DoubleSide, depthWrite: false });
+            earth.add(new THREE.Mesh(g, m));
+          });
+
+          // ---- outlines (drawn on top of fills) ----
+          const mesh = topojson.mesh(topo, topo.objects.countries, (a, b) => true);
+          const positions = [];
+          const RR = R * 1.003;
+          mesh.coordinates.forEach((line) => {
+            for (let i = 0; i < line.length - 1; i++) {
+              const [lon1, lat1] = line[i];
+              const [lon2, lat2] = line[i + 1];
+              const v1 = toVec(lat1, lon1, RR);
+              const v2 = toVec(lat2, lon2, RR);
+              positions.push(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+            }
+          });
+          const lg = new THREE.BufferGeometry();
+          lg.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+          const lm = new THREE.LineBasicMaterial({
+            color: 0xffd0a0, transparent: true, opacity: 0.35,
+            depthWrite: false, blending: THREE.AdditiveBlending });
+          earth.add(new THREE.LineSegments(lg, lm));
+        }).catch(() => {});
+      };
+
+      const img = new Image();
+      img.onload = () => buildEarth(img);
+      img.onerror = () => buildFurry(() => true);
+      img.src = 'assets/earth-night.jpg';
+
+      let yaw = -0.7, dragging = false, lx = 0, downX = 0, downY = 0;
+      let dist = 8, targetDist = 8;
+      setTargetDistRef.current = (v) => { targetDist = Math.max(4.5, Math.min(13, v)); };
+      const dom = renderer.domElement;
+      dom.style.cursor = 'grab';
+      const down = (e) => { downX = e.clientX; downY = e.clientY; if (zoomRef.current) return; dragging = true; dom.style.cursor = 'grabbing'; lx = e.clientX; e.stopPropagation(); };
+      const move = (e) => { if (!dragging) return; yaw += (e.clientX - lx) * 0.006; lx = e.clientX; };
+      const up = () => { dragging = false; dom.style.cursor = 'grab'; };
+      const wheel = (e) => { e.preventDefault(); e.stopPropagation(); targetDist = Math.max(4.5, Math.min(13, targetDist + e.deltaY * 0.006)); };
+      dom.addEventListener('pointerdown', down);
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+      dom.addEventListener('wheel', wheel, { passive: false });
+
+      // hover detection: raycast against furry points + projected distance to Shane
+      const ray = new THREE.Raycaster();
+      ray.params.Points = { threshold: 0.045 };
+      const ndc = new THREE.Vector2();
+      let lastHoverKey = null;
+      let lastHoverInfo = null; // mirror for click-to-pin
+      let hoverThrottle = 0;
+      const hitTest = (clientX, clientY) => {
+        const rect = dom.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
+        const cx = clientX - rect.left, cy = clientY - rect.top;
+        ndc.x = (cx / rect.width) * 2 - 1;
+        ndc.y = -((cy / rect.height) * 2 - 1);
+        ray.setFromCamera(ndc, camera);
+        const sp = sw.clone().project(camera);
+        const sx = (sp.x * 0.5 + 0.5) * rect.width;
+        const sy = (-sp.y * 0.5 + 0.5) * rect.height;
+        const sd = Math.hypot(cx - sx, cy - sy);
+        const facing = sw.clone().normalize().dot(dir);
+        if (sd < 70 && facing > 0.1) return { kind: 'shane', cx, cy };
+        // Extra subjects (Klaus / Shōne / Shai)
+        for (const sid of Object.keys(extraMarkers)) {
+          const wp = extraPos[sid];
+          if (!wp) continue;
+          const fac = wp.clone().normalize().dot(dir);
+          if (fac <= 0.1) continue;
+          const sp2 = wp.clone().project(camera);
+          const sx2 = (sp2.x * 0.5 + 0.5) * rect.width;
+          const sy2 = (-sp2.y * 0.5 + 0.5) * rect.height;
+          const sd2 = Math.hypot(cx - sx2, cy - sy2);
+          if (sd2 < 50) return { kind: 'subject', subjectId: sid, cx: sx2, cy: sy2 };
+        }
+        if (furryPoints) {
+          const hits = ray.intersectObject(furryPoints, false);
+          if (hits.length) {
+            const idx = hits[0].index;
+            const arr = furryPoints.geometry.attributes.position.array;
+            return { kind: 'furry', idx, lp: [arr[idx*3], arr[idx*3+1], arr[idx*3+2]], cx, cy };
+          }
+        }
+        return null;
+      };
+      const hover = (e) => {
+        if (dragging) return;
+        const now = performance.now();
+        if (now - hoverThrottle < 50) return;
+        hoverThrottle = now;
+        const hit = hitTest(e.clientX, e.clientY);
+        if (!hit) {
+          if (lastHoverKey !== null) { lastHoverKey = null; lastHoverInfo = null; setHoverInfo(null); }
+          return;
+        }
+        if (hit.kind === 'shane') {
+          if (lastHoverKey !== 'shane') {
+            lastHoverKey = 'shane';
+            lastHoverInfo = { kind: 'shane', label: 'Shane Bruess', sub: 'Subject', url: 'https://www.facebook.com/shane.bruess' };
+          }
+          setHoverInfo({ ...lastHoverInfo, x: hit.cx, y: hit.cy });
+        } else if (hit.kind === 'subject') {
+          const key = 'subject:' + hit.subjectId;
+          if (lastHoverKey !== key) {
+            lastHoverKey = key;
+            const sd = SUBJECT_DATA[hit.subjectId];
+            lastHoverInfo = { kind: 'shane', label: sd.name.split(' (')[0], sub: sd.sub };
+          }
+          setHoverInfo({ ...lastHoverInfo, x: hit.cx, y: hit.cy });
+        } else {
+          const key = 'furry:' + hit.idx;
+          if (lastHoverKey !== key) {
+            lastHoverKey = key;
+            const id = 1000000 + Math.floor(Math.random() * 1000000);
+            lastHoverInfo = { kind: 'furry', id, lp: hit.lp, label: '#' + id, sub: 'Furtrack post', url: 'https://www.furtrack.com/p/' + id };
+          }
+          setHoverInfo({ ...lastHoverInfo, x: hit.cx, y: hit.cy });
+        }
+      };
+      const leave = () => { lastHoverKey = null; lastHoverInfo = null; setHoverInfo(null); };
+      const onPointerUp = (e) => {
+        // treat as click only if the cursor barely moved between down and up
+        if (Math.hypot((e.clientX || downX) - downX, (e.clientY || downY) - downY) > 6) return;
+        const hit = hitTest(e.clientX, e.clientY);
+        if (!hit) return;
+        if (hit.kind === 'shane') {
+          setClicked({ kind: 'shane', label: 'Shane Bruess', sub: 'Subject contact', url: 'https://www.facebook.com/shane.bruess' });
+        } else if (hit.kind === 'subject') {
+          setClicked({ kind: 'subject', subjectId: hit.subjectId, data: SUBJECT_DATA[hit.subjectId] });
+        } else {
+          const id = (lastHoverInfo && lastHoverInfo.kind === 'furry' && lastHoverInfo.id) || (1000000 + Math.floor(Math.random() * 1000000));
+          setClicked({ kind: 'furry', id, lp: hit.lp, label: '#' + id, sub: 'Furtrack post', url: 'https://www.furtrack.com/p/' + id });
+        }
+      };
+      dom.addEventListener('pointermove', hover);
+      dom.addEventListener('pointerleave', leave);
+      dom.addEventListener('pointerup', onPointerUp);
+
+      const sw = new THREE.Vector3(), dir = new THREE.Vector3(0, 0, 1), tdir = new THREE.Vector3();
+      const extraPos = {
+        klaus:   new THREE.Vector3(),
+        shone:   new THREE.Vector3(),
+        shai:    new THREE.Vector3(),
+        anthony: new THREE.Vector3(),
+        rafael:  new THREE.Vector3(),
+      };
+      const extraLabelRefs = {
+        klaus:   klausLabelRef,
+        shone:   shoneLabelRef,
+        shai:    shaiLabelRef,
+        anthony: anthonyLabelRef,
+        rafael:  rafaelLabelRef,
+      };
+      let raf;
+      const tick = () => {
+        raf = requestAnimationFrame(tick);
+        if (!dragging && !zoomRef.current && autoRotateRef.current) yaw += 0.0021;
+        earth.rotation.y = yaw; earth.rotation.x = 0;
+        seattle.getWorldPosition(sw);
+        Object.keys(extraMarkers).forEach((sid) => {
+          extraMarkers[sid].getWorldPosition(extraPos[sid]);
+        });
+        if (zoomRef.current) tdir.copy(sw).normalize();
+        else tdir.set(0, 0, 1);
+        dir.lerp(tdir, 0.05); dir.normalize();
+        dist += (targetDist - dist) * 0.12;
+        camera.position.copy(dir).multiplyScalar(dist);
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+        const lbl = labelRef.current;
+        if (lbl) {
+          const facing = sw.clone().normalize().dot(dir);
+          const p = sw.clone().project(camera);
+          lbl.style.left = ((p.x * 0.5 + 0.5) * W) + 'px';
+          lbl.style.top = ((-p.y * 0.5 + 0.5) * H) + 'px';
+          lbl.style.opacity = facing > 0.1 ? '1' : '0';
+        }
+        // Update each extra subject's label position
+        Object.keys(extraLabelRefs).forEach((sid) => {
+          const el = extraLabelRefs[sid] && extraLabelRefs[sid].current;
+          if (!el) return;
+          const wp = extraPos[sid];
+          const fac = wp.clone().normalize().dot(dir);
+          const p = wp.clone().project(camera);
+          el.style.left = ((p.x * 0.5 + 0.5) * W) + 'px';
+          el.style.top = ((-p.y * 0.5 + 0.5) * H) + 'px';
+          el.style.opacity = fac > 0.1 ? '1' : '0';
+        });
+        // connector line: clicked dot -> popup card
+        const c = clickedRef.current;
+        const lineEl = lineRef.current && lineRef.current.firstChild;
+        if (lineEl) {
+          if (c && cardRef.current && wrapRef.current) {
+            let wp = null;
+            if (c.kind === 'shane') wp = sw.clone();
+            else if (c.kind === 'subject' && extraPos[c.subjectId]) wp = extraPos[c.subjectId].clone();
+            else if (c.lp) {
+              earth.updateMatrixWorld();
+              wp = new THREE.Vector3(c.lp[0], c.lp[1], c.lp[2]).applyMatrix4(earth.matrixWorld);
+            }
+            if (wp) {
+              const facing2 = wp.clone().normalize().dot(dir);
+              const p2 = wp.clone().project(camera);
+              const dx2 = (p2.x * 0.5 + 0.5) * W;
+              const dy2 = (-p2.y * 0.5 + 0.5) * H;
+              const wrapRect = wrapRef.current.getBoundingClientRect();
+              const cardRect = cardRef.current.getBoundingClientRect();
+              const sx = ((cardRect.left - wrapRect.left) / wrapRect.width) * W;
+              const sy = ((cardRect.top + cardRect.height - wrapRect.top) / wrapRect.height) * H;
+              lineEl.setAttribute('x1', sx);
+              lineEl.setAttribute('y1', sy);
+              lineEl.setAttribute('x2', dx2);
+              lineEl.setAttribute('y2', dy2);
+              lineEl.setAttribute('class', (c.kind === 'shane' || c.kind === 'subject') ? 'shane' : '');
+              lineEl.style.opacity = facing2 > 0 ? 1 : 0;
+            } else {
+              lineEl.style.opacity = 0;
+            }
+          } else {
+            lineEl.style.opacity = 0;
+          }
+        }
+      };
+      tick();
+
+      return () => {
+        cancelAnimationFrame(raf);
+        dom.removeEventListener('pointerdown', down);
+        dom.removeEventListener('wheel', wheel);
+        dom.removeEventListener('pointermove', hover);
+        dom.removeEventListener('pointerleave', leave);
+        dom.removeEventListener('pointerup', onPointerUp);
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        renderer.dispose();
+        if (dom.parentNode) dom.parentNode.removeChild(dom);
+      };
+    }, []);
+
+    return (
+      <div className="pm">
+        <div className="pm-globe-wrap" ref={wrapRef}>
+          <div className="pm-globe">
+            <div className="pm-canvas" ref={mountRef}></div>
+            <div className="pm-label" ref={labelRef}>
+              <div className="box"><b>SHANE</b><span>Seattle, WA</span></div>
+              <div className="stem"></div>
+              <div className="dot"></div>
+            </div>
+            <div className="pm-label sub" ref={klausLabelRef}>
+              <div className="box"><b>LUKAS</b><span>Berlin, DE</span></div>
+              <div className="stem"></div>
+              <div className="dot"></div>
+            </div>
+            <div className="pm-label sub" ref={shoneLabelRef}>
+              <div className="box"><b>HARUKI</b><span>Tokyo, JP</span></div>
+              <div className="stem"></div>
+              <div className="dot"></div>
+            </div>
+            <div className="pm-label sub" ref={shaiLabelRef}>
+              <div className="box"><b>ITAI</b><span>Tel Aviv, IL</span></div>
+              <div className="stem"></div>
+              <div className="dot"></div>
+            </div>
+            <div className="pm-label sub" ref={anthonyLabelRef}>
+              <div className="box"><b>ANTHONY</b><span>New York, NY</span></div>
+              <div className="stem"></div>
+              <div className="dot"></div>
+            </div>
+            <div className="pm-label sub" ref={rafaelLabelRef}>
+              <div className="box"><b>RAFAEL</b><span>São Paulo, BR</span></div>
+              <div className="stem"></div>
+              <div className="dot"></div>
+            </div>
+            <svg className="pm-line" ref={lineRef} viewBox="0 0 1800 1800" preserveAspectRatio="none">
+              <line x1="0" y1="0" x2="0" y2="0" style={{ opacity: 0 }} />
+            </svg>
+            <button className={'pm-rotate-btn' + (autoRotate ? '' : ' off')}
+                    onPointerDown={stop}
+                    onClick={(e) => { stop(e); setAutoRotate((r) => !r); }}>
+              <span className="ic">{autoRotate ? '●' : '○'}</span>
+              {autoRotate ? 'Auto-rotate' : 'Paused'}
+            </button>
+            {hoverInfo && (
+              <div className={'pm-hover ' + hoverInfo.kind}
+                   style={{ left: hoverInfo.x + 'px', top: hoverInfo.y + 'px' }}>
+                <span className="sub">{hoverInfo.sub}</span>
+                {hoverInfo.label}
+              </div>
+            )}
+            {clicked && (
+              <div className={'pm-popup ' + clicked.kind + (dragging2 ? ' dragging' : '')}
+                   ref={cardRef}
+                   style={{ transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)` }}
+                   onPointerDown={onCardDown}>
+                <div className="topbar">
+                  <span className="grip-l"><span className="dots">⋮⋮</span>{clicked.kind === 'furry' ? 'Furtrack' : 'Subject'}</span>
+                  <span className="x" onPointerDown={stop} onClick={(e) => { stop(e); setClicked(null); }}>✕</span>
+                </div>
+                <div className="body">
+                  {clicked.kind === 'furry' && (
+                    <>
+                      <div className="img">
+                        {clicked.imgUrl === undefined && <span className="ph">Loading preview…</span>}
+                        {clicked.imgUrl === null && <span className="ph">No preview available</span>}
+                        {clicked.imgUrl && <img src={clicked.imgUrl} alt="" referrerPolicy="no-referrer" onError={(e) => { e.target.parentNode.innerHTML = '<span class="ph">Preview unavailable</span>'; }} />}
+                      </div>
+                      <span className="lbl">{clicked.sub}</span>
+                      <span className="val">{clicked.title || clicked.label}</span>
+                      {clicked.title && (
+                        <span className="lbl" style={{ marginTop: '8px' }}>Post {clicked.label}</span>
+                      )}
+                      {clicked.desc && <span className="meta">{clicked.desc}</span>}
+                      <a className="cta" href={clicked.url} target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>
+                        Open furtrack.com ↗
+                      </a>
+                    </>
+                  )}
+                  {clicked.kind === 'shane' && (
+                    <>
+                      <span className="lbl">Case · 001 · Subject</span>
+                      <span className="val">Shane Bruess</span>
+                      <span className="meta">Sales Engineer · Outreach · Seattle, WA. Birthday boy. Egregious case.</span>
+
+                      {(() => {
+                        const pct = (window.RiskState && window.RiskState.current) || 83.4;
+                        const cx = 120, cy = 130, r = 100;
+                        const a = Math.PI * (1 - pct / 100);
+                        const ex = cx + r * Math.cos(a);
+                        const ey = cy - r * Math.sin(a);
+                        const nx = cx + (r - 12) * Math.cos(a);
+                        const ny = cy - (r - 12) * Math.sin(a);
+                        return (
+                          <div className="ds-section ds-gauge">
+                            <div className="ds-title" style={{ alignSelf: 'flex-start' }}>Risk index</div>
+                            <svg viewBox="0 0 240 170" className="gauge-svg">
+                              <defs>
+                                <linearGradient id="riskGrad" x1="0" y1="0" x2="1" y2="0">
+                                  <stop offset="0%"   stopColor="#3fb56a" />
+                                  <stop offset="50%"  stopColor="#e8c547" />
+                                  <stop offset="100%" stopColor="#e5372b" />
+                                </linearGradient>
+                              </defs>
+                              <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+                                    fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="14" strokeLinecap="round" />
+                              <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
+                                    fill="none" stroke="url(#riskGrad)" strokeWidth="14" strokeLinecap="round" />
+                              {[0, 25, 50, 75, 100].map((p) => {
+                                const t = Math.PI * (1 - p / 100);
+                                const inR = r - 22, outR = r - 10;
+                                return (
+                                  <line key={p}
+                                        x1={cx + inR * Math.cos(t)} y1={cy - inR * Math.sin(t)}
+                                        x2={cx + outR * Math.cos(t)} y2={cy - outR * Math.sin(t)}
+                                        stroke="rgba(255,255,255,0.75)" strokeWidth="2" />
+                                );
+                              })}
+                              {[0, 50, 100].map((p) => {
+                                const t = Math.PI * (1 - p / 100);
+                                const lx = cx + (r + 16) * Math.cos(t);
+                                const ly = cy - (r + 16) * Math.sin(t);
+                                return (
+                                  <text key={p} x={lx} y={ly + 4} textAnchor="middle"
+                                        fill="rgba(255,255,255,0.55)"
+                                        style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '0.16em', fontFamily: 'Archivo, sans-serif' }}>{p}</text>
+                                );
+                              })}
+                              <g className="needle">
+                                <line x1={cx} y1={cy} x2={nx} y2={ny}
+                                      stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
+                                <circle cx={cx} cy={cy} r="7" fill="var(--accent)" stroke="var(--ink)" strokeWidth="2" />
+                              </g>
+                              <text x={cx} y={cy - 28} textAnchor="middle" fill="var(--accent)"
+                                    style={{ fontSize: '42px', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Archivo, sans-serif' }}>{pct}</text>
+                              <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.55)"
+                                    style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '0.28em', fontFamily: 'Archivo, sans-serif' }}>OF 100</text>
+                            </svg>
+                          </div>
+                        );
+                      })()}
+
+                      <div className="dossier-grid">
+                        <div><span className="dk">Age</span><span className="dv">33</span></div>
+                        <div><span className="dk">DOB</span><span className="dv">Jun 3, 1993</span></div>
+                        <div><span className="dk">Origin</span><span className="dv">Hailey, ID</span></div>
+                        <div><span className="dk">Current city</span><span className="dv">Lake Stevens, WA</span></div>
+                        <div><span className="dk">Status</span><span className="dv">Married · Cori</span></div>
+                        <div><span className="dk">Employer</span><span className="dv">Outreach · Sr. Technical PM</span></div>
+                        <div><span className="dk">Vehicle</span><span className="dv">VW Jetta</span></div>
+                        <div><span className="dk">Tracking vector</span><span className="dv">Vax chip: Mod. C-19</span></div>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Risk profile</div>
+                        <ul className="ds-list">
+                          <li>Risk factors present <b>5 of 5</b></li>
+                          <li>Peak risk index <b className="red">+98.4</b></li>
+                          <li>Risk level <b className="red">Bad Dragon</b></li>
+                          <li>Trajectory <b className="good">↓ 12 / yr</b></li>
+                          <li>Knot-curiosity <b>elevated</b></li>
+                        </ul>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Medical history</div>
+                        <ul className="ds-list">
+                          <li>Cholecystectomy <b>gallbladder, removed</b></li>
+                          <li>GLP-1 receptor agonist <b className="good">active Rx</b></li>
+                          <li>Musk-maxxing protocol <b>self-reported</b></li>
+                          <li>Hydration <b>questionable</b></li>
+                          <li>Vaccinated <b>3x + 12 boosters</b></li>
+                          <li>Bussy <b>open minded</b></li>
+                        </ul>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Education</div>
+                        <ul className="ds-list">
+                          <li>University of Idaho <b>B.S. Virtual Technology & Design</b></li>
+                        </ul>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Certifications</div>
+                        <ul className="ds-list">
+                          <li>Certified Scrum Product Owner <b className="good">CSPO</b></li>
+                          <li>Outreach Admin Certification <b className="good">May 2018</b></li>
+                        </ul>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Known accounts</div>
+                        <div className="ds-links">
+                          <a href="https://www.facebook.com/shane.bruess" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>Facebook <span className="src">facebook.com ↗</span></a>
+                          <a href="https://www.linkedin.com/in/shane-bruess-a413a6ba/" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>LinkedIn <span className="src">linkedin.com ↗</span></a>
+                          <a href="https://theorg.com/org/outreach/org-chart/shane-bruess" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>TheOrg · Outreach <span className="src">theorg.com ↗</span></a>
+                          <a href="https://www.zoominfo.com/p/Shane-Bruess/-1240333863" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>ZoomInfo <span className="src">zoominfo.com ↗</span></a>
+                          <a href="https://www.google.com/search?q=%22shane+bruess%22+instagram" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>Instagram <span className="src">google search ↗</span></a>
+                          <a href="https://www.google.com/search?q=%22shane+bruess%22+tiktok" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>TikTok <span className="src">google search ↗</span></a>
+                          <a href="https://www.furtrack.com/index/photographer:shane" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>Furtrack · search <span className="src">furtrack.com ↗</span></a>
+                        </div>
+                      </div>
+
+                      <div className="ds-section" style={{ marginTop: '18px' }}>
+                        <div className="ds-title">Verdict</div>
+                        <ul className="ds-list">
+                          <li>Past peak <b className="good">confirmed</b></li>
+                          <li>Numbers <b className="good">coming down</b></li>
+                        </ul>
+                      </div>
+                    </>
+                  )}
+                  {clicked.kind === 'subject' && (() => {
+                    const d = clicked.data;
+                    const pct = (window.RiskState && window.RiskState[d.riskKey]) || d.riskBase;
+                    const cx = 120, cy = 130, r = 100;
+                    const a = Math.PI * (1 - pct / 100);
+                    const ex = cx + r * Math.cos(a);
+                    const ey = cy - r * Math.sin(a);
+                    const nx = cx + (r - 12) * Math.cos(a);
+                    const ny = cy - (r - 12) * Math.sin(a);
+                    return (
+                      <>
+                        <span className="lbl">{d.sub}</span>
+                        <span className="val">{d.name}</span>
+                        <span className="meta">{d.blurb}</span>
+
+                        <div className="ds-section ds-gauge">
+                          <div className="ds-title" style={{ alignSelf: 'flex-start' }}>Risk index</div>
+                          <svg viewBox="0 0 240 170" className="gauge-svg">
+                            <defs>
+                              <linearGradient id={`riskGrad-${clicked.subjectId}`} x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%"   stopColor="#3fb56a" />
+                                <stop offset="50%"  stopColor="#e8c547" />
+                                <stop offset="100%" stopColor="#e5372b" />
+                              </linearGradient>
+                            </defs>
+                            <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+                                  fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="14" strokeLinecap="round" />
+                            <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
+                                  fill="none" stroke={`url(#riskGrad-${clicked.subjectId})`} strokeWidth="14" strokeLinecap="round" />
+                            {[0, 25, 50, 75, 100].map((p) => {
+                              const t = Math.PI * (1 - p / 100);
+                              const inR = r - 22, outR = r - 10;
+                              return (
+                                <line key={p}
+                                      x1={cx + inR * Math.cos(t)} y1={cy - inR * Math.sin(t)}
+                                      x2={cx + outR * Math.cos(t)} y2={cy - outR * Math.sin(t)}
+                                      stroke="rgba(255,255,255,0.75)" strokeWidth="2" />
+                              );
+                            })}
+                            {[0, 50, 100].map((p) => {
+                              const t = Math.PI * (1 - p / 100);
+                              const lx = cx + (r + 16) * Math.cos(t);
+                              const ly = cy - (r + 16) * Math.sin(t);
+                              return (
+                                <text key={p} x={lx} y={ly + 4} textAnchor="middle"
+                                      fill="rgba(255,255,255,0.55)"
+                                      style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '0.16em', fontFamily: 'Archivo, sans-serif' }}>{p}</text>
+                              );
+                            })}
+                            <g className="needle">
+                              <line x1={cx} y1={cy} x2={nx} y2={ny}
+                                    stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
+                              <circle cx={cx} cy={cy} r="7" fill="var(--accent)" stroke="var(--ink)" strokeWidth="2" />
+                            </g>
+                            <text x={cx} y={cy - 28} textAnchor="middle" fill="var(--accent)"
+                                  style={{ fontSize: '42px', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Archivo, sans-serif' }}>{pct}</text>
+                            <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.55)"
+                                  style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '0.28em', fontFamily: 'Archivo, sans-serif' }}>OF 100</text>
+                          </svg>
+                        </div>
+
+                        <div className="dossier-grid">
+                          {d.facts.map(([k, v]) => (
+                            <div key={k}><span className="dk">{k}</span><span className="dv">{v}</span></div>
+                          ))}
+                        </div>
+
+                        <div className="ds-section">
+                          <div className="ds-title">Risk profile</div>
+                          <ul className="ds-list">
+                            {d.risk.map(([k, v, cls], i) => (
+                              <li key={i}>{k} <b className={cls || ''}>{v}</b></li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="ds-section">
+                          <div className="ds-title">Medical history</div>
+                          <ul className="ds-list">
+                            {d.medical.map(([k, v, cls], i) => (
+                              <li key={i}>{k} <b className={cls || ''}>{v}</b></li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="ds-section">
+                          <div className="ds-title">Education</div>
+                          <ul className="ds-list">
+                            {d.education.map(([k, v], i) => (
+                              <li key={i}>{k} <b>{v}</b></li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="ds-section">
+                          <div className="ds-title">Certifications</div>
+                          <ul className="ds-list">
+                            {d.certs.map(([k, v, cls], i) => (
+                              <li key={i}>{k} <b className={cls || ''}>{v}</b></li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="ds-section">
+                          <div className="ds-title">Known accounts</div>
+                          <div className="ds-links">
+                            {d.accounts.map((a, i) => (
+                              <a key={i} href={a.url} target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>
+                                {a.label} <span className="src">{a.src}</span>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="ds-section" style={{ marginTop: '18px' }}>
+                          <div className="ds-title">Verdict</div>
+                          <ul className="ds-list">
+                            {d.verdict.map(([k, v, cls], i) => (
+                              <li key={i}>{k} <b className={cls || ''}>{v}</b></li>
+                            ))}
+                          </ul>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="pm-left">
+          <h2 className="pm-title">It couldn't happen to me, right?</h2>
+          <p className="pm-caveat">Believe it or not, furries ARE real people... and they maintain 96% of our global networking infrastructure.</p>
+          <div className="pm-figure">
+            <div className="pm-big">~2M</div>
+            <div className="pm-big-cap" style={{ color: 'var(--accent)' }}>afflicted worldwide. 70% of those striken live in the U.S.A.</div>
+          </div>
+          <div className="pm-cities">
+            <div className="pm-city"><span className="rk">01</span><span className="cn">Los Angeles</span><span className="cv">~9,000</span></div>
+            <div className="pm-city"><span className="rk">02</span><span className="cn">San Francisco</span><span className="cv">~7,500</span></div>
+            <div className="pm-city"><span className="rk">03</span><span className="cn">Seattle</span><span className="cv">~6,000 · +1 Shane</span></div>
+          </div>
+          <button className={'pm-zoom' + (zoom ? ' on' : '')} onPointerDown={stop}
+                  onClick={(e) => {
+                    stop(e);
+                    const next = !zoom;
+                    setZoom(next);
+                    if (next) {
+                      setClicked({ kind: 'shane', label: 'Shane Bruess', sub: 'Subject contact', url: 'https://www.facebook.com/shane.bruess' });
+                      if (setTargetDistRef.current) setTargetDistRef.current(4.7);
+                    } else {
+                      setClicked(null);
+                      if (setTargetDistRef.current) setTargetDistRef.current(8);
+                    }
+                  }}>
+            <span className="ic">{zoom ? '◉' : '◯'}</span>
+            {zoom ? 'Locked on highest risk' : 'Find Highest risk'}
+          </button>
+          {zoom && (
+            <p style={{ marginTop: '14px', fontSize: '20px', lineHeight: 1.35, color: 'var(--accent)', fontWeight: 700, maxWidth: '32ch' }}>
+              As you can see, he is in a <span style={{ textTransform: 'uppercase', letterSpacing: '0.04em' }}>hot hot</span> spot for the Furry community.
+            </p>
+          )}
+          <div className="pm-legend">
+            <div className="lg-title">High risk areas</div>
+            <div className="lg-strip">
+              <span>High</span>
+              <div className="lg-bar">
+                <span style={{ background: 'rgba(229,55,43,0.25)' }}></span>
+                <span style={{ background: 'rgba(229,55,43,0.15)' }}></span>
+                <span style={{ background: 'rgba(229,55,43,0.05)' }}></span>
+                <span style={{ background: 'transparent' }}></span>
+              </div>
+              <span>Low</span>
+            </div>
+            <div className="lg-row"><span className="lg-dot"></span>Confirmed furry activity</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  (function () {
+    const el = document.getElementById('premise-root');
+    if (el && window.ReactDOM && ReactDOM.createRoot) ReactDOM.createRoot(el).render(<PremisePanel />);
+  })();
+</script>
+
+<script>
+  // Scale the 1920x1080 stage to fit any viewport (desktop, projector, phone).
+  (function () {
+    var stage = document.getElementById('stage');
+    function fit() {
+      var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+      stage.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', fit);
+    fit();
+  })();
+</script>
+
+<script>
+  // Shared soundtrack — one <audio>, a single draggable control pinned top-right.
+  // Auto-plays (falling back to the first user gesture if the browser blocks it).
+  (function () {
+    var PLAY  = '<svg class="da-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
+    var PAUSE = '<svg class="da-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+
+    var audio = document.getElementById('deckAudio');
+    if (!audio) return;
+    audio.volume = 0.7;
+
+    var box = document.createElement('div');
+    box.className = 'deck-audio';
+    box.innerHTML =
+      '<button class="da-toggle" type="button" aria-label="Play soundtrack">' + PLAY + PAUSE + '</button>' +
+      '<div class="da-meta"><span class="da-track">Flooded City</span><span class="da-artist">Jeremy Cullen</span></div>' +
+      '<input class="da-vol" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volume">';
+    document.body.appendChild(box);
+
+    var toggle = box.querySelector('.da-toggle');
+    var vol = box.querySelector('.da-vol');
+
+    toggle.addEventListener('click', function () {
+      if (audio.paused) { audio.play().catch(function () {}); }
+      else { audio.pause(); }
+    });
+    vol.addEventListener('input', function () { audio.volume = parseFloat(vol.value); });
+
+    function syncPlay() {
+      var playing = !audio.paused && !audio.ended;
+      box.classList.toggle('is-playing', playing);
+      toggle.setAttribute('aria-label', playing ? 'Pause soundtrack' : 'Play soundtrack');
+    }
+    function syncVol() { if (parseFloat(vol.value) !== audio.volume) vol.value = audio.volume; }
+    audio.addEventListener('play', syncPlay);
+    audio.addEventListener('pause', syncPlay);
+    audio.addEventListener('ended', syncPlay);
+    audio.addEventListener('volumechange', syncVol);
+
+    // Drag the pill anywhere in the viewport (ignoring the button + slider).
+    var dragging = false, sx = 0, sy = 0, bl = 0, bt = 0;
+    box.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('.da-toggle, .da-vol')) return;
+      dragging = true; box.classList.add('dragging');
+      var r = box.getBoundingClientRect();
+      bl = r.left; bt = r.top; sx = e.clientX; sy = e.clientY;
+      box.style.right = 'auto'; box.style.left = bl + 'px'; box.style.top = bt + 'px';
+      try { box.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+    box.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var nl = bl + (e.clientX - sx), nt = bt + (e.clientY - sy);
+      nl = Math.max(0, Math.min(window.innerWidth - box.offsetWidth, nl));
+      nt = Math.max(0, Math.min(window.innerHeight - box.offsetHeight, nt));
+      box.style.left = nl + 'px'; box.style.top = nt + 'px';
+    });
+    function end(e) {
+      if (!dragging) return;
+      dragging = false; box.classList.remove('dragging');
+      try { box.releasePointerCapture(e.pointerId); } catch (_) {}
+    }
+    box.addEventListener('pointerup', end);
+    box.addEventListener('pointercancel', end);
+
+    // Auto-play; if blocked, start on the first interaction anywhere.
+    var p = audio.play();
+    if (p && p.catch) {
+      p.catch(function () {
+        var evs = ['pointerdown', 'keydown', 'touchstart'];
+        var once = function () {
+          audio.play().catch(function () {});
+          evs.forEach(function (ev) { window.removeEventListener(ev, once, true); });
+        };
+        evs.forEach(function (ev) { window.addEventListener(ev, once, true); });
+      });
+    }
+
+    syncPlay(); syncVol();
+  })();
+</script>
+
+<script>
+  // QR code -> this page's own URL, so a projected screen lets the room scan in.
+  (function () {
+    var card = document.getElementById('qrCard');
+    var img = document.getElementById('qrImg');
+    if (!card || !img) return;
+    var url = location.href.split('#')[0];
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=10&data=' + encodeURIComponent(url);
+    img.onerror = function () {
+      card.innerHTML = '<div class="qr-cap">Open on your phone:<br>' + url + '</div>';
+    };
+    var x = card.querySelector('.qr-x');
+    if (x) x.addEventListener('click', function () { card.classList.add('hidden'); });
+  })();
+</script>
+
+</body></html>

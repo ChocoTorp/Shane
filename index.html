@@ -4174,4 +4174,316 @@
   })();
 </script>
 
+<!-- ============ Shared deck soundtrack ============ -->
+<!-- One <audio> element, one shared play/pause + volume state, with a control
+     pinned to the top-left corner of every slide. All per-slide controls drive
+     and mirror the same audio, so playback is continuous across navigation. -->
+<style>
+  /* Themed audio control — matches the deck palette (:root vars). */
+  .deck-audio {
+    position: absolute;
+    top: 26px;
+    left: 26px;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 18px 10px 12px;
+    background: rgba(22, 22, 27, 0.74);          /* var(--panel) @ ~74% */
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    font-family: "Archivo", system-ui, sans-serif;
+    user-select: none;
+    cursor: grab;
+    touch-action: none;                          /* let pointer-drag own the gesture */
+    animation: da-pop 360ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  }
+  .deck-audio.dragging { cursor: grabbing; }
+  /* Second instance is anchored to the top-right until dragged. */
+  .deck-audio[data-anchor="top-right"] { left: auto; right: 26px; }
+  @keyframes da-pop {
+    from { opacity: 0; transform: scale(0.7) translateY(-8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .deck-audio { animation: none; }
+  }
+  .deck-audio .da-toggle {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(--accent);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: transform 140ms ease, background 140ms ease;
+  }
+  .deck-audio .da-toggle:hover { transform: scale(1.06); }
+  .deck-audio .da-toggle:active { transform: scale(0.96); }
+  .deck-audio .da-toggle svg { width: 18px; height: 18px; display: block; }
+  /* Swap play <-> pause glyphs based on shared state. */
+  .deck-audio .da-toggle .da-pause { display: none; }
+  .deck-audio.is-playing .da-toggle .da-play { display: none; }
+  .deck-audio.is-playing .da-toggle .da-pause { display: block; }
+
+  .deck-audio .da-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+    margin-right: 2px;
+  }
+  .deck-audio .da-track {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .deck-audio .da-artist {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Volume slider — themed range input, accent fill on the thumb. */
+  .deck-audio .da-vol {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 110px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--faint);
+    cursor: pointer;
+    outline: none;
+  }
+  .deck-audio .da-vol::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--accent);
+    margin-top: 0;
+    transition: transform 120ms ease;
+  }
+  .deck-audio .da-vol::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .deck-audio .da-vol::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--accent);
+  }
+  .deck-audio .da-vol::-moz-range-track {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--faint);
+  }
+</style>
+
+<audio id="deckAudio" src="assets/flooded-city.mp3" loop preload="auto"></audio>
+
+<script>
+  // Shared soundtrack: one <audio>, with a control cloned into the top-LEFT and
+  // top-RIGHT corner of every slide. Every control reads/writes the same audio +
+  // volume and re-syncs on play/pause/volumechange, so they read consistently no
+  // matter which slide you're on. Controls are draggable; a drag on one corner's
+  // control moves every slide's copy of that corner in lockstep. Playback
+  // auto-starts (falling back to the first user gesture if the browser blocks it).
+  (function () {
+    var PLAY_ICON  = '<svg class="da-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
+    var PAUSE_ICON = '<svg class="da-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+    var ANCHORS = ['top-right'];
+    var DESIGN_W = 1920, DESIGN_H = 1080;
+
+    var audio = document.getElementById('deckAudio');
+    if (!audio) return;
+    audio.volume = 0.7;
+
+    var controls = [];          // { vol } per control, for volume syncing
+    var positions = {};         // anchor -> { left, top } in design px, once dragged
+
+    // Convert a screen-space delta to design-space px using the slide's render scale.
+    function scaleOf(section) {
+      var w = section.offsetWidth || DESIGN_W;       // authored width (1920)
+      var rect = section.getBoundingClientRect();
+      return (rect.width || w) / w;                  // rendered / authored
+    }
+
+    // Apply a dragged position to EVERY control that shares this anchor, so the
+    // control stays put as you move between slides.
+    function applyPosition(anchor) {
+      var p = positions[anchor];
+      if (!p) return;
+      var nodes = document.querySelectorAll('.deck-audio[data-anchor="' + anchor + '"]');
+      for (var i = 0; i < nodes.length; i++) {
+        nodes[i].style.left = p.left + 'px';
+        nodes[i].style.top = p.top + 'px';
+        nodes[i].style.right = 'auto';
+      }
+    }
+
+    function makeDraggable(box, anchor) {
+      var dragging = false, startX = 0, startY = 0, baseL = 0, baseT = 0, scale = 1;
+      box.addEventListener('pointerdown', function (e) {
+        // Don't start a drag from the play button or the volume slider.
+        if (e.target.closest('.da-toggle, .da-vol')) return;
+        dragging = true;
+        box.classList.add('dragging');
+        var section = box.closest('section');
+        scale = section ? scaleOf(section) : 1;
+        baseL = box.offsetLeft;                      // works whether anchored L or R
+        baseT = box.offsetTop;
+        startX = e.clientX; startY = e.clientY;
+        try { box.setPointerCapture(e.pointerId); } catch (_) {}
+        e.preventDefault();
+      });
+      box.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var maxL = DESIGN_W - box.offsetWidth, maxH = DESIGN_H - box.offsetHeight;
+        var nl = baseL + (e.clientX - startX) / scale;
+        var nt = baseT + (e.clientY - startY) / scale;
+        nl = Math.max(0, Math.min(maxL, nl));
+        nt = Math.max(0, Math.min(maxH, nt));
+        positions[anchor] = { left: nl, top: nt };
+        applyPosition(anchor);
+      });
+      function end(e) {
+        if (!dragging) return;
+        dragging = false;
+        box.classList.remove('dragging');
+        try { box.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+      box.addEventListener('pointerup', end);
+      box.addEventListener('pointercancel', end);
+    }
+
+    function makeControl(anchor) {
+      var box = document.createElement('div');
+      box.className = 'deck-audio';
+      box.setAttribute('data-anchor', anchor);
+      box.innerHTML =
+        '<button class="da-toggle" type="button" aria-label="Play soundtrack">' +
+          PLAY_ICON + PAUSE_ICON +
+        '</button>' +
+        '<div class="da-meta">' +
+          '<span class="da-track">Flooded City</span>' +
+          '<span class="da-artist">Jeremy Cullen</span>' +
+        '</div>' +
+        '<input class="da-vol" type="range" min="0" max="1" step="0.01" value="0.7" ' +
+          'aria-label="Volume">';
+
+      // Keep taps/clicks on the control from reaching the deck's tap-to-navigate.
+      box.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+      box.addEventListener('click', function (e) { e.stopPropagation(); });
+
+      var toggle = box.querySelector('.da-toggle');
+      toggle.addEventListener('click', function () {
+        if (audio.paused) { audio.play().catch(function () {}); }
+        else { audio.pause(); }
+      });
+
+      var vol = box.querySelector('.da-vol');
+      vol.addEventListener('input', function () {
+        audio.volume = parseFloat(vol.value);   // fires 'volumechange' -> syncVol
+      });
+
+      makeDraggable(box, anchor);
+      controls.push({ vol: vol });
+      return box;
+    }
+
+    function syncPlay() {
+      var playing = !audio.paused && !audio.ended;
+      var nodes = document.querySelectorAll('.deck-audio');
+      for (var i = 0; i < nodes.length; i++) {
+        nodes[i].classList.toggle('is-playing', playing);
+        var t = nodes[i].querySelector('.da-toggle');
+        if (t) t.setAttribute('aria-label', playing ? 'Pause soundtrack' : 'Play soundtrack');
+      }
+    }
+    function syncVol() {
+      for (var i = 0; i < controls.length; i++) {
+        if (parseFloat(controls[i].vol.value) !== audio.volume) {
+          controls[i].vol.value = audio.volume;
+        }
+      }
+    }
+
+    audio.addEventListener('play', syncPlay);
+    audio.addEventListener('pause', syncPlay);
+    audio.addEventListener('ended', syncPlay);
+    audio.addEventListener('volumechange', syncVol);
+
+    // Auto-play: try immediately; if the browser blocks unmuted autoplay, start
+    // on the first user interaction anywhere (clicking through the deck counts).
+    function tryAutoplay() {
+      var p = audio.play();
+      if (p && p.catch) {
+        p.catch(function () {
+          var kick = function () { audio.play().catch(function () {}); };
+          var events = ['pointerdown', 'keydown', 'touchstart'];
+          var once = function () {
+            kick();
+            events.forEach(function (ev) { window.removeEventListener(ev, once, true); });
+          };
+          events.forEach(function (ev) { window.addEventListener(ev, once, true); });
+        });
+      }
+    }
+
+    function inject() {
+      var deck = document.querySelector('deck-stage');
+      if (!deck) return false;
+      var slides = deck.querySelectorAll(':scope > section');
+      if (!slides.length) return false;
+      for (var i = 0; i < slides.length; i++) {
+        for (var a = 0; a < ANCHORS.length; a++) {
+          var anchor = ANCHORS[a];
+          if (slides[i].querySelector(':scope > .deck-audio[data-anchor="' + anchor + '"]')) continue;
+          slides[i].appendChild(makeControl(anchor));
+          applyPosition(anchor);   // honour any in-progress dragged position
+        }
+      }
+      syncPlay();
+      syncVol();
+      return true;
+    }
+
+    // Hide the control inside the shadow-DOM thumbnail-rail clones (it's a live
+    // playback control, not slide content — it shouldn't render in the rail).
+    function hideInRail() {
+      var deck = document.querySelector('deck-stage');
+      if (!deck || !deck.shadowRoot) return false;
+      if (deck.shadowRoot.getElementById('__hide-audio-thumb')) return true;
+      var st = document.createElement('style');
+      st.id = '__hide-audio-thumb';
+      st.textContent = '.thumb .deck-audio{ display: none !important; }';
+      deck.shadowRoot.appendChild(st);
+      return true;
+    }
+
+    tryAutoplay();
+
+    var n = 0;
+    var timer = setInterval(function () {
+      var a = inject(), b = hideInRail();
+      if ((a && b) || ++n > 90) clearInterval(timer);
+    }, 100);
+    if (window.customElements && customElements.whenDefined) {
+      customElements.whenDefined('deck-stage').then(function () { inject(); hideInRail(); });
+    }
+  })();
+</script>
+
 </body></html>
