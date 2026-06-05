@@ -1408,6 +1408,56 @@
     gap: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
     width: 100%;
   }
+  .finale-gauge-mount { width: 100%; margin-top: 28px; position: relative; }
+  .fg {
+    position: relative; width: 100%;
+    padding: 18px 22px 22px;
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(420px 220px at 50% 90%, rgba(229,55,43,0.16), transparent 70%),
+      rgba(15,15,18,0.55);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 22px 50px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.03);
+    overflow: hidden;
+  }
+  .fg::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 48px),
+      repeating-linear-gradient(0deg,  rgba(255,255,255,0.025) 0 1px, transparent 1px 48px);
+    mask-image: radial-gradient(circle at 50% 70%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at 50% 70%, #000 30%, transparent 80%);
+  }
+  .fg-head {
+    position: relative; display: flex; justify-content: space-between; align-items: center;
+    font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .fg-head .lvl { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); }
+  .fg-head .lvl .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(229,55,43,0.7); animation: fgPulse 1.4s ease-out infinite;
+  }
+  @keyframes fgPulse {
+    0% { box-shadow: 0 0 0 0 rgba(229,55,43,0.7); }
+    100% { box-shadow: 0 0 0 14px rgba(229,55,43,0); }
+  }
+  .fg-svg { width: 100%; height: auto; display: block; }
+  .fg-svg .fg-needle { transform-origin: 200px 215px; animation: fgHover 3.4s ease-in-out infinite; }
+  @keyframes fgHover {
+    0%, 100% { transform: rotate(-0.6deg); }
+    50%      { transform: rotate(0.6deg); }
+  }
+  .fg-foot {
+    position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
+    font-family: "Archivo", sans-serif;
+  }
+  .fg-foot .fk { display: block; font-size: 10px; letter-spacing: 0.24em; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+  .fg-foot .fv { display: block; margin-top: 4px; font-size: 18px; color: var(--ink); font-weight: 800; }
+  .fg-foot .fv.r { color: var(--accent); }
+  .fg-foot .fv.g { color: #3fb56a; }
   .finale-stat {
     padding: 14px 18px; border-right: 1px solid var(--line);
   }
@@ -1539,7 +1589,7 @@
     user-select: none;
     will-change: transform;
   }
-  .pm-popup.shane { border-color: #5286cc; }
+  .pm-popup.shane { border-color: var(--accent); }
   .pm-popup .topbar {
     display: flex; align-items: center; justify-content: space-between;
     background: var(--accent); color: #0a0a0c;
@@ -1548,7 +1598,7 @@
     touch-action: none;
     border-bottom: 1px solid rgba(0,0,0,0.18);
   }
-  .pm-popup.shane .topbar { background: #5286cc; }
+  .pm-popup.shane .topbar { background: var(--accent); }
   .pm-popup.dragging .topbar { cursor: grabbing; }
   .pm-popup .topbar .grip-l { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
   .pm-popup .topbar .grip-l .dots { font-size: 18px; opacity: 0.7; line-height: 1; }
@@ -1560,7 +1610,7 @@
   .pm-popup .meta { font-size: 15px; color: var(--muted); margin-top: 10px; line-height: 1.4; max-height: 5.6em; overflow: hidden; }
   .pm-popup .cta { display: inline-block; font-size: 17px; color: var(--accent); margin-top: 16px; font-weight: 800; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; }
   .pm-popup .cta:hover { text-decoration: underline; }
-  .pm-popup.shane .cta { color: #5286cc; }
+  .pm-popup.shane .cta { color: var(--accent); }
   .pm-popup .img {
     width: 100%; aspect-ratio: 4 / 3; margin-bottom: 14px;
     background: #0a0a0c; border: 1px solid rgba(255,255,255,0.08);
@@ -1569,9 +1619,37 @@
   }
   .pm-popup .img img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
   .pm-popup .img .ph { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .pm-popup.shane .body { max-height: 72vh; overflow-y: auto; }
+  .pm-popup .dossier-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px;
+    margin-top: 14px; padding: 12px 14px;
+    border: 1px solid var(--line); background: rgba(229,55,43,0.06);
+  }
+  .pm-popup .dossier-grid .dk { display: block; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .pm-popup .dossier-grid .dv { display: block; margin-top: 2px; font-size: 16px; color: var(--ink); font-weight: 700; }
+  .pm-popup .ds-section { margin-top: 14px; }
+  .pm-popup .ds-title { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); font-weight: 800; margin-bottom: 6px; }
+  .pm-popup .ds-list { list-style: none; margin: 0; padding: 0; }
+  .pm-popup .ds-list li { font-size: 14px; line-height: 1.4; color: var(--ink); padding: 6px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; }
+  .pm-popup .ds-list li:last-child { border-bottom: 0; }
+  .pm-popup .ds-list b { font-weight: 800; }
+  .pm-popup .ds-list b.red { color: var(--accent); }
+  .pm-popup .ds-list b.good { color: #3fb56a; }
+  .pm-popup .ds-links { display: flex; flex-direction: column; }
+  .pm-popup .ds-links a { font-size: 14px; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: color .12s; }
+  .pm-popup .ds-links a:last-child { border-bottom: 0; }
+  .pm-popup .ds-links a:hover { color: var(--accent); }
+  .pm-popup .ds-links a .src { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .pm-popup .ds-gauge { display: flex; flex-direction: column; align-items: center; padding: 6px 0 2px; }
+  .pm-popup .gauge-svg { width: 100%; max-width: 300px; height: auto; }
+  .pm-popup .gauge-svg .needle { transform-origin: 120px 130px; animation: gaugeHover 3.6s ease-in-out infinite; }
+  @keyframes gaugeHover {
+    0%, 100% { transform: rotate(-0.5deg); }
+    50%      { transform: rotate(0.5deg); }
+  }
   .pm-line { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
   .pm-line line { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 6; opacity: 0.85; }
-  .pm-line line.shane { stroke: #5286cc; }
+  .pm-line line.shane { stroke: var(--accent); }
   .pm-hover {
     position: absolute; z-index: 7; pointer-events: none;
     transform: translate(14px, -50%);
@@ -1580,7 +1658,7 @@
     padding: 6px 12px; font-family: inherit; font-size: 16px; font-weight: 800; letter-spacing: 0.04em;
     white-space: nowrap;
   }
-  .pm-hover.shane { border-color: #5286cc; }
+  .pm-hover.shane { border-color: var(--accent); }
   .pm-hover .sub { display: block; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 2px; }
 </style>
 </head>
@@ -2046,6 +2124,7 @@
             <span class="past"><s>30</s><s>31</s><s>32</s></span>
             <span class="now">33</span>
           </div>
+          <div id="finale-gauge-root" class="finale-gauge-mount"></div>
           <div class="finale-stat-row">
             <div class="finale-stat"><span class="k">Peak risk</span><span class="v red">+98.4</span></div>
             <div class="finale-stat"><span class="k">Today</span><span class="v">−25 / yr</span></div>
@@ -2153,20 +2232,54 @@
 </script>
 
 
+<script>
+  // Global ticker: a single Current Risk value (and a few shadow stats) drifts ±0.1 every 3s.
+  // All slides subscribe via the 'risk-tick' CustomEvent so they stay in sync.
+  (function () {
+    if (window.RiskState) return;
+    const round1 = (v) => Math.round(v * 10) / 10;
+    const jiggle = (v, lo, hi) => {
+      const delta = Math.random() < 0.5 ? -0.1 : 0.1;
+      return round1(Math.max(lo, Math.min(hi, v + delta)));
+    };
+    window.RiskState = {
+      current: 83.4,   // the main "Current risk" — Shane card gauge + finale gauge
+      gamer: 93.0,     // slide 4 Shane bars
+      outside: 87.0,
+      anime: 93.0,
+    };
+    setInterval(() => {
+      window.RiskState.current = jiggle(window.RiskState.current, 60, 96);
+      window.RiskState.gamer   = jiggle(window.RiskState.gamer, 78, 99);
+      window.RiskState.outside = jiggle(window.RiskState.outside, 72, 96);
+      window.RiskState.anime   = jiggle(window.RiskState.anime, 80, 99);
+      window.dispatchEvent(new CustomEvent('risk-tick'));
+    }, 3000);
+  })();
+</script>
+
 <script type="text/babel">
   function RiskExplorer() {
-    const { useState } = React;
+    const { useState, useEffect } = React;
+    // Subscribe to the global risk tick so Shane bars update every 3s.
+    const [, _bump] = useState(0);
+    useEffect(() => {
+      const h = () => _bump((x) => x + 1);
+      window.addEventListener('risk-tick', h);
+      return () => window.removeEventListener('risk-tick', h);
+    }, []);
     const [sex, setSex] = useState('male');
     const [age, setAge] = useState(22);
     const [geo, setGeo] = useState('metro');
 
     const FACTORS = [
-      { label: 'Gamer',                  base: 62, male: 14, slope: 0.9, geo: 4, mult: 0.5, unit: 'pct', max: 100, shane: 93 },
-      { label: "Doesn't go outside",     base: 48, male: 6,  slope: 0.7, geo: 6, mult: 0.3, unit: 'pct', max: 100, shane: 87 },
-      { label: 'Anime · Titty figurines', base: 35, male: 27, slope: 0.8, geo: 8, mult: 1.0, unit: 'pct', max: 100, shane: 93 },
+      { label: 'Gamer',                  key: 'gamer',   base: 62, male: 14, slope: 0.9, geo: 4, mult: 0.5, unit: 'pct', max: 100, shane: 93 },
+      { label: "Doesn't go outside",     key: 'outside', base: 48, male: 6,  slope: 0.7, geo: 6, mult: 0.3, unit: 'pct', max: 100, shane: 87 },
+      { label: 'Anime · Titty figurines', key: 'anime',  base: 35, male: 27, slope: 0.8, geo: 8, mult: 1.0, unit: 'pct', max: 100, shane: 93 },
       { label: 'Would fuck a turtle*',    base: 18, male: 9,  slope: 0.4, geo: 3, mult: 0.1, unit: 'pct', max: 100, shane: 100 },
       { label: 'Hrs/day on Discord',     base: 1.4, male: 0.3, slope: 0.04, geo: 0.15, mult: 1.0, unit: 'hrs', max: 24, shane: 23 },
     ];
+    const shaneOf = (f) => (f.key && window.RiskState ? window.RiskState[f.key] : f.shane);
     const avgOf = (f) => {
       const v = (f.base + (sex === 'male' ? f.male : -f.male)
               + (25 - age) * f.slope
@@ -2174,7 +2287,11 @@
       if (f.unit === 'hrs') return Math.max(0, Math.min(f.max, Math.round(v)));
       return Math.max(2, Math.min(90, Math.round(v)));
     };
-    const fmtVal = (f, v) => f.unit === 'hrs' ? v + ' hrs.' : v + '%';
+    const fmtVal = (f, v) => {
+      if (f.unit === 'hrs') return v + ' hrs.';
+      // shane values that come from RiskState are floats with 1 decimal; avgs are ints.
+      return (Number.isInteger(v) ? v : v.toFixed(1)) + '%';
+    };
     const barW = (f, v) => (v / f.max * 100) + '%';
     const stop = (e) => e.stopPropagation();
 
@@ -2221,8 +2338,8 @@
                   </div>
                   <div className="ix-bar">
                     <span className="ix-tag shane">Shane</span>
-                    <div className="ix-track"><div className="ix-fill shane" style={{ width: barW(f, f.shane) }}></div></div>
-                    <span className="ix-pct shane">{fmtVal(f, f.shane)}</span>
+                    <div className="ix-track"><div className="ix-fill shane" style={{ width: barW(f, shaneOf(f)) }}></div></div>
+                    <span className="ix-pct shane">{fmtVal(f, shaneOf(f))}</span>
                   </div>
                 </div>
               </div>
@@ -2241,6 +2358,13 @@
 <script type="text/babel">
   function PremisePanel() {
     const { useState, useRef, useEffect } = React;
+    // Subscribe to global risk tick so the Shane gauge updates every 3s.
+    const [, _bumpRisk] = useState(0);
+    useEffect(() => {
+      const h = () => _bumpRisk((x) => x + 1);
+      window.addEventListener('risk-tick', h);
+      return () => window.removeEventListener('risk-tick', h);
+    }, []);
     const [zoom, setZoom] = useState(false);
     const [autoRotate, setAutoRotate] = useState(true);
     const [hoverInfo, setHoverInfo] = useState(null);
@@ -2660,21 +2784,139 @@
                 </div>
                 <div className="body">
                   {clicked.kind === 'furry' && (
-                    <div className="img">
-                      {clicked.imgUrl === undefined && <span className="ph">Loading preview…</span>}
-                      {clicked.imgUrl === null && <span className="ph">No preview available</span>}
-                      {clicked.imgUrl && <img src={clicked.imgUrl} alt="" referrerPolicy="no-referrer" onError={(e) => { e.target.parentNode.innerHTML = '<span class="ph">Preview unavailable</span>'; }} />}
-                    </div>
+                    <>
+                      <div className="img">
+                        {clicked.imgUrl === undefined && <span className="ph">Loading preview…</span>}
+                        {clicked.imgUrl === null && <span className="ph">No preview available</span>}
+                        {clicked.imgUrl && <img src={clicked.imgUrl} alt="" referrerPolicy="no-referrer" onError={(e) => { e.target.parentNode.innerHTML = '<span class="ph">Preview unavailable</span>'; }} />}
+                      </div>
+                      <span className="lbl">{clicked.sub}</span>
+                      <span className="val">{clicked.title || clicked.label}</span>
+                      {clicked.title && (
+                        <span className="lbl" style={{ marginTop: '8px' }}>Post {clicked.label}</span>
+                      )}
+                      {clicked.desc && <span className="meta">{clicked.desc}</span>}
+                      <a className="cta" href={clicked.url} target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>
+                        Open furtrack.com ↗
+                      </a>
+                    </>
                   )}
-                  <span className="lbl">{clicked.sub}</span>
-                  <span className="val">{clicked.title || clicked.label}</span>
-                  {clicked.kind === 'furry' && clicked.title && (
-                    <span className="lbl" style={{ marginTop: '8px' }}>Post {clicked.label}</span>
+                  {clicked.kind === 'shane' && (
+                    <>
+                      <span className="lbl">Case · 001 · Subject</span>
+                      <span className="val">Shane Bruess</span>
+                      <span className="meta">Sales Engineer · Outreach · Seattle, WA. Birthday boy. Egregious case.</span>
+
+                      {(() => {
+                        const pct = (window.RiskState && window.RiskState.current) || 83.4;
+                        const cx = 120, cy = 130, r = 100;
+                        const a = Math.PI * (1 - pct / 100);
+                        const ex = cx + r * Math.cos(a);
+                        const ey = cy - r * Math.sin(a);
+                        const nx = cx + (r - 12) * Math.cos(a);
+                        const ny = cy - (r - 12) * Math.sin(a);
+                        return (
+                          <div className="ds-section ds-gauge">
+                            <div className="ds-title" style={{ alignSelf: 'flex-start' }}>Risk index</div>
+                            <svg viewBox="0 0 240 170" className="gauge-svg">
+                              <defs>
+                                <linearGradient id="riskGrad" x1="0" y1="0" x2="1" y2="0">
+                                  <stop offset="0%"   stopColor="#3fb56a" />
+                                  <stop offset="50%"  stopColor="#e8c547" />
+                                  <stop offset="100%" stopColor="#e5372b" />
+                                </linearGradient>
+                              </defs>
+                              <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+                                    fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="14" strokeLinecap="round" />
+                              <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
+                                    fill="none" stroke="url(#riskGrad)" strokeWidth="14" strokeLinecap="round" />
+                              {[0, 25, 50, 75, 100].map((p) => {
+                                const t = Math.PI * (1 - p / 100);
+                                const inR = r - 22, outR = r - 10;
+                                return (
+                                  <line key={p}
+                                        x1={cx + inR * Math.cos(t)} y1={cy - inR * Math.sin(t)}
+                                        x2={cx + outR * Math.cos(t)} y2={cy - outR * Math.sin(t)}
+                                        stroke="rgba(255,255,255,0.75)" strokeWidth="2" />
+                                );
+                              })}
+                              {[0, 50, 100].map((p) => {
+                                const t = Math.PI * (1 - p / 100);
+                                const lx = cx + (r + 16) * Math.cos(t);
+                                const ly = cy - (r + 16) * Math.sin(t);
+                                return (
+                                  <text key={p} x={lx} y={ly + 4} textAnchor="middle"
+                                        fill="rgba(255,255,255,0.55)"
+                                        style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '0.16em', fontFamily: 'Archivo, sans-serif' }}>{p}</text>
+                                );
+                              })}
+                              <g className="needle">
+                                <line x1={cx} y1={cy} x2={nx} y2={ny}
+                                      stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
+                                <circle cx={cx} cy={cy} r="7" fill="var(--accent)" stroke="var(--ink)" strokeWidth="2" />
+                              </g>
+                              <text x={cx} y={cy - 28} textAnchor="middle" fill="var(--accent)"
+                                    style={{ fontSize: '42px', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Archivo, sans-serif' }}>{pct}</text>
+                              <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.55)"
+                                    style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '0.28em', fontFamily: 'Archivo, sans-serif' }}>OF 100</text>
+                            </svg>
+                          </div>
+                        );
+                      })()}
+
+                      <div className="dossier-grid">
+                        <div><span className="dk">Age</span><span className="dv">33</span></div>
+                        <div><span className="dk">DOB</span><span className="dv">Jun 3, 1993</span></div>
+                        <div><span className="dk">Origin</span><span className="dv">Hailey, ID</span></div>
+                        <div><span className="dk">Current city</span><span className="dv">Lake Stevens, WA</span></div>
+                        <div><span className="dk">Status</span><span className="dv">Married · Cori</span></div>
+                        <div><span className="dk">Employer</span><span className="dv">Outreach</span></div>
+                        <div><span className="dk">Vehicle</span><span className="dv">VW Jetta</span></div>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Risk profile</div>
+                        <ul className="ds-list">
+                          <li>Risk factors present <b>5 of 5</b></li>
+                          <li>Peak risk index <b className="red">+98.4</b></li>
+                          <li>Threat level <b className="red">Bad Dragon</b></li>
+                          <li>Trajectory <b className="good">↓ 12 / yr</b></li>
+                          <li>Knot-curiosity <b>elevated</b></li>
+                        </ul>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Medical history</div>
+                        <ul className="ds-list">
+                          <li>Cholecystectomy <b>gallbladder, removed</b></li>
+                          <li>GLP-1 receptor agonist <b className="good">active Rx</b></li>
+                          <li>Musk-maxxing protocol <b>self-reported</b></li>
+                          <li>Hydration <b>questionable</b></li>
+                        </ul>
+                      </div>
+
+                      <div className="ds-section">
+                        <div className="ds-title">Known accounts</div>
+                        <div className="ds-links">
+                          <a href="https://www.facebook.com/shane.bruess" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>Facebook <span className="src">facebook.com ↗</span></a>
+                          <a href="https://www.linkedin.com/in/shane-bruess-a413a6ba/" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>LinkedIn <span className="src">linkedin.com ↗</span></a>
+                          <a href="https://theorg.com/org/outreach/org-chart/shane-bruess" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>TheOrg · Outreach <span className="src">theorg.com ↗</span></a>
+                          <a href="https://www.zoominfo.com/p/Shane-Bruess/-1240333863" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>ZoomInfo <span className="src">zoominfo.com ↗</span></a>
+                          <a href="https://www.google.com/search?q=%22shane+bruess%22+instagram" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>Instagram <span className="src">google search ↗</span></a>
+                          <a href="https://www.google.com/search?q=%22shane+bruess%22+tiktok" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>TikTok <span className="src">google search ↗</span></a>
+                          <a href="https://www.furtrack.com/index/photographer:shane" target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>Furtrack · search <span className="src">furtrack.com ↗</span></a>
+                        </div>
+                      </div>
+
+                      <div className="ds-section" style={{ marginTop: '18px' }}>
+                        <div className="ds-title">Verdict</div>
+                        <ul className="ds-list">
+                          <li>Past peak <b className="good">confirmed</b></li>
+                          <li>Numbers <b className="good">coming down</b></li>
+                        </ul>
+                      </div>
+                    </>
                   )}
-                  {clicked.desc && <span className="meta">{clicked.desc}</span>}
-                  <a className="cta" href={clicked.url} target="_blank" rel="noopener noreferrer" onPointerDown={stop} onClick={stop}>
-                    {clicked.kind === 'shane' ? 'Open Facebook ↗' : 'Open furtrack.com ↗'}
-                  </a>
                 </div>
               </div>
             )}
@@ -2709,6 +2951,115 @@
   (function () {
     const el = document.getElementById('premise-root');
     if (el && window.ReactDOM && ReactDOM.createRoot) ReactDOM.createRoot(el).render(<PremisePanel />);
+  })();
+</script>
+
+<script type="text/babel">
+  // Cooler, bigger risk gauge for the finale slide. Subscribes to the same global tick.
+  function FinaleGauge() {
+    const { useState, useEffect } = React;
+    const [, _bump] = useState(0);
+    useEffect(() => {
+      const h = () => _bump((x) => x + 1);
+      window.addEventListener('risk-tick', h);
+      return () => window.removeEventListener('risk-tick', h);
+    }, []);
+    const pct = (window.RiskState && window.RiskState.current) || 83.4;
+    const cx = 200, cy = 215, r = 175;
+    const a  = Math.PI * (1 - pct / 100);
+    const ex = cx + r * Math.cos(a);
+    const ey = cy - r * Math.sin(a);
+    const nx = cx + (r - 22) * Math.cos(a);
+    const ny = cy - (r - 22) * Math.sin(a);
+    const arc = (p) => {
+      const t = Math.PI * (1 - p / 100);
+      return { x: cx + r * Math.cos(t), y: cy - r * Math.sin(t) };
+    };
+    const start = arc(0);
+    return (
+      <div className="fg">
+        <div className="fg-head">
+          <span>Live · Current Risk Index</span>
+          <span className="lvl"><span className="dot"></span>Live signal</span>
+        </div>
+        <svg viewBox="0 0 400 250" className="fg-svg">
+          <defs>
+            <linearGradient id="fgGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stopColor="#3fb56a" />
+              <stop offset="50%"  stopColor="#e8c547" />
+              <stop offset="100%" stopColor="#e5372b" />
+            </linearGradient>
+            <filter id="fgGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+
+          {/* outer ring decoration */}
+          <path d={`M ${start.x} ${start.y} A ${r + 14} ${r + 14} 0 0 1 ${cx + r + 14} ${cy}`}
+                fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+          {/* background track */}
+          <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+                fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="22" strokeLinecap="round" />
+          {/* glow underlay */}
+          <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
+                fill="none" stroke="url(#fgGrad)" strokeWidth="28" strokeLinecap="round"
+                opacity="0.45" filter="url(#fgGlow)" />
+          {/* main filled arc */}
+          <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
+                fill="none" stroke="url(#fgGrad)" strokeWidth="22" strokeLinecap="round" />
+
+          {/* minor ticks every 5 */}
+          {Array.from({ length: 21 }, (_, i) => i * 5).map((p) => {
+            const t = Math.PI * (1 - p / 100);
+            const big = p % 25 === 0;
+            const inR = r - (big ? 36 : 32), outR = r - 16;
+            return (
+              <line key={p}
+                    x1={cx + inR * Math.cos(t)} y1={cy - inR * Math.sin(t)}
+                    x2={cx + outR * Math.cos(t)} y2={cy - outR * Math.sin(t)}
+                    stroke={big ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.35)'}
+                    strokeWidth={big ? 2.5 : 1.5} />
+            );
+          })}
+          {/* major labels */}
+          {[0, 25, 50, 75, 100].map((p) => {
+            const t = Math.PI * (1 - p / 100);
+            const lx = cx + (r + 26) * Math.cos(t);
+            const ly = cy - (r + 26) * Math.sin(t) + 5;
+            return (
+              <text key={p} x={lx} y={ly} textAnchor="middle"
+                    fill="rgba(255,255,255,0.7)"
+                    style={{ fontSize: '13px', fontWeight: 800, letterSpacing: '0.16em', fontFamily: 'Archivo, sans-serif' }}>{p}</text>
+            );
+          })}
+
+          {/* needle */}
+          <g className="fg-needle">
+            <line x1={cx} y1={cy} x2={nx} y2={ny}
+                  stroke="var(--ink)" strokeWidth="5" strokeLinecap="round"
+                  filter="url(#fgGlow)" />
+            <circle cx={cx} cy={cy} r="13" fill="#0a0a0c" stroke="var(--accent)" strokeWidth="3" />
+            <circle cx={cx} cy={cy} r="5"  fill="var(--accent)" />
+          </g>
+
+          {/* huge value */}
+          <text x={cx} y={cy - 58} textAnchor="middle" fill="var(--accent)"
+                style={{ fontSize: '78px', fontWeight: 900, letterSpacing: '-0.04em', fontFamily: 'Archivo, sans-serif' }}>{pct.toFixed(1)}</text>
+          <text x={cx} y={cy - 28} textAnchor="middle" fill="rgba(255,255,255,0.55)"
+                style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '0.32em', fontFamily: 'Archivo, sans-serif' }}>OF 100 · LIVE</text>
+        </svg>
+        <div className="fg-foot">
+          <div><span className="fk">Peak</span><span className="fv r">+98.4</span></div>
+          <div><span className="fk">Today</span><span className="fv">{pct.toFixed(1)}</span></div>
+          <div><span className="fk">Trend</span><span className="fv g">↓ Receding</span></div>
+        </div>
+      </div>
+    );
+  }
+  (function () {
+    const el = document.getElementById('finale-gauge-root');
+    if (el && window.ReactDOM && ReactDOM.createRoot) ReactDOM.createRoot(el).render(<FinaleGauge />);
   })();
 </script>
 
