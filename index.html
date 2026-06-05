@@ -1586,6 +1586,23 @@
   .pm-rotate-btn:hover { background: rgba(229,55,43,0.18); }
   .pm-rotate-btn.off { border-color: rgba(255,255,255,0.30); color: var(--muted); }
   .pm-rotate-btn .ic { font-size: 14px; }
+  .pm-legend {
+    margin-top: 22px;
+    display: flex; flex-direction: column; gap: 12px;
+    padding: 14px 16px;
+    background: rgba(15,15,18,0.55);
+    border: 1px solid rgba(255,255,255,0.14);
+    font-family: inherit; color: var(--ink); max-width: 32ch;
+  }
+  .pm-legend .lg-title { font-size: 10px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .pm-legend .lg-row { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; color: var(--ink); letter-spacing: 0.04em; }
+  .pm-legend .lg-swatch { width: 22px; height: 12px; border: 1px solid rgba(255,255,255,0.20); flex: none; }
+  .pm-legend .lg-dot {
+    width: 12px; height: 12px; border-radius: 50%; flex: none;
+    background: #ff4133; box-shadow: 0 0 8px 2px rgba(255,65,51,0.65);
+  }
+  .pm-legend .lg-block + .lg-block { border-top: 1px solid rgba(255,255,255,0.10); padding-top: 10px; }
+  .pm-legend .lg-block { display: flex; flex-direction: column; gap: 6px; }
   .pm-popup {
     position: absolute; top: 18%; right: 12%; z-index: 6; pointer-events: auto;
     display: flex; flex-direction: column;
@@ -2043,7 +2060,7 @@
       <div class="findings-grid anim d2">
         <div class="finding"><span class="k">Subject</span><span class="v">S. Bruess</span></div>
         <div class="finding"><span class="k">Origin</span><span class="v">Hailey, Idaho · 1993</span></div>
-        <div class="finding"><span class="k">Threat factors of Five?</span><span class="v">Five+... Threat level: BAD DRAGON.</span></div>
+        <div class="finding"><span class="k">Threat factors of Five?</span><span class="v">Five+... Risk level: BAD DRAGON.</span></div>
         <div class="finding"><span class="k">Status</span><span class="v">Married · risk declining</span></div>
         <div class="finding"><span class="k">Peak risk index</span><span class="v red">+98.4 · eve of wedding</span></div>
         <div class="finding"><span class="k">Current trajectory</span><span class="v good">Reducing by 12 points on average annually.</span></div>
@@ -2092,7 +2109,7 @@
         <div class="finale-ticker-track">
           <span>Subject: <span class="r">S. Bruess</span></span><span class="sep">◆</span>
           <span>Origin: Hailey, ID</span><span class="sep">◆</span>
-          <span>Threat level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
+          <span>Risk level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
           <span>Peak risk: <span class="r">+98.4</span></span><span class="sep">◆</span>
           <span>Status: Married</span><span class="sep">◆</span>
           <span>Trajectory: <span class="r">↓ 12 / yr</span></span><span class="sep">◆</span>
@@ -2100,7 +2117,7 @@
           <!-- duplicate for seamless loop -->
           <span>Subject: <span class="r">S. Bruess</span></span><span class="sep">◆</span>
           <span>Origin: Hailey, ID</span><span class="sep">◆</span>
-          <span>Threat level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
+          <span>Risk level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
           <span>Peak risk: <span class="r">+98.4</span></span><span class="sep">◆</span>
           <span>Status: Married</span><span class="sep">◆</span>
           <span>Trajectory: <span class="r">↓ 12 / yr</span></span><span class="sep">◆</span>
@@ -2483,7 +2500,7 @@
 
       const R = 1.62;
       earth.add(new THREE.Mesh(
-        new THREE.SphereGeometry(R * 0.984, 48, 32),
+        new THREE.SphereGeometry(R * 0.965, 48, 32),
         new THREE.MeshBasicMaterial({ color: 0x09090b })));
       earth.add(new THREE.LineSegments(
         new THREE.WireframeGeometry(new THREE.SphereGeometry(R * 0.997, 30, 20)),
@@ -2717,12 +2734,176 @@
         buildCountries();
       };
 
-      // Country/continent vector outlines from world-atlas topojson, drawn as line segments
-      // just above the dot-shaded earth so borders read clearly against the dark texture.
+      // Country outlines + tiered LGBTQ+ legality fills, sourced from world-atlas topojson.
+      // Tiers (ISO 3166-1 numeric / M49 IDs):
+      //   high       — same-sex marriage or near-full equal rights → red @ 25%
+      //   mixed      — civil unions / partial recognition / decriminalized & evolving → red @ 15%
+      //   restrict   — restrictive / hostile but not criminalized → red @ 5%
+      //   criminal   — same-sex acts illegal → no fill
+      const LEGAL_TIERS = {
+        high: [
+          840, // USA
+          124, // Canada
+          826, // United Kingdom
+          372, // Ireland
+          250, // France
+          276, // Germany
+          528, // Netherlands
+           56, // Belgium
+          442, // Luxembourg
+          724, // Spain
+          620, // Portugal
+          380, // Italy (civil unions, trending up)
+           40, // Austria
+          756, // Switzerland
+          208, // Denmark
+          752, // Sweden
+          578, // Norway
+          246, // Finland
+          352, // Iceland
+           36, // Australia
+          554, // New Zealand
+           32, // Argentina
+          858, // Uruguay
+           76, // Brazil
+          152, // Chile
+          484, // Mexico
+          170, // Colombia
+          218, // Ecuador
+          710, // South Africa
+          158, // Taiwan
+          470, // Malta
+        ],
+        mixed: [
+          392, // Japan
+          410, // South Korea
+          376, // Israel
+          203, // Czechia
+          705, // Slovenia
+          191, // Croatia
+          233, // Estonia
+          300, // Greece
+          196, // Cyprus
+          188, // Costa Rica
+          604, // Peru
+           68, // Bolivia
+          862, // Venezuela
+          764, // Thailand
+          608, // Philippines
+          348, // Hungary
+          703, // Slovakia
+          642, // Romania
+          100, // Bulgaria
+          440, // Lithuania
+          428, // Latvia
+          499, // Montenegro
+            8, // Albania
+          807, // North Macedonia
+           70, // Bosnia & Herz.
+          688, // Serbia
+          192, // Cuba
+          591, // Panama
+          704, // Vietnam
+          116, // Cambodia
+          524, // Nepal
+          496, // Mongolia
+        ],
+        restrict: [
+          643, // Russia
+          156, // China
+          356, // India
+          616, // Poland
+          792, // Turkey
+          112, // Belarus
+          804, // Ukraine
+          360, // Indonesia (Aceh excepted)
+          702, // Singapore
+          340, // Honduras
+          600, // Paraguay
+          214, // Dominican Rep.
+          320, // Guatemala
+          398, // Kazakhstan
+          417, // Kyrgyzstan
+          762, // Tajikistan
+          860, // Uzbekistan
+          104, // Myanmar
+          144, // Sri Lanka
+           64, // Bhutan
+          418, // Laos
+          788, // Tunisia
+          422, // Lebanon
+          400, // Jordan
+          504, // Morocco
+          818, // Egypt
+           72, // Botswana
+          516, // Namibia
+          508, // Mozambique
+          450, // Madagascar
+           24, // Angola
+          384, // Côte d'Ivoire
+        ],
+      };
+      const tierOf = (id) => {
+        if (LEGAL_TIERS.high.indexOf(id) >= 0) return 'high';
+        if (LEGAL_TIERS.mixed.indexOf(id) >= 0) return 'mixed';
+        if (LEGAL_TIERS.restrict.indexOf(id) >= 0) return 'restrict';
+        return null; // criminalized / unknown → no fill
+      };
+      const TIER_OPACITY = { high: 0.25, mixed: 0.15, restrict: 0.05 };
+
       const buildCountries = () => {
         if (!window.topojson) return;
         const URL = 'https://unpkg.com/world-atlas@2/countries-110m.json';
         fetch(URL).then(r => r.json()).then(topo => {
+          // ---- fills ----
+          const RR_FILL = R * 1.002;
+          const tierPos = { high: [], mixed: [], restrict: [] };
+          const features = topojson.feature(topo, topo.objects.countries).features;
+          features.forEach((f) => {
+            const tier = tierOf(+f.id);
+            if (!tier) return;
+            const dest = tierPos[tier];
+            const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+            polys.forEach((rings) => {
+              if (!rings || !rings.length) return;
+              const outer = rings[0].map(([lo, la]) => new THREE.Vector2(lo, la));
+              if (outer.length < 3) return;
+              const shape = new THREE.Shape(outer);
+              for (let h = 1; h < rings.length; h++) {
+                const hole = rings[h].map(([lo, la]) => new THREE.Vector2(lo, la));
+                if (hole.length >= 3) shape.holes.push(new THREE.Path(hole));
+              }
+              let sg;
+              try { sg = new THREE.ShapeGeometry(shape); } catch (e) { return; }
+              const posAttr = sg.attributes.position.array;
+              const idx = sg.index ? sg.index.array : null;
+              if (idx) {
+                for (let i = 0; i < idx.length; i++) {
+                  const k = idx[i] * 3;
+                  const v = toVec(posAttr[k + 1], posAttr[k], RR_FILL);
+                  dest.push(v.x, v.y, v.z);
+                }
+              } else {
+                for (let i = 0; i < posAttr.length; i += 3) {
+                  const v = toVec(posAttr[i + 1], posAttr[i], RR_FILL);
+                  dest.push(v.x, v.y, v.z);
+                }
+              }
+              sg.dispose();
+            });
+          });
+          Object.keys(tierPos).forEach((tier) => {
+            const arr = tierPos[tier];
+            if (!arr.length) return;
+            const g = new THREE.BufferGeometry();
+            g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3));
+            const m = new THREE.MeshBasicMaterial({
+              color: 0xe5372b, transparent: true, opacity: TIER_OPACITY[tier],
+              side: THREE.DoubleSide, depthWrite: false });
+            earth.add(new THREE.Mesh(g, m));
+          });
+
+          // ---- outlines (drawn on top of fills) ----
           const mesh = topojson.mesh(topo, topo.objects.countries, (a, b) => true);
           const positions = [];
           const RR = R * 1.003;
@@ -3040,7 +3221,7 @@
                         <ul className="ds-list">
                           <li>Risk factors present <b>5 of 5</b></li>
                           <li>Peak risk index <b className="red">+98.4</b></li>
-                          <li>Threat level <b className="red">Bad Dragon</b></li>
+                          <li>Risk level <b className="red">Bad Dragon</b></li>
                           <li>Trajectory <b className="good">↓ 12 / yr</b></li>
                           <li>Knot-curiosity <b>elevated</b></li>
                         </ul>
@@ -3122,6 +3303,18 @@
               As you can see, he is in a <span style={{ textTransform: 'uppercase', letterSpacing: '0.04em' }}>hot hot</span> spot for the Furry community.
             </p>
           )}
+          <div className="pm-legend">
+            <div className="lg-block">
+              <div className="lg-title">Risk of becoming a furry</div>
+              <div className="lg-row"><span className="lg-swatch" style={{ background: 'rgba(229,55,43,0.25)' }}></span>High — full equality</div>
+              <div className="lg-row"><span className="lg-swatch" style={{ background: 'rgba(229,55,43,0.15)' }}></span>Mixed — partial protection</div>
+              <div className="lg-row"><span className="lg-swatch" style={{ background: 'rgba(229,55,43,0.05)' }}></span>Restrictive</div>
+              <div className="lg-row"><span className="lg-swatch" style={{ background: 'transparent' }}></span>Criminalized</div>
+            </div>
+            <div className="lg-block">
+              <div className="lg-row"><span className="lg-dot"></span>Confirmed furry activity</div>
+            </div>
+          </div>
         </div>
       </div>
     );
