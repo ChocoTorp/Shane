@@ -1099,8 +1099,10 @@
 
       // stand: turns the whole assembly horizontally about the vertical (like spinning a desk
       // globe's base). axis: the fixed 45° lean. earth: the ball spinning on its own tilted axis.
+      const orbit = new THREE.Group();   // free-mode (Google-Earth) trackball orientation; identity in auto mode
+      scene.add(orbit);
       const stand = new THREE.Group();
-      scene.add(stand);
+      orbit.add(stand);
       const axis = new THREE.Group();
       axis.rotation.x = 0.6;           // tip north pole toward the camera
       axis.rotation.z = Math.PI / 4;   // fixed 45 deg lean
@@ -1558,6 +1560,11 @@
       img.src = 'assets/earth-night.jpg';
 
       let yaw = -0.7, azimuth = 0, dragging = false, lx = 0, ly = 0, downX = 0, downY = 0;
+      // Free-orbit (auto-rotate OFF): accumulated trackball rotation applied to the `orbit` group.
+      const freeQuat = new THREE.Quaternion();
+      const IDENTITY = new THREE.Quaternion();
+      const AXIS_X = new THREE.Vector3(1, 0, 0), AXIS_Y = new THREE.Vector3(0, 1, 0);
+      const _dq = new THREE.Quaternion();   // scratch for per-move delta rotation
       const VFOV = 46 * Math.PI / 180;
       const ZMIN = 2.8, ZMAX = 16;             // ZMIN lowered → ~60% more zoom-in than before
       const START_MIN = 4.5;                   // initial framing floor (start zoom unchanged)
@@ -1625,14 +1632,19 @@
           return;
         }
         if (!dragging) return;
-        // The 45° lean is always locked. Grab ON the globe ⇒ spin it on its own tilted axis (like
-        // before); grab in EMPTY SPACE ⇒ turn the whole stand horizontally (azimuth about vertical).
-        // Distance-scaled so a pixel of drag tracks 1:1 at any zoom (zoomed in ⇒ less rotation).
-        const dx = e.clientX - lx;
+        const dx = e.clientX - lx, dy = e.clientY - ly;
         lx = e.clientX; ly = e.clientY;
-        const k = dx * 2 * Math.tan(VFOV / 2) * dist / (R * H);
-        if (dragSpin) yaw += k;       // on the globe → own-axis spin
-        else azimuth += k;            // in space → turn the whole stand horizontally
+        const kpp = 2 * Math.tan(VFOV / 2) * dist / (R * H);   // radians per pixel (1:1 at the globe front)
+        if (!autoRotateRef.current) {
+          // Auto-rotate OFF → free Google-Earth orbit: drag rotates the globe any direction.
+          _dq.setFromAxisAngle(AXIS_Y, dx * kpp); freeQuat.premultiply(_dq);   // horizontal → about vertical
+          _dq.setFromAxisAngle(AXIS_X, dy * kpp); freeQuat.premultiply(_dq);   // vertical → about screen-horizontal
+          return;
+        }
+        // Auto-rotate ON → branded constrained controls: the 45° lean is locked.
+        //   grab ON the globe ⇒ spin its own tilted axis · grab SPACE ⇒ turn the whole stand horizontally.
+        if (dragSpin) yaw += dx * kpp;
+        else azimuth += dx * kpp;
       };
       const up = (e) => {
         pointers.delete(e.pointerId);
@@ -1766,8 +1778,13 @@
       let raf;
       const tick = () => {
         raf = requestAnimationFrame(tick);
-        if (!dragging && !zoomRef.current && autoRotateRef.current) yaw += 0.0021;
-        earth.rotation.y = yaw; earth.rotation.x = 0;   // ball spins on its own tilted axis (auto-rotate)
+        if (autoRotateRef.current) {
+          // Branded auto mode: ease any free-orbit back to neutral, then run the locked 45° rig.
+          freeQuat.slerp(IDENTITY, 0.12);
+          if (!dragging && !zoomRef.current) yaw += 0.0021;   // ball spins on its own tilted axis
+        }
+        orbit.quaternion.copy(freeQuat);                // free Google-Earth orientation (identity in auto)
+        earth.rotation.y = yaw; earth.rotation.x = 0;
         stand.rotation.y = azimuth;                     // whole assembly turned horizontally by drag
         // axis keeps its fixed 45° lean (set once at creation).
         seattle.getWorldPosition(sw);
