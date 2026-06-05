@@ -1097,14 +1097,16 @@
       const camera = new THREE.PerspectiveCamera(46, W / H, 0.1, 100);
       camera.position.set(0, 0, 8);
 
+      // stand: turns the whole assembly horizontally about the vertical (like spinning a desk
+      // globe's base). axis: the fixed 45° lean. earth: the ball spinning on its own tilted axis.
+      const stand = new THREE.Group();
+      scene.add(stand);
       const axis = new THREE.Group();
       axis.rotation.x = 0.6;           // tip north pole toward the camera
       axis.rotation.z = Math.PI / 4;   // fixed 45 deg lean
-      scene.add(axis);
+      stand.add(axis);
       const earth = new THREE.Group();
-      // XYZ so the user tip (X) is the outer, screen-fixed equatorial axis and the spin (Y)
-      // is innermost — lets us blend the two so a horizontal drag reads as horizontal rotation.
-      earth.rotation.order = 'XYZ';
+      earth.rotation.order = 'YXZ';
       axis.add(earth);
 
       const R = 1.62;
@@ -1555,11 +1557,10 @@
       img.onerror = () => buildFurry(() => true);
       img.src = 'assets/earth-night.jpg';
 
-      let yaw = -0.7, tip = 0, dragging = false, lx = 0, ly = 0, downX = 0, downY = 0;
+      let yaw = -0.7, azimuth = 0, dragging = false, lx = 0, ly = 0, downX = 0, downY = 0;
       const VFOV = 46 * Math.PI / 180;
       const ZMIN = 2.8, ZMAX = 16;             // ZMIN lowered → ~60% more zoom-in than before
       const START_MIN = 4.5;                   // initial framing floor (start zoom unchanged)
-      const TIP_MIN = -1.0, TIP_MAX = 1.0;     // how far the globe can tip about its equatorial axis
       // Distance at which the whole sphere is comfortably framed for the current aspect.
       const fitDist = () => {
         const aspect = W / H;
@@ -1587,6 +1588,17 @@
       // --- pointer drag (rotate) + two-finger pinch (zoom) ---
       const pointers = new Map();
       let pinching = false, pinchStartGap = 0, pinchStartTarget = 0;
+      let dragSpin = false;   // true: grabbed the globe (spin own axis) · false: grabbed space (azimuth)
+      const ORIGIN = new THREE.Vector3();
+      // Ray-vs-sphere: did the pointer land on the globe (radius R, centred at the origin)?
+      const hitGlobe = (clientX, clientY) => {
+        const rect = dom.getBoundingClientRect();
+        if (!rect.width || !rect.height) return false;
+        ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        ndc.y = -(((clientY - rect.top) / rect.height) * 2 - 1);
+        ray.setFromCamera(ndc, camera);
+        return ray.ray.distanceToPoint(ORIGIN) <= R;
+      };
       const pinchGap = () => {
         const p = [...pointers.values()];
         return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
@@ -1600,7 +1612,8 @@
         }
         downX = e.clientX; downY = e.clientY;
         if (zoomRef.current) return;
-        dragging = true; dom.style.cursor = 'grabbing'; lx = e.clientX; ly = e.clientY; e.stopPropagation();
+        dragging = true; dragSpin = hitGlobe(e.clientX, e.clientY);
+        dom.style.cursor = 'grabbing'; lx = e.clientX; ly = e.clientY; e.stopPropagation();
       };
       const move = (e) => {
         if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -1612,15 +1625,14 @@
           return;
         }
         if (!dragging) return;
-        // The pole leans 45° on screen (north pole up-left, south down-right). Decompose the
-        // drag onto that tilted frame so the gesture follows the globe instead of the screen axes:
-        //   • across the pole line (NE–SW) → spin around the pole
-        //   • along the pole line (NW–SE)  → tip the near pole toward you
-        // Blended, a plain horizontal drag rotates the globe horizontally (the feel we want).
-        const dx = e.clientX - lx, dy = e.clientY - ly;
+        // The 45° lean is always locked. Grab ON the globe ⇒ spin it on its own tilted axis (like
+        // before); grab in EMPTY SPACE ⇒ turn the whole stand horizontally (azimuth about vertical).
+        // Distance-scaled so a pixel of drag tracks 1:1 at any zoom (zoomed in ⇒ less rotation).
+        const dx = e.clientX - lx;
         lx = e.clientX; ly = e.clientY;
-        yaw += (dx - dy) * 0.0045;                                            // perpendicular → spin
-        tip = Math.max(TIP_MIN, Math.min(TIP_MAX, tip + (dx + dy) * 0.0045)); // along pole → tip
+        const k = dx * 2 * Math.tan(VFOV / 2) * dist / (R * H);
+        if (dragSpin) yaw += k;       // on the globe → own-axis spin
+        else azimuth += k;            // in space → turn the whole stand horizontally
       };
       const up = (e) => {
         pointers.delete(e.pointerId);
@@ -1629,6 +1641,7 @@
           if (pointers.size === 1 && !zoomRef.current) {
             const rem = [...pointers.values()][0];
             lx = rem.x; ly = rem.y; dragging = true;   // hand rotation back to the remaining finger
+            dragSpin = hitGlobe(rem.x, rem.y);
           }
         }
         if (pointers.size === 0) { dragging = false; dom.style.cursor = 'grab'; }
@@ -1754,9 +1767,9 @@
       const tick = () => {
         raf = requestAnimationFrame(tick);
         if (!dragging && !zoomRef.current && autoRotateRef.current) yaw += 0.0021;
-        earth.rotation.y = yaw;    // spin around the (45°-leaned) pole
-        earth.rotation.x = tip;    // tip the near pole toward / away from camera
-        // axis keeps its fixed 45° lean (set once at creation); only the earth rotates.
+        earth.rotation.y = yaw; earth.rotation.x = 0;   // ball spins on its own tilted axis (auto-rotate)
+        stand.rotation.y = azimuth;                     // whole assembly turned horizontally by drag
+        // axis keeps its fixed 45° lean (set once at creation).
         seattle.getWorldPosition(sw);
         Object.keys(extraMarkers).forEach((sid) => {
           extraMarkers[sid].getWorldPosition(extraPos[sid]);
