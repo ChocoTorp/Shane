@@ -508,7 +508,8 @@
   #stage .pm-globe-wrap {
     position: absolute; inset: 0;
     top: 0; left: 0; width: 100%; height: 100%;
-    transform: none; z-index: 1;
+    transform: none;
+    z-index: auto;   /* override base z-index:1 so it doesn't trap the centred card */
   }
   #stage .pm-canvas canvas { width: 100% !important; height: 100% !important; display: block; }
 
@@ -518,10 +519,13 @@
   #stage .pm-caveat,
   #stage .pm-figure,
   #stage .pm-cities { display: none !important; }
-  /* .pm-left is just a host now — its children are placed individually below. */
+  /* .pm-left hosts the optional zoom blurb only. position:absolute with NO z-index,
+     so it does NOT form a stacking context that would trap the fixed children
+     (#pm-zoom / #pm-legend) beneath the dock. */
   #stage .pm-left {
-    position: fixed; left: 22px; bottom: 150px; top: auto;
-    max-width: 280px; padding: 0; z-index: 60;
+    position: absolute; left: 22px; bottom: 104px; top: auto;
+    max-width: 280px; padding: 0;
+    z-index: auto;   /* override base z-index:2 so children aren't trapped under the dock */
   }
 
   /* Risk tracker: full-width, minimal-height strip directly under the header. */
@@ -536,25 +540,52 @@
   #stage .pm-legend .lg-strip { flex: 0 1 300px; }
   #stage .pm-legend .lg-row { margin-left: auto; }
 
-  /* Find Highest risk + Auto-rotate: identical UI, stacked bottom-left. */
-  #stage .pm-zoom,
-  #stage .pm-rotate-btn {
-    position: fixed; left: 22px; z-index: 60; margin: 0;
-    width: 264px; box-sizing: border-box;
-    display: inline-flex; align-items: center; justify-content: flex-start; gap: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid var(--accent); color: var(--accent); border-radius: 0;
-    padding: 14px 20px; transform: none;
-    font-family: "Archivo", system-ui, sans-serif;
-    font-size: 19px; font-weight: 700; letter-spacing: 0.04em; text-transform: none;
-    cursor: pointer; transition: background 0.15s, color 0.15s; white-space: nowrap;
+  /* ===== bottom dock: [rotate toggle] · [find highest risk] · [play+volume] ===== */
+  #wk-dock {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 78;
+    height: 88px; box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.85); border-top: 1px solid var(--line);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   }
-  #stage .pm-zoom { bottom: 86px; }
-  #stage .pm-rotate-btn { bottom: 22px; }
-  #stage .pm-zoom .ic, #stage .pm-rotate-btn .ic { font-size: 18px; }
-  #stage .pm-zoom:hover, #stage .pm-rotate-btn:hover { background: var(--accent); color: var(--ink); }
-  #stage .pm-zoom.on { background: var(--accent); color: var(--ink); }
-  #stage .pm-rotate-btn.off { background: rgba(0, 0, 0, 0.8); border-color: var(--accent); color: var(--accent); }
+
+  /* Auto-rotate: square, boxy on/off toggle with a static rotate glyph (left of the dock). */
+  #stage .pm-rotate-btn {
+    position: fixed; left: 22px; bottom: 16px; z-index: 82; margin: 0; transform: none;
+    width: 56px; height: 56px; padding: 0; gap: 0; border-radius: 2px 0 0 2px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line);
+    color: var(--muted); font-size: 0; text-transform: none;
+    cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+  #stage .pm-rotate-btn:hover { border-color: rgba(229, 55, 43, 0.5); color: var(--ink); }
+  #stage .pm-rotate-btn .ic { display: none; }
+  #stage .pm-rotate-btn::before { content: "\27F3"; font-size: 26px; line-height: 1; }
+  /* ON = engaged (solid red). OFF = dim. No spin — it's a state indicator, not a spinner. */
+  #stage .pm-rotate-btn:not(.off) {
+    background: var(--accent); border-color: var(--accent); color: var(--ink);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 18px rgba(229, 55, 43, 0.45);
+  }
+  #stage .pm-rotate-btn.off { background: rgba(255, 255, 255, 0.04); border-color: var(--line); color: var(--muted); }
+
+  /* Find Highest risk: the primary action. Stretches to fill the bar between the two square
+     side buttons; their inner borders are the shared dividers. Boxy, monospace, terminal-style. */
+  #stage .pm-zoom {
+    position: fixed; left: 78px; right: 78px; bottom: 16px; transform: none; z-index: 81; margin: 0;
+    display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+    height: 56px; box-sizing: border-box; padding: 0 30px; border-radius: 0;
+    background: rgba(229, 55, 43, 0.1); border: 1px solid var(--line); border-left: 0; border-right: 0; color: var(--accent);
+    font-family: ui-monospace, "SF Mono", "Menlo", Consolas, monospace;
+    font-size: 16px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+    box-shadow: none;
+  }
+  #stage .pm-zoom .ic { font-size: 15px; }
+  #stage .pm-zoom:hover { background: rgba(229, 55, 43, 0.16); }
+  /* Locked = engaged: solid red. */
+  #stage .pm-zoom.on {
+    background: var(--accent); color: var(--ink);
+  }
+  #stage .pm-zoom.on:hover { background: #f0463a; }
 
   /* Cards render dead-centre, above everything, and scroll if tall. */
   .pm-popup {
@@ -599,53 +630,63 @@
     .whiskr-logo .wk-dot, .whiskr-logo .wk-cursor { animation: none; }
   }
 
-  /* ---- music player: vertical pill, bottom-right (volume up top, play at bottom) ---- */
+  /* ---- music: play button in the dock (right); volume slides out the top when playing ---- */
   .deck-audio {
-    position: fixed; bottom: 22px; right: 22px; top: auto; left: auto; z-index: 80;
-    display: flex; flex-direction: column-reverse; align-items: center; gap: 14px;
-    padding: 16px 12px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid var(--line); border-radius: 999px;
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    position: fixed; bottom: 16px; right: 22px; top: auto; left: auto; z-index: 82;
+    display: flex; flex-direction: column-reverse; align-items: center; gap: 0;
+    padding: 0; background: none; border: 0; box-shadow: none;
     font-family: "Archivo", system-ui, sans-serif;
-    user-select: none; cursor: grab; touch-action: none;
+    user-select: none; touch-action: none;
     animation: da-pop 360ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
   }
-  .deck-audio.dragging { cursor: grabbing; }
   @keyframes da-pop {
-    from { opacity: 0; transform: scale(0.7) translateY(-8px); }
+    from { opacity: 0; transform: scale(0.7) translateY(8px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
   }
   .deck-audio .da-toggle {
-    flex: none; width: 44px; height: 44px; border-radius: 50%; border: none;
-    cursor: pointer; background: var(--accent); color: var(--ink);
+    position: relative; z-index: 2; flex: none;
+    width: 56px; height: 56px; border-radius: 0 2px 2px 0; border: 1px solid var(--line);
+    cursor: pointer; background: rgba(255, 255, 255, 0.04); color: var(--accent);
     display: flex; align-items: center; justify-content: center; padding: 0;
-    transition: transform 140ms ease;
+    box-shadow: none;
+    transition: background 140ms ease, color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
   }
-  .deck-audio .da-toggle:hover { transform: scale(1.06); }
-  .deck-audio .da-toggle:active { transform: scale(0.96); }
-  .deck-audio .da-toggle svg { width: 18px; height: 18px; display: block; }
+  .deck-audio .da-toggle:hover { background: rgba(229, 55, 43, 0.12); border-color: rgba(229, 55, 43, 0.5); }
+  .deck-audio .da-toggle:active { background: rgba(229, 55, 43, 0.2); }
+  .deck-audio .da-toggle svg { width: 20px; height: 20px; display: block; }
   .deck-audio .da-toggle .da-pause { display: none; }
   .deck-audio.is-playing .da-toggle .da-play { display: none; }
   .deck-audio.is-playing .da-toggle .da-pause { display: block; }
+  /* Playing = engaged (solid red), matching the rotate toggle's ON state. */
+  .deck-audio.is-playing .da-toggle {
+    background: var(--accent); color: var(--ink); border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 18px rgba(229, 55, 43, 0.45);
+  }
   .deck-audio .da-meta { display: none; }
-  .deck-audio .da-vol {
+  /* Volume: hidden when paused; when playing it grows up out of the button, same width (56px). */
+  .deck-audio .da-vol { display: none; }
+  .deck-audio.is-playing .da-vol {
+    display: block; z-index: 1;
     -webkit-appearance: none; appearance: none;
     writing-mode: vertical-lr; direction: rtl;
-    width: 6px; height: 120px; border-radius: 999px;
-    background: var(--faint); cursor: pointer; outline: none;
+    width: 56px; height: 128px; box-sizing: border-box;
+    margin-bottom: -24px; padding: 12px 0 26px;
+    border: 1px solid var(--line); border-bottom: 0; border-radius: 2px 2px 0 0;
+    background: linear-gradient(var(--faint), var(--faint)) center 12px / 4px calc(100% - 44px) no-repeat,
+                rgba(0, 0, 0, 0.85);
+    cursor: pointer; outline: none;
+    animation: da-vol-pop 200ms ease both;
   }
+  @keyframes da-vol-pop { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .deck-audio .da-vol::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
-    width: 15px; height: 15px; border-radius: 50%;
-    background: var(--ink); border: 3px solid var(--accent);
+    width: 40px; height: 10px; border-radius: 6px;
+    background: var(--accent); border: 2px solid var(--ink);
     transition: transform 120ms ease;
   }
-  .deck-audio .da-vol::-webkit-slider-thumb:hover { transform: scale(1.15); }
-  .deck-audio .da-vol::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--ink); border: 3px solid var(--accent); }
-  .deck-audio .da-vol::-moz-range-track { height: 4px; border-radius: 999px; background: var(--faint); }
-  @media (prefers-reduced-motion: reduce) { .deck-audio { animation: none; } }
+  .deck-audio .da-vol::-webkit-slider-thumb:hover { transform: scale(1.08); }
+  .deck-audio .da-vol::-moz-range-thumb { width: 40px; height: 10px; border-radius: 6px; background: var(--accent); border: 2px solid var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .deck-audio, .deck-audio.is-playing .da-vol { animation: none; } }
 
   /* ---- phone tuning ---- */
   @media (max-width: 640px) {
@@ -656,27 +697,32 @@
     #stage .pm-legend { top: 50px; gap: 10px; padding: 4px 12px; font-size: 10px; }
     #stage .pm-legend .lg-title { display: none; }
     #stage .pm-legend .lg-strip { flex: 0 1 150px; }
-    #stage .pm-zoom, #stage .pm-rotate-btn { left: 12px; width: 210px; font-size: 15px; padding: 11px 15px; }
-    #stage .pm-zoom { bottom: 66px; }
-    #stage .pm-rotate-btn { bottom: 12px; }
-    .deck-audio { bottom: 12px; right: 12px; padding: 13px 10px; gap: 12px; }
-    .deck-audio .da-vol { height: 96px; }
+    #wk-dock { height: 78px; }
+    #stage .pm-rotate-btn { left: 12px; bottom: 13px; width: 52px; height: 52px; }
+    #stage .pm-rotate-btn::before { font-size: 25px; }
+    #stage .pm-zoom { left: 64px; right: 64px; bottom: 13px; height: 52px; padding: 0 14px; font-size: 14px; letter-spacing: 0.1em; }
+    #stage .pm-zoom .ic { font-size: 13px; }
+    .deck-audio { right: 12px; bottom: 13px; }
+    .deck-audio .da-toggle { width: 52px; height: 52px; }
+    .deck-audio.is-playing .da-vol { width: 52px; height: 110px; }
   }
 </style>
 </head>
 <body>
 
-<div id="stage"><div id="premise-root" class="premise-mount"></div></div>
+<div id="stage">
+  <div id="premise-root" class="premise-mount"></div>
+  <div id="wk-dock" aria-hidden="true"></div>
+  <div class="whiskr-logo" aria-label="WHISKR">
+    <div class="wk-mark">
+      <span class="wk-dot"></span>
+      <span>W<span class="ax">.</span>H<span class="ax">.</span>I<span class="ax">.</span>S<span class="ax">.</span>K<span class="ax">.</span>R</span><span class="wk-cursor">_</span>
+    </div>
+    <span class="wk-sub">Worldwide Heuristic Index · Suspected Knot-Reactives</span>
+  </div>
+</div>
 
 <audio id="deckAudio" src="assets/flooded-city.mp3" loop preload="auto"></audio>
-
-<div class="whiskr-logo" aria-label="WHISKR">
-  <div class="wk-mark">
-    <span class="wk-dot"></span>
-    <span>W<span class="ax">.</span>H<span class="ax">.</span>I<span class="ax">.</span>S<span class="ax">.</span>K<span class="ax">.</span>R</span><span class="wk-cursor">_</span>
-  </div>
-  <span class="wk-sub">Worldwide Heuristic Index · Suspected Knot-Reactives</span>
-</div>
 
 <script src="assets/asset-010.js"></script>
 <script src="assets/asset-011.js"></script>
@@ -706,43 +752,37 @@
     useEffect(() => {
       if (!clicked || clicked.kind !== 'furry' || clicked.imgUrl !== undefined) return;
       let cancelled = false;
-      const target = 'https://fxfurtrack.com/p/' + clicked.id;
+      const id = clicked.id;
+      const apply = (img, title, desc) => {
+        if (cancelled) return;
+        setClicked((c) => (c && c.id === id ? { ...c, imgUrl: img || null, title: title, desc: desc } : c));
+      };
+      // 1) Same-origin serverless proxy — works on Vercel (no 3rd-party CORS gating).
+      const viaApi = () =>
+        fetch('/api/furtrack?id=' + id)
+          .then((r) => (r.ok ? r.json() : Promise.reject()))
+          .then((d) => { if (!d || !d.img) return Promise.reject(); apply(d.img, d.title, d.desc); });
+      // 2) Fallback: public CORS proxies — for local/static use where /api isn't available.
+      const target = 'https://fxfurtrack.com/p/' + id;
       const proxies = [
         (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
         (u) => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
         (u) => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
         (u) => 'https://cors.eu.org/' + u,
       ];
-      const parseAndApply = (html, winnerIdx) => {
+      const parse = (html) => {
         const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
         const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
         const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
         if (!img) throw new Error('no og:image');
-        if (winnerIdx != null) window.__furtrackProxyIdx = winnerIdx;
-        setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
+        return { img, title, desc };
       };
-      const tryOne = (idx) =>
-        fetch(proxies[idx](target))
-          .then((r) => (r.ok ? r.text() : Promise.reject()))
-          .then((html) => ({ html, idx }));
-      // If we've already discovered a working proxy this session, use it directly.
-      const cached = window.__furtrackProxyIdx;
-      if (cached != null) {
-        tryOne(cached).then(({ html }) => { if (!cancelled) parseAndApply(html, cached); })
-          .catch(() => {
-            // cached proxy failed; invalidate and fall back to racing
-            window.__furtrackProxyIdx = null;
-            if (cancelled) return;
-            Promise.any(proxies.map((_, i) => tryOne(i)))
-              .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
-              .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
-          });
-      } else {
-        // First call: race all proxies in parallel, fastest wins.
-        Promise.any(proxies.map((_, i) => tryOne(i)))
-          .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
-          .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
-      }
+      const viaProxies = () =>
+        Promise.any(proxies.map((p) =>
+          fetch(p(target)).then((r) => (r.ok ? r.text() : Promise.reject())).then(parse)
+        )).then((d) => apply(d.img, d.title, d.desc));
+
+      viaApi().catch(() => viaProxies()).catch(() => apply(null));
       return () => { cancelled = true; };
     }, [clicked && clicked.id, clicked && clicked.kind]);
     const onCardDown = (e) => {
@@ -1062,7 +1102,9 @@
       axis.rotation.z = Math.PI / 4;   // fixed 45 deg lean
       scene.add(axis);
       const earth = new THREE.Group();
-      earth.rotation.order = 'YXZ';
+      // XYZ so the user tip (X) is the outer, screen-fixed equatorial axis and the spin (Y)
+      // is innermost — lets us blend the two so a horizontal drag reads as horizontal rotation.
+      earth.rotation.order = 'XYZ';
       axis.add(earth);
 
       const R = 1.62;
@@ -1513,14 +1555,16 @@
       img.onerror = () => buildFurry(() => true);
       img.src = 'assets/earth-night.jpg';
 
-      let yaw = -0.7, dragging = false, lx = 0, downX = 0, downY = 0;
+      let yaw = -0.7, tip = 0, dragging = false, lx = 0, ly = 0, downX = 0, downY = 0;
       const VFOV = 46 * Math.PI / 180;
-      const ZMIN = 4.5, ZMAX = 16;
+      const ZMIN = 2.8, ZMAX = 16;             // ZMIN lowered → ~60% more zoom-in than before
+      const START_MIN = 4.5;                   // initial framing floor (start zoom unchanged)
+      const TIP_MIN = -1.0, TIP_MAX = 1.0;     // how far the globe can tip about its equatorial axis
       // Distance at which the whole sphere is comfortably framed for the current aspect.
       const fitDist = () => {
         const aspect = W / H;
         const d = (R * 1.08) / Math.tan(VFOV / 2) / Math.min(1, aspect);
-        return Math.max(ZMIN, Math.min(ZMAX, d));
+        return Math.max(START_MIN, Math.min(ZMAX, d));
       };
       let dist = fitDist(), targetDist = dist;
       setTargetDistRef.current = (v) => { targetDist = Math.max(ZMIN, Math.min(ZMAX, v)); };
@@ -1556,7 +1600,7 @@
         }
         downX = e.clientX; downY = e.clientY;
         if (zoomRef.current) return;
-        dragging = true; dom.style.cursor = 'grabbing'; lx = e.clientX; e.stopPropagation();
+        dragging = true; dom.style.cursor = 'grabbing'; lx = e.clientX; ly = e.clientY; e.stopPropagation();
       };
       const move = (e) => {
         if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -1568,7 +1612,15 @@
           return;
         }
         if (!dragging) return;
-        yaw += (e.clientX - lx) * 0.006; lx = e.clientX;
+        // The pole leans 45° on screen (north pole up-left, south down-right). Decompose the
+        // drag onto that tilted frame so the gesture follows the globe instead of the screen axes:
+        //   • across the pole line (NE–SW) → spin around the pole
+        //   • along the pole line (NW–SE)  → tip the near pole toward you
+        // Blended, a plain horizontal drag rotates the globe horizontally (the feel we want).
+        const dx = e.clientX - lx, dy = e.clientY - ly;
+        lx = e.clientX; ly = e.clientY;
+        yaw += (dx - dy) * 0.0045;                                            // perpendicular → spin
+        tip = Math.max(TIP_MIN, Math.min(TIP_MAX, tip + (dx + dy) * 0.0045)); // along pole → tip
       };
       const up = (e) => {
         pointers.delete(e.pointerId);
@@ -1576,7 +1628,7 @@
           pinching = false;
           if (pointers.size === 1 && !zoomRef.current) {
             const rem = [...pointers.values()][0];
-            lx = rem.x; dragging = true;   // hand rotation back to the remaining finger
+            lx = rem.x; ly = rem.y; dragging = true;   // hand rotation back to the remaining finger
           }
         }
         if (pointers.size === 0) { dragging = false; dom.style.cursor = 'grab'; }
@@ -1702,7 +1754,9 @@
       const tick = () => {
         raf = requestAnimationFrame(tick);
         if (!dragging && !zoomRef.current && autoRotateRef.current) yaw += 0.0021;
-        earth.rotation.y = yaw; earth.rotation.x = 0;
+        earth.rotation.y = yaw;    // spin around the (45°-leaned) pole
+        earth.rotation.x = tip;    // tip the near pole toward / away from camera
+        // axis keeps its fixed 45° lean (set once at creation); only the earth rotates.
         seattle.getWorldPosition(sw);
         Object.keys(extraMarkers).forEach((sid) => {
           extraMarkers[sid].getWorldPosition(extraPos[sid]);
@@ -2159,13 +2213,8 @@
                     }
                   }}>
             <span className="ic">{zoom ? '◉' : '◯'}</span>
-            {zoom ? 'Locked on highest risk' : 'Find Highest risk'}
+            {zoom ? 'Target Locked' : 'Find Highest risk'}
           </button>
-          {zoom && (
-            <p style={{ marginTop: '14px', fontSize: '20px', lineHeight: 1.35, color: 'var(--accent)', fontWeight: 700, maxWidth: '32ch' }}>
-              As you can see, he is in a <span style={{ textTransform: 'uppercase', letterSpacing: '0.04em' }}>hot hot</span> spot for the Furry community.
-            </p>
-          )}
           <div className="pm-legend">
             <div className="lg-title">High risk areas</div>
             <div className="lg-strip">
@@ -2207,7 +2256,7 @@
       '<button class="da-toggle" type="button" aria-label="Play soundtrack">' + PLAY + PAUSE + '</button>' +
       '<div class="da-meta"><span class="da-track">Flooded City</span><span class="da-artist">Jeremy Cullen</span></div>' +
       '<input class="da-vol" type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Volume">';
-    document.body.appendChild(box);
+    (document.getElementById('stage') || document.body).appendChild(box);
 
     var toggle = box.querySelector('.da-toggle');
     var vol = box.querySelector('.da-vol');

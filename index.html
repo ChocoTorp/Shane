@@ -1694,7 +1694,7 @@
     position: absolute; top: 250px; right: 96px; z-index: 8;
     width: 248px; padding: 16px; background: #fff;
     border: 3px solid var(--accent); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
-    cursor: grab; touch-action: none;
+    cursor: pointer; touch-action: none;
   }
   .slide-qr.dragging { cursor: grabbing; }
   .slide-qr img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
@@ -2427,43 +2427,37 @@
     useEffect(() => {
       if (!clicked || clicked.kind !== 'furry' || clicked.imgUrl !== undefined) return;
       let cancelled = false;
-      const target = 'https://fxfurtrack.com/p/' + clicked.id;
+      const id = clicked.id;
+      const apply = (img, title, desc) => {
+        if (cancelled) return;
+        setClicked((c) => (c && c.id === id ? { ...c, imgUrl: img || null, title: title, desc: desc } : c));
+      };
+      // 1) Same-origin serverless proxy — works on Vercel (no 3rd-party CORS gating).
+      const viaApi = () =>
+        fetch('/api/furtrack?id=' + id)
+          .then((r) => (r.ok ? r.json() : Promise.reject()))
+          .then((d) => { if (!d || !d.img) return Promise.reject(); apply(d.img, d.title, d.desc); });
+      // 2) Fallback: public CORS proxies — for local/static use where /api isn't available.
+      const target = 'https://fxfurtrack.com/p/' + id;
       const proxies = [
         (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
         (u) => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
         (u) => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
         (u) => 'https://cors.eu.org/' + u,
       ];
-      const parseAndApply = (html, winnerIdx) => {
+      const parse = (html) => {
         const img = (html.match(/property="og:image"\s+content="([^"]+)"/) || [])[1] || null;
         const title = (html.match(/property="og:title"\s+content="([^"]+)"/) || [])[1] || null;
         const desc = (html.match(/property="og:description"\s+content="([^"]+)"/) || [])[1] || null;
         if (!img) throw new Error('no og:image');
-        if (winnerIdx != null) window.__furtrackProxyIdx = winnerIdx;
-        setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: img, title, desc } : c));
+        return { img, title, desc };
       };
-      const tryOne = (idx) =>
-        fetch(proxies[idx](target))
-          .then((r) => (r.ok ? r.text() : Promise.reject()))
-          .then((html) => ({ html, idx }));
-      // If we've already discovered a working proxy this session, use it directly.
-      const cached = window.__furtrackProxyIdx;
-      if (cached != null) {
-        tryOne(cached).then(({ html }) => { if (!cancelled) parseAndApply(html, cached); })
-          .catch(() => {
-            // cached proxy failed; invalidate and fall back to racing
-            window.__furtrackProxyIdx = null;
-            if (cancelled) return;
-            Promise.any(proxies.map((_, i) => tryOne(i)))
-              .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
-              .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
-          });
-      } else {
-        // First call: race all proxies in parallel, fastest wins.
-        Promise.any(proxies.map((_, i) => tryOne(i)))
-          .then(({ html, idx }) => { if (!cancelled) parseAndApply(html, idx); })
-          .catch(() => { if (!cancelled) setClicked((c) => (c && c.id === clicked.id ? { ...c, imgUrl: null } : c)); });
-      }
+      const viaProxies = () =>
+        Promise.any(proxies.map((p) =>
+          fetch(p(target)).then((r) => (r.ok ? r.text() : Promise.reject())).then(parse)
+        )).then((d) => apply(d.img, d.title, d.desc));
+
+      viaApi().catch(() => viaProxies()).catch(() => apply(null));
       return () => { cancelled = true; };
     }, [clicked && clicked.id, clicked && clicked.kind]);
     const onCardDown = (e) => {
@@ -4522,9 +4516,9 @@
         var w = sec.offsetWidth || 1920;
         return (sec.getBoundingClientRect().width || w) / w;
       };
-      var dragging = false, sx = 0, sy = 0, bl = 0, bt = 0, scale = 1;
+      var dragging = false, moved = false, sx = 0, sy = 0, bl = 0, bt = 0, scale = 1;
       qr.addEventListener('pointerdown', function (e) {
-        dragging = true; qr.classList.add('dragging');
+        dragging = true; moved = false; qr.classList.add('dragging');
         scale = scaleOf();
         bl = qr.offsetLeft; bt = qr.offsetTop;
         sx = e.clientX; sy = e.clientY;
@@ -4534,6 +4528,7 @@
       });
       qr.addEventListener('pointermove', function (e) {
         if (!dragging) return;
+        if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) > 4) moved = true;
         qr.style.left = (bl + (e.clientX - sx) / scale) + 'px';
         qr.style.top = (bt + (e.clientY - sy) / scale) + 'px';
       });
@@ -4541,6 +4536,8 @@
         if (!dragging) return;
         dragging = false; qr.classList.remove('dragging');
         try { qr.releasePointerCapture(e.pointerId); } catch (_) {}
+        // A click (no real drag) opens Whiskr in a new tab — the QR is a live link too.
+        if (!moved) window.open(url, '_blank', 'noopener');
       }
       qr.addEventListener('pointerup', end);
       qr.addEventListener('pointercancel', end);
