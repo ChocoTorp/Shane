@@ -1408,9 +1408,15 @@
     gap: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
     width: 100%;
   }
-  .finale-gauge-mount { width: 100%; margin-top: 28px; position: relative; }
+  .finale-gauge-mount {
+    position: absolute; top: 0; right: 0; z-index: 9999;
+    transform: scale(0.8); transform-origin: top right;
+    cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+  }
+  .finale-gauge-mount:active { cursor: grabbing; }
+  .finale-gauge-mount * { user-select: none; -webkit-user-select: none; }
   .fg {
-    position: relative; width: 100%;
+    position: relative; width: 380px;
     padding: 18px 22px 22px;
     border: 1px solid var(--line);
     background:
@@ -2957,13 +2963,51 @@
 <script type="text/babel">
   // Cooler, bigger risk gauge for the finale slide. Subscribes to the same global tick.
   function FinaleGauge() {
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
     const [, _bump] = useState(0);
     useEffect(() => {
       const h = () => _bump((x) => x + 1);
       window.addEventListener('risk-tick', h);
       return () => window.removeEventListener('risk-tick', h);
     }, []);
+
+    const [pos, setPos] = useState({ x: 0, y: 0 });
+    const [dragging, setDragging] = useState(false);
+    const dragRef = useRef({ startX: 0, startY: 0, initX: 0, initY: 0 });
+
+    const onDown = (e) => {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      dragRef.current = { startX: clientX, startY: clientY, initX: pos.x, initY: pos.y };
+      setDragging(true);
+    };
+
+    const onMove = (e) => {
+      if (!dragging) return;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const dx = clientX - dragRef.current.startX;
+      const dy = clientY - dragRef.current.startY;
+      setPos({ x: dragRef.current.initX + dx, y: dragRef.current.initY + dy });
+    };
+
+    const onUp = () => setDragging(false);
+
+    useEffect(() => {
+      if (dragging) {
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend', onUp);
+        return () => {
+          window.removeEventListener('mousemove', onMove);
+          window.removeEventListener('mouseup', onUp);
+          window.removeEventListener('touchmove', onMove);
+          window.removeEventListener('touchend', onUp);
+        };
+      }
+    }, [dragging]);
+
     const pct = (window.RiskState && window.RiskState.current) || 83.4;
     const cx = 200, cy = 215, r = 175;
     const a  = Math.PI * (1 - pct / 100);
@@ -2977,7 +3021,8 @@
     };
     const start = arc(0);
     return (
-      <div className="fg">
+      <div className="fg" style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
+           onPointerDown={onDown}>
         <div className="fg-head">
           <span>Live · Current Risk Index</span>
           <span className="lvl"><span className="dot"></span>Live signal</span>
@@ -3052,7 +3097,7 @@
         <div className="fg-foot">
           <div><span className="fk">Peak</span><span className="fv r">+98.4</span></div>
           <div><span className="fk">Today</span><span className="fv">{pct.toFixed(1)}</span></div>
-          <div><span className="fk">Trend</span><span className="fv g">↓ Receding</span></div>
+          <div><span className="fk">12 Mo. Low</span><span className="fv g">79.3</span></div>
         </div>
       </div>
     );
