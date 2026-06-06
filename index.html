@@ -1071,6 +1071,8 @@
   }
   .hope-chip .dn { color: #3fb56a; font-weight: 800; font-size: 30px; }
   .hope-chip b { color: #3fb56a; font-weight: 700; }
+  /* gated chips stay hidden until the age scrubber passes their age */
+  .hope-chip[data-ax] { opacity: 0; transition: opacity 240ms ease; }
 
   /* risk-factor chip (case studies) */
   .risk-chip {
@@ -2207,7 +2209,7 @@
             <text class="life-cap" x="74" y="228" text-anchor="end">50%</text>
             <text class="life-cap" x="74" y="323" text-anchor="end">25%</text>
             <text class="life-cap" x="74" y="416" text-anchor="end">0%</text>
-            <text class="life-cap" x="20" y="220" text-anchor="middle" transform="rotate(-90 20 220)" style="letter-spacing: 0.16em; font-size: 19px;">FURRY RISK</text>
+            <text class="life-cap" x="11" y="220" text-anchor="middle" transform="rotate(-90 11 220)" style="letter-spacing: 0.16em; font-size: 19px;">FURRY RISK</text>
             <!-- line + area, progressively revealed by the AGE scrubber -->
             <g clip-path="url(#ageClip)">
               <path id="lifeAreaUp1" class="life-area" d="M110,410 L220,364 L330,287 L330,410 Z"></path>
@@ -2265,8 +2267,8 @@
           </svg>
         </div>
         <div class="now-hopes anim d3">
-          <div class="hope-chip"><span class="dn">▼</span> <span><b>Married.</b> Triggered the steepest decline ever recorded.</span></div>
-          <div class="hope-chip"><span class="dn">▼</span> <span><b>Past 30.</b> Risk metabolizes with age.</span></div>
+          <div class="hope-chip" data-ax="1100"><span class="dn">▼</span> <span><b>Married.</b> Triggered the steepest decline ever recorded.</span></div>
+          <div class="hope-chip" data-ax="990"><span class="dn">▼</span> <span><b>Past 30.</b> Risk metabolizes with age.</span></div>
         </div>
       </div>
       <div class="folio"><b>11</b> / 16</div>
@@ -4470,6 +4472,8 @@
       var handle = svg.querySelector('#ageHandle');
       var hit = svg.querySelector('#ageHit');
       var reveals = svg.querySelectorAll('.areveal');
+      var sec = svg.closest('section') || document;
+      var chips = sec.querySelectorAll('.hope-chip[data-ax]');
       var ppTitle = document.getElementById('ppTitle');
       if (!rect || !handle || !hit) return false;
       var scrub = X0, dragging = false;
@@ -4479,6 +4483,10 @@
         for (var i = 0; i < reveals.length; i++) {
           var ax = parseFloat(reveals[i].getAttribute('data-ax'));
           reveals[i].style.opacity = (ax <= scrub + 0.5) ? '1' : '0';
+        }
+        for (var j = 0; j < chips.length; j++) {
+          var cax = parseFloat(chips[j].getAttribute('data-ax'));
+          chips[j].style.opacity = (cax <= scrub + 0.5) ? '1' : '0';
         }
         if (ppTitle) ppTitle.style.opacity = (scrub >= X1 - 4) ? '1' : '0';
       }
