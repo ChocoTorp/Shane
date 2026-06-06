@@ -730,6 +730,94 @@
 <script src="assets/three.min.js"></script>
 <script src="https://unpkg.com/topojson-client@3"></script>
 
+<!-- Firebase: shared, self-ticking risk value for Shane's gauge (see plan). -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+  // ---- Shared Shane-risk engine -------------------------------------------
+  // The value everyone shares lives in Firebase as { v, t } (value + the server
+  // time it was set). Every browser DERIVES the live, self-ticking value from
+  // that baseline with the same pure function, so all viewers stay in lockstep
+  // without anyone writing the tick. The only writes are votes (+ a rare
+  // value-preserving checkpoint to bound the local catch-up loop).
+  firebase.initializeApp({
+    apiKey: "AIzaSyBkaDzHZkF1yMrXD3llX4_Un4vsRcRKU5Q",
+    authDomain: "shane-10320.firebaseapp.com",
+    databaseURL: "https://shane-10320-default-rtdb.firebaseio.com",
+    projectId: "shane-10320",
+    storageBucket: "shane-10320.firebasestorage.app",
+    messagingSenderId: "1031169936236",
+    appId: "1:1031169936236:web:c00f668fb8e333abe18149"
+  });
+  var ref = firebase.database().ref('shaneRisk');
+
+  var REST = 83.4, LO = 80.1, HI = 84.9, STEP = 0.1, TICK_MS = 2000;
+
+  // Server-clock sync so every browser agrees on tick boundaries.
+  var skew = 0;
+  firebase.database().ref('.info/serverTimeOffset').on('value', function (s) { skew = s.val() || 0; });
+  function now() { return Date.now() + skew; }
+  function tick(t) { return Math.floor(t / TICK_MS); }
+  function r1(x) { return Math.round(x * 10) / 10; }
+  function dir(i) { return (((i * 2654435761) >>> 0) & 1) ? STEP : -STEP; } // deterministic ±0.1
+
+  // Advance one tick at absolute tick index i (identical on every client).
+  function step(v, i) {
+    if (v > HI) return r1(v - STEP);          // drift down toward band
+    if (v < LO) return r1(v + STEP);          // drift up toward band
+    var nv = r1(v + dir(i));                   // in band: random walk
+    return nv > HI ? HI : nv < LO ? LO : nv;
+  }
+
+  // Pure: the value "now", derived from the stored baseline {v,t}.
+  function compute(base, tNow) {
+    if (!base || typeof base.v !== 'number') return REST;
+    var i0 = tick(base.t), i1 = tick(tNow), v = base.v;
+    if (i1 - i0 > 10000) i0 = i1 - 10000;     // safety backstop; checkpoint keeps this tiny
+    for (var i = i0; i < i1; i++) v = step(v, i);
+    return v;
+  }
+
+  function reflect(base) {
+    window.RiskState = window.RiskState || {};
+    window.RiskState.current = compute(base, now());
+    window.dispatchEvent(new Event('risk-tick'));   // existing gauge listener re-renders
+  }
+
+  var baseline = null;
+  ref.on('value', function (s) {
+    var b = s.val();
+    if (!b || typeof b.v !== 'number') {            // seed once if empty
+      ref.transaction(function (c) { return (c && typeof c.v === 'number') ? c : { v: REST, t: now() }; });
+      return;
+    }
+    baseline = b; reflect(b);                        // instant updates (own votes + others')
+  });
+
+  // Local self-tick: recompute every 2s so it visibly ticks; occasionally checkpoint.
+  setInterval(function () {
+    if (!baseline) return;
+    reflect(baseline);
+    if (tick(now()) - tick(baseline.t) > 150) {      // ~5 min old: rebaseline (value-preserving)
+      ref.transaction(function (c) {
+        if (!c || typeof c.v !== 'number') return c;
+        if (tick(now()) - tick(c.t) <= 150) return;  // someone beat us; abort
+        return { v: compute(c, now()), t: now() };
+      });
+    }
+  }, TICK_MS);
+
+  // Vote: atomic, applied on top of the live (drifted) value, clamped to the gauge range.
+  window.voteShaneRisk = function (delta) {
+    ref.transaction(function (c) {
+      var base = (c && typeof c.v === 'number') ? c : { v: REST, t: now() };
+      var v = r1(compute(base, now()) + delta);
+      return { v: v < 0 ? 0 : v > 100 ? 100 : v, t: now() };
+    });
+  };
+</script>
+
 <script type="text/babel">
   function PremisePanel() {
     const { useState, useRef, useEffect } = React;
@@ -1960,7 +2048,7 @@
                       <span className="meta">Sales Engineer · Outreach · Seattle, WA. Birthday boy. Egregious case.</span>
 
                       {(() => {
-                        const pct = (window.RiskState && window.RiskState.current) || 83.4;
+                        const pct = (window.RiskState && typeof window.RiskState.current === 'number') ? window.RiskState.current : 83.4;
                         const cx = 120, cy = 130, r = 100;
                         const a = Math.PI * (1 - pct / 100);
                         const ex = cx + r * Math.cos(a);
@@ -2008,13 +2096,22 @@
                                 <circle cx={cx} cy={cy} r="7" fill="var(--accent)" stroke="var(--ink)" strokeWidth="2" />
                               </g>
                               <text x={cx} y={cy - 28} textAnchor="middle" fill="var(--accent)"
-                                    style={{ fontSize: '42px', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Archivo, sans-serif' }}>{pct}</text>
+                                    style={{ fontSize: '42px', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Archivo, sans-serif' }}>{pct.toFixed(1)}</text>
                               <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.55)"
                                     style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '0.28em', fontFamily: 'Archivo, sans-serif' }}>OF 100</text>
                             </svg>
                           </div>
                         );
                       })()}
+
+                      <div className="ds-section" style={{ flexDirection: 'row', gap: '8px', justifyContent: 'center' }}>
+                        <button onClick={() => window.voteShaneRisk && window.voteShaneRisk(-0.1)}
+                                style={{ background: '#3fb56a', color: '#0b0b0b', border: 'none', borderRadius: '8px',
+                                         padding: '8px 12px', fontWeight: 800, letterSpacing: '0.02em', cursor: 'pointer' }}>Non-Furry Behavior</button>
+                        <button onClick={() => window.voteShaneRisk && window.voteShaneRisk(0.1)}
+                                style={{ background: '#e5372b', color: '#fff', border: 'none', borderRadius: '8px',
+                                         padding: '8px 12px', fontWeight: 800, letterSpacing: '0.02em', cursor: 'pointer' }}>Furry Behavior</button>
+                      </div>
 
                       <div className="dossier-grid">
                         <div><span className="dk">Age</span><span className="dv">33</span></div>
