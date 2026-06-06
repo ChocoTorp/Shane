@@ -1291,7 +1291,7 @@
   .finale-bg {
     position: absolute; inset: 0; pointer-events: none; z-index: 0;
     background:
-      radial-gradient(800px 600px at 78% 28%, rgba(229,55,43,0.22), transparent 70%),
+      radial-gradient(800px 600px at 78% 28%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
       radial-gradient(600px 500px at 12% 80%, rgba(82,134,204,0.16), transparent 70%);
   }
   .finale-grid {
@@ -1421,7 +1421,7 @@
     padding: 18px 22px 22px;
     border: 1px solid var(--line);
     background:
-      radial-gradient(420px 220px at 50% 90%, rgba(229,55,43,0.16), transparent 70%),
+      radial-gradient(420px 220px at 50% 90%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
       rgba(15,15,18,0.55);
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     box-shadow: 0 22px 50px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.03);
@@ -1444,11 +1444,11 @@
   .fg-head .lvl { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); }
   .fg-head .lvl .dot {
     width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
-    box-shadow: 0 0 0 0 rgba(229,55,43,0.7); animation: fgPulse 1.4s ease-out infinite;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); animation: fgPulse 1.4s ease-out infinite;
   }
   @keyframes fgPulse {
-    0% { box-shadow: 0 0 0 0 rgba(229,55,43,0.7); }
-    100% { box-shadow: 0 0 0 14px rgba(229,55,43,0); }
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); }
+    100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent) 0%, transparent); }
   }
   .fg-svg { width: 100%; height: auto; display: block; }
   .fg-svg .fg-needle { transform-origin: 200px 215px; animation: fgHover 3.4s ease-in-out infinite; }
