@@ -1287,24 +1287,23 @@
   .signoff b { color: var(--ink); }
 
   /* ================= SLIDE: The Isolation Test (click-to-reveal compare) ================= */
-  .iso { margin-top: 24px; }
+  .iso { margin-top: 18px; display: flex; align-items: center; justify-content: center; }
   .iso-cb { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
   .iso-stage {
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 36px;
-    max-width: 1180px; margin: 0 auto;
+    display: grid; grid-template-columns: auto auto auto;
+    justify-content: center; align-items: center; gap: 56px;
+    margin: 0 auto;
   }
   .iso-card {
     position: relative; cursor: pointer;
-    display: flex; flex-direction: column; gap: 16px;
-    width: 100%; max-width: 420px;
+    display: flex; flex-direction: column; gap: 18px;
+    width: min(540px, 34vw);
     transition: transform .35s;
   }
-  .iso-card.l { justify-self: end; }
-  .iso-card.r { justify-self: start; }
   .iso-frame {
     position: relative; overflow: hidden;
     border: 1px solid var(--line); background: #0a0a0c;
-    aspect-ratio: 3 / 4; max-height: 54vh;
+    aspect-ratio: 3 / 4; max-height: 66vh;
     transition: box-shadow .35s, border-color .35s;
   }
   .iso-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
