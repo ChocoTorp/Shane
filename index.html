@@ -2293,8 +2293,21 @@
       anthony: 76.8,   // NYC subject (Anthony Russo)
       rafael:  73.5,   // São Paulo subject (Rafael Oliveira)
     };
+    // Map a risk value (0..100) to a colour: low = green, mid = yellow, high = red,
+    // interpolating through the deck's three brand stops. Used to tint Shane's card,
+    // his globe tag, and the finale meter so they all read as one risk level.
+    window.riskColor = function (pct) {
+      var p = Math.max(0, Math.min(100, (typeof pct === 'number') ? pct : 83.4));
+      var green = [63, 181, 106], yellow = [232, 197, 71], red = [229, 55, 43];
+      var a, b, t;
+      if (p <= 50) { a = green; b = yellow; t = p / 50; }
+      else { a = yellow; b = red; t = (p - 50) / 50; }
+      return 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * t) + ',' +
+                      Math.round(a[1] + (b[1] - a[1]) * t) + ',' +
+                      Math.round(a[2] + (b[2] - a[2]) * t) + ')';
+    };
     setInterval(() => {
-      window.RiskState.current = jiggle(window.RiskState.current, 60, 96);
+      // .current is driven by the shared Firebase value (see engine below), not jiggled here.
       window.RiskState.gamer   = jiggle(window.RiskState.gamer, 78, 99);
       window.RiskState.outside = jiggle(window.RiskState.outside, 72, 96);
       window.RiskState.anime   = jiggle(window.RiskState.anime, 80, 99);
@@ -2305,6 +2318,62 @@
       window.RiskState.rafael  = jiggle(window.RiskState.rafael,  65.3, 80.3);
       window.dispatchEvent(new CustomEvent('risk-tick'));
     }, 3000);
+  })();
+</script>
+
+<!-- Firebase: read the SAME shared risk value whiskr's voting controls, so the
+     slide-2 card and the finale meter reflect real audience votes (read-only here). -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+  (function () {
+    firebase.initializeApp({
+      apiKey: "AIzaSyBkaDzHZkF1yMrXD3llX4_Un4vsRcRKU5Q",
+      authDomain: "shane-10320.firebaseapp.com",
+      databaseURL: "https://shane-10320-default-rtdb.firebaseio.com",
+      projectId: "shane-10320",
+      storageBucket: "shane-10320.firebasestorage.app",
+      messagingSenderId: "1031169936236",
+      appId: "1:1031169936236:web:c00f668fb8e333abe18149"
+    });
+    var ref = firebase.database().ref('shaneRisk');
+
+    // Same value model as whiskr: the live number is derived from the stored
+    // baseline {v,t} so the deck and whiskr show the identical ticking value.
+    var REST = 83.4, LO = 80.1, HI = 84.9, STEP = 0.1, TICK_MS = 2000;
+    var skew = 0;
+    firebase.database().ref('.info/serverTimeOffset').on('value', function (s) { skew = s.val() || 0; });
+    function now() { return Date.now() + skew; }
+    function tick(t) { return Math.floor(t / TICK_MS); }
+    function r1(x) { return Math.round(x * 10) / 10; }
+    function dir(i) { return (((i * 2654435761) >>> 0) & 1) ? STEP : -STEP; }
+    function step(v, i) {
+      if (v > HI) return r1(v - STEP);
+      if (v < LO) return r1(v + STEP);
+      var nv = r1(v + dir(i));
+      return nv > HI ? HI : nv < LO ? LO : nv;
+    }
+    function compute(base, tNow) {
+      if (!base || typeof base.v !== 'number') return REST;
+      var i0 = tick(base.t), i1 = tick(tNow), v = base.v;
+      if (i1 - i0 > 10000) i0 = i1 - 10000;
+      for (var i = i0; i < i1; i++) v = step(v, i);
+      return v;
+    }
+    function reflect(base) {
+      window.RiskState = window.RiskState || {};
+      window.RiskState.current = compute(base, now());
+      window.dispatchEvent(new CustomEvent('risk-tick'));
+    }
+
+    var baseline = null;
+    ref.on('value', function (s) {
+      var b = s.val();
+      if (b && typeof b.v === 'number') { baseline = b; reflect(b); }
+      else { ref.transaction(function (c) { return (c && typeof c.v === 'number') ? c : { v: REST, t: now() }; }); }
+    });
+    // Re-derive every 2s so the deck visibly ticks in lockstep with whiskr.
+    setInterval(function () { if (baseline) reflect(baseline); }, TICK_MS);
   })();
 </script>
 
@@ -3437,12 +3506,15 @@
       };
     }, []);
 
+    const shaneAccent = window.riskColor
+      ? window.riskColor((window.RiskState && typeof window.RiskState.current === 'number') ? window.RiskState.current : 83.4)
+      : undefined;
     return (
       <div className="pm">
         <div className="pm-globe-wrap" ref={wrapRef}>
           <div className="pm-globe">
             <div className="pm-canvas" ref={mountRef}></div>
-            <div className="pm-label" ref={labelRef}>
+            <div className="pm-label" ref={labelRef} style={shaneAccent ? { '--accent': shaneAccent } : undefined}>
               <div className="box"><b>SHANE</b><span>Seattle, WA</span></div>
               <div className="stem"></div>
               <div className="dot"></div>
@@ -3472,7 +3544,8 @@
               <div className="stem"></div>
               <div className="dot"></div>
             </div>
-            <svg className="pm-line" ref={lineRef} viewBox="0 0 1800 1800" preserveAspectRatio="none">
+            <svg className="pm-line" ref={lineRef} viewBox="0 0 1800 1800" preserveAspectRatio="none"
+                 style={shaneAccent ? { '--accent': shaneAccent } : undefined}>
               <line x1="0" y1="0" x2="0" y2="0" style={{ opacity: 0 }} />
             </svg>
             <button className={'pm-rotate-btn' + (autoRotate ? '' : ' off')}
@@ -3491,7 +3564,10 @@
             {clicked && (
               <div className={'pm-popup ' + clicked.kind + (dragging2 ? ' dragging' : '')}
                    ref={cardRef}
-                   style={{ transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)` }}
+                   style={{ transform: `translate(${cardOffset.x}px, ${cardOffset.y}px)`,
+                            ...(clicked.kind === 'shane' && window.riskColor
+                                ? { '--accent': window.riskColor((window.RiskState && typeof window.RiskState.current === 'number') ? window.RiskState.current : 83.4) }
+                                : {}) }}
                    onPointerDown={onCardDown}>
                 <div className="topbar">
                   <span className="grip-l"><span className="dots">⋮⋮</span>{clicked.kind === 'furry' ? 'Furtrack' : 'Subject'}</span>
@@ -3530,6 +3606,7 @@
                         const ey = cy - r * Math.sin(a);
                         const nx = cx + (r - 12) * Math.cos(a);
                         const ny = cy - (r - 12) * Math.sin(a);
+                        const col = window.riskColor ? window.riskColor(pct) : 'var(--accent)';
                         return (
                           <div className="ds-section ds-gauge">
                             <div className="ds-title" style={{ alignSelf: 'flex-start' }}>Risk index</div>
@@ -3544,7 +3621,7 @@
                               <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
                                     fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="14" strokeLinecap="round" />
                               <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
-                                    fill="none" stroke="url(#riskGrad)" strokeWidth="14" strokeLinecap="round" />
+                                    fill="none" stroke={col} strokeWidth="14" strokeLinecap="round" />
                               {[0, 25, 50, 75, 100].map((p) => {
                                 const t = Math.PI * (1 - p / 100);
                                 const inR = r - 22, outR = r - 10;
@@ -3568,9 +3645,9 @@
                               <g className="needle">
                                 <line x1={cx} y1={cy} x2={nx} y2={ny}
                                       stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
-                                <circle cx={cx} cy={cy} r="7" fill="var(--accent)" stroke="var(--ink)" strokeWidth="2" />
+                                <circle cx={cx} cy={cy} r="7" fill={col} stroke="var(--ink)" strokeWidth="2" />
                               </g>
-                              <text x={cx} y={cy - 28} textAnchor="middle" fill="var(--accent)"
+                              <text x={cx} y={cy - 28} textAnchor="middle" fill={col}
                                     style={{ fontSize: '42px', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Archivo, sans-serif' }}>{pct}</text>
                               <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.55)"
                                     style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '0.28em', fontFamily: 'Archivo, sans-serif' }}>OF 100</text>
@@ -3897,8 +3974,9 @@
       return { x: cx + r * Math.cos(t), y: cy - r * Math.sin(t) };
     };
     const start = arc(0);
+    const col = window.riskColor ? window.riskColor(pct) : 'var(--accent)';
     return (
-      <div className="fg" style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
+      <div className="fg" style={{ transform: `translate(${pos.x}px, ${pos.y}px)`, '--accent': col }}
            onPointerDown={onDown}>
         <div className="fg-head">
           <span>Live · Current Risk Index</span>
@@ -3925,11 +4003,11 @@
                 fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="22" strokeLinecap="round" />
           {/* glow underlay */}
           <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
-                fill="none" stroke="url(#fgGrad)" strokeWidth="28" strokeLinecap="round"
+                fill="none" stroke={col} strokeWidth="28" strokeLinecap="round"
                 opacity="0.45" filter="url(#fgGlow)" />
           {/* main filled arc */}
           <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
-                fill="none" stroke="url(#fgGrad)" strokeWidth="22" strokeLinecap="round" />
+                fill="none" stroke={col} strokeWidth="22" strokeLinecap="round" />
 
           {/* minor ticks every 5 */}
           {Array.from({ length: 21 }, (_, i) => i * 5).map((p) => {

@@ -470,6 +470,31 @@
   .pm-popup .ds-links a:hover { color: var(--accent); }
   .pm-popup .ds-links a .src { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
   .pm-popup .ds-gauge { display: flex; flex-direction: column; align-items: center; padding: 6px 0 2px; }
+  /* Handler Behavior Reports: frosted-glass panel, terminal styling to echo "Find Highest risk". */
+  .pm-popup .hbr {
+    margin-top: 14px; border: 1px solid var(--line);
+    background: rgba(15, 15, 18, 0.55);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .pm-popup .hbr-title {
+    font-family: ui-monospace, "SF Mono", "Menlo", Consolas, monospace;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+    font-weight: 800; text-align: center; padding: 10px 14px; border-bottom: 1px solid var(--line);
+  }
+  .pm-popup .hbr-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .pm-popup .hbr-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 15px 12px; border: 0; cursor: pointer;
+    font-family: ui-monospace, "SF Mono", "Menlo", Consolas, monospace;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+    background: transparent; transition: background 0.15s, box-shadow 0.15s;
+  }
+  .pm-popup .hbr-btn .ar { font-size: 16px; line-height: 1; }
+  .pm-popup .hbr-btn.no  { color: #3fb56a; background: rgba(63, 181, 106, 0.08); border-right: 1px solid var(--line); }
+  .pm-popup .hbr-btn.no:hover  { background: rgba(63, 181, 106, 0.18); box-shadow: inset 0 0 22px rgba(63, 181, 106, 0.25); }
+  .pm-popup .hbr-btn.yes { color: #e5372b; background: rgba(229, 55, 43, 0.08); }
+  .pm-popup .hbr-btn.yes:hover { background: rgba(229, 55, 43, 0.18); box-shadow: inset 0 0 22px rgba(229, 55, 43, 0.25); }
+  .pm-popup .hbr-btn:active { transform: translateY(1px); }
   .pm-popup .gauge-svg { width: 100%; max-width: 300px; height: auto; }
   .pm-popup .gauge-svg .needle { transform-origin: 120px 130px; animation: gaugeHover 3.6s ease-in-out infinite; }
   @keyframes gaugeHover {
@@ -754,6 +779,20 @@
 
   var REST = 83.4, LO = 80.1, HI = 84.9, STEP = 0.1, TICK_MS = 2000;
 
+  // Map a risk value (0..100) to a colour: low = green, mid = yellow, high = red,
+  // interpolating through the gauge's own three brand stops. Used by the dial, the
+  // number, Shane's card accent, and his globe tag so they all read as one level.
+  window.riskColor = function (pct) {
+    var p = Math.max(0, Math.min(100, (typeof pct === 'number') ? pct : REST));
+    var green = [63, 181, 106], yellow = [232, 197, 71], red = [229, 55, 43];
+    var a, b, t;
+    if (p <= 50) { a = green; b = yellow; t = p / 50; }
+    else { a = yellow; b = red; t = (p - 50) / 50; }
+    return 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * t) + ',' +
+                    Math.round(a[1] + (b[1] - a[1]) * t) + ',' +
+                    Math.round(a[2] + (b[2] - a[2]) * t) + ')';
+  };
+
   // Server-clock sync so every browser agrees on tick boundaries.
   var skew = 0;
   firebase.database().ref('.info/serverTimeOffset').on('value', function (s) { skew = s.val() || 0; });
@@ -807,6 +846,15 @@
       });
     }
   }, TICK_MS);
+
+  // Button sound effects. One reused element each, so a rapid re-press restarts the
+  // clip from the top instead of overlapping a new copy.
+  var sndPos = new Audio('assets/positive.mp3');
+  var sndNeg = new Audio('assets/negative.mp3');
+  window.hbrPlay = function (which) {
+    var a = which === 'pos' ? sndPos : sndNeg;
+    try { a.currentTime = 0; a.play(); } catch (e) {}
+  };
 
   // Vote: atomic, applied on top of the live (drifted) value, clamped to the gauge range.
   window.voteShaneRisk = function (delta) {
@@ -1962,12 +2010,15 @@
       };
     }, []);
 
+    const shaneAccent = window.riskColor
+      ? window.riskColor((window.RiskState && typeof window.RiskState.current === 'number') ? window.RiskState.current : 83.4)
+      : undefined;
     return (
       <div className="pm">
         <div className="pm-globe-wrap" ref={wrapRef}>
           <div className="pm-globe">
             <div className="pm-canvas" ref={mountRef}></div>
-            <div className="pm-label" ref={labelRef}>
+            <div className="pm-label" ref={labelRef} style={shaneAccent ? { '--accent': shaneAccent } : undefined}>
               <div className="box"><b>SHANE</b><span>Seattle, WA</span></div>
               <div className="stem"></div>
               <div className="dot"></div>
@@ -1997,7 +2048,8 @@
               <div className="stem"></div>
               <div className="dot"></div>
             </div>
-            <svg className="pm-line" ref={lineRef} viewBox="0 0 1800 1800" preserveAspectRatio="none">
+            <svg className="pm-line" ref={lineRef} viewBox="0 0 1800 1800" preserveAspectRatio="none"
+                 style={shaneAccent ? { '--accent': shaneAccent } : undefined}>
               <line x1="0" y1="0" x2="0" y2="0" style={{ opacity: 0 }} />
             </svg>
             <button className={'pm-rotate-btn' + (autoRotate ? '' : ' off')}
@@ -2016,7 +2068,10 @@
             {clicked && (
               <div className={'pm-popup ' + clicked.kind + (dragging2 ? ' dragging' : '')}
                    ref={cardRef}
-                   style={{ transform: `translate(calc(-50% + ${cardOffset.x}px), calc(-50% + ${cardOffset.y}px))` }}
+                   style={{ transform: `translate(calc(-50% + ${cardOffset.x}px), calc(-50% + ${cardOffset.y}px))`,
+                            ...(clicked.kind === 'shane' && window.riskColor
+                                ? { '--accent': window.riskColor((window.RiskState && typeof window.RiskState.current === 'number') ? window.RiskState.current : 83.4) }
+                                : {}) }}
                    onPointerDown={onCardDown}>
                 <div className="topbar">
                   <span className="grip-l"><span className="dots">⋮⋮</span>{clicked.kind === 'furry' ? 'Furtrack' : 'Subject'}</span>
@@ -2055,6 +2110,7 @@
                         const ey = cy - r * Math.sin(a);
                         const nx = cx + (r - 12) * Math.cos(a);
                         const ny = cy - (r - 12) * Math.sin(a);
+                        const col = window.riskColor ? window.riskColor(pct) : 'var(--accent)';
                         return (
                           <div className="ds-section ds-gauge">
                             <div className="ds-title" style={{ alignSelf: 'flex-start' }}>Risk index</div>
@@ -2069,7 +2125,7 @@
                               <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
                                     fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="14" strokeLinecap="round" />
                               <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
-                                    fill="none" stroke="url(#riskGrad)" strokeWidth="14" strokeLinecap="round" />
+                                    fill="none" stroke={col} strokeWidth="14" strokeLinecap="round" />
                               {[0, 25, 50, 75, 100].map((p) => {
                                 const t = Math.PI * (1 - p / 100);
                                 const inR = r - 22, outR = r - 10;
@@ -2093,9 +2149,9 @@
                               <g className="needle">
                                 <line x1={cx} y1={cy} x2={nx} y2={ny}
                                       stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
-                                <circle cx={cx} cy={cy} r="7" fill="var(--accent)" stroke="var(--ink)" strokeWidth="2" />
+                                <circle cx={cx} cy={cy} r="7" fill={col} stroke="var(--ink)" strokeWidth="2" />
                               </g>
-                              <text x={cx} y={cy - 28} textAnchor="middle" fill="var(--accent)"
+                              <text x={cx} y={cy - 28} textAnchor="middle" fill={col}
                                     style={{ fontSize: '42px', fontWeight: 900, letterSpacing: '-0.02em', fontFamily: 'Archivo, sans-serif' }}>{pct.toFixed(1)}</text>
                               <text x={cx} y={cy - 10} textAnchor="middle" fill="rgba(255,255,255,0.55)"
                                     style={{ fontSize: '9px', fontWeight: 800, letterSpacing: '0.28em', fontFamily: 'Archivo, sans-serif' }}>OF 100</text>
@@ -2104,13 +2160,12 @@
                         );
                       })()}
 
-                      <div className="ds-section" style={{ flexDirection: 'row', gap: '8px', justifyContent: 'center' }}>
-                        <button onClick={() => window.voteShaneRisk && window.voteShaneRisk(-0.1)}
-                                style={{ background: '#3fb56a', color: '#0b0b0b', border: 'none', borderRadius: '8px',
-                                         padding: '8px 12px', fontWeight: 800, letterSpacing: '0.02em', cursor: 'pointer' }}>Non-Furry Behavior</button>
-                        <button onClick={() => window.voteShaneRisk && window.voteShaneRisk(0.1)}
-                                style={{ background: '#e5372b', color: '#fff', border: 'none', borderRadius: '8px',
-                                         padding: '8px 12px', fontWeight: 800, letterSpacing: '0.02em', cursor: 'pointer' }}>Furry Behavior</button>
+                      <div className="hbr">
+                        <div className="hbr-title">Handler Behavior Reports</div>
+                        <div className="hbr-grid">
+                          <button className="hbr-btn no" onClick={() => { window.hbrPlay && window.hbrPlay('pos'); window.voteShaneRisk && window.voteShaneRisk(-0.7); }}><span className="ar">▼</span>Non-Furry Behavior</button>
+                          <button className="hbr-btn yes" onClick={() => { window.hbrPlay && window.hbrPlay('neg'); window.voteShaneRisk && window.voteShaneRisk(0.7); }}>Furry Behavior<span className="ar">▲</span></button>
+                        </div>
                       </div>
 
                       <div className="dossier-grid">
