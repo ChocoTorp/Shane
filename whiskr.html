@@ -585,7 +585,7 @@
   #stage .pm-rotate-btn:hover { border-color: rgba(229, 55, 43, 0.5); color: var(--ink); }
   #stage .pm-rotate-btn .ic { display: none; }
   #stage .pm-rotate-btn::before { content: "\27F3"; font-size: 26px; line-height: 1; }
-  /* ON = engaged (solid red). OFF = dim. No spin — it's a state indicator, not a spinner. */
+  /* ON = engaged (solid red). OFF = dim. No spin - it's a state indicator, not a spinner. */
   #stage .pm-rotate-btn:not(.off) {
     background: var(--accent); border-color: var(--accent); color: var(--ink);
     box-shadow: 0 0 0 1px var(--accent), 0 0 18px rgba(229, 55, 43, 0.45);
@@ -857,7 +857,7 @@
   };
 
   // Vote: atomic, applied on top of the live (drifted) value, clamped to the gauge range.
-  // The deck infers the report from the value jump (±0.7 vote vs ±0.1 drift) — nothing
+  // The deck infers the report from the value jump (±0.7 vote vs ±0.1 drift) - nothing
   // extra to write here.
   window.voteShaneRisk = function (delta) {
     ref.transaction(function (c) {
@@ -895,12 +895,12 @@
         if (cancelled) return;
         setClicked((c) => (c && c.id === id ? { ...c, imgUrl: img || null, title: title, desc: desc } : c));
       };
-      // 1) Same-origin serverless proxy — works on Vercel (no 3rd-party CORS gating).
+      // 1) Same-origin serverless proxy - works on Vercel (no 3rd-party CORS gating).
       const viaApi = () =>
         fetch('/api/furtrack?id=' + id)
           .then((r) => (r.ok ? r.json() : Promise.reject()))
           .then((d) => { if (!d || !d.img) return Promise.reject(); apply(d.img, d.title, d.desc); });
-      // 2) Fallback: public CORS proxies — for local/static use where /api isn't available.
+      // 2) Fallback: public CORS proxies - for local/static use where /api isn't available.
       const target = 'https://fxfurtrack.com/p/' + id;
       const proxies = [
         (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
@@ -1000,7 +1000,7 @@
         education: [['TU Berlin', 'M.Sc. Informatik']],
         certs: [
           ['SAP Certified App Associate', 'SAP · 2019', 'good'],
-          ['AWS Solutions Architect — Pro', 'AWS · 2022', 'good'],
+          ['AWS Solutions Architect · Pro', 'AWS · 2022', 'good'],
         ],
         accounts: [
           { label: 'Eurofurence registry', src: 'eurofurence.org ↗', url: 'https://www.eurofurence.org/' },
@@ -1314,7 +1314,7 @@
         const pos = [];
         const push = (lat, lon) => pos.push(...toVec(lat, lon, R * 1.01).toArray());
         // -------------------------------------------------------------------
-        // LAYER 1 — Hotspot city clusters (LA/SF/Seattle kept at full volume,
+        // LAYER 1 - Hotspot city clusters (LA/SF/Seattle kept at full volume,
         // every other cluster halved per request).
         // [lat, lon, count, scatterScale]
         const CLUSTERS = [
@@ -1402,7 +1402,7 @@
         });
 
         // -------------------------------------------------------------------
-        // LAYER 2 — Country/region diffuse spread, weighted by LGBTQ+ legal
+        // LAYER 2 - Country/region diffuse spread, weighted by LGBTQ+ legal
         // climate. High-acceptance regions get plenty of evenly-spread dots;
         // restrictive regions get a sparse handful; criminalized regions get
         // 0-2 token dots. Bounding boxes are rough; isLit filters to land.
@@ -1503,10 +1503,10 @@
 
       // Country outlines + tiered LGBTQ+ legality fills, sourced from world-atlas topojson.
       // Tiers (ISO 3166-1 numeric / M49 IDs):
-      //   high       — same-sex marriage or near-full equal rights → red @ 25%
-      //   mixed      — civil unions / partial recognition / decriminalized & evolving → red @ 15%
-      //   restrict   — restrictive / hostile but not criminalized → red @ 5%
-      //   criminal   — same-sex acts illegal → no fill
+      //   high       - same-sex marriage or near-full equal rights → red @ 25%
+      //   mixed      - civil unions / partial recognition / decriminalized & evolving → red @ 15%
+      //   restrict   - restrictive / hostile but not criminalized → red @ 5%
+      //   criminal   - same-sex acts illegal → no fill
       const LEGAL_TIERS = {
         high: [
           840, // USA
@@ -2424,7 +2424,7 @@
 </script>
 
 <script>
-  // Shared soundtrack — one <audio>, a single draggable control pinned top-right.
+  // Shared soundtrack - one <audio>, a single draggable control pinned top-right.
   // Auto-plays (falling back to the first user gesture if the browser blocks it).
   (function () {
     var PLAY  = '<svg class="da-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>';
