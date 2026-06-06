@@ -1307,7 +1307,7 @@
     position: absolute; top: 30px; left: 0; right: 0; z-index: 2;
     overflow: hidden; pointer-events: none;
     border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    background: rgba(229,55,43,0.06);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
     padding: 12px 0;
   }
   .finale-ticker-track {
@@ -1370,16 +1370,16 @@
     font-family: "Archivo", sans-serif; font-weight: 900;
     font-size: 22px; letter-spacing: 0.24em; text-transform: uppercase;
     transform: rotate(-2deg);
-    box-shadow: inset 0 0 0 4px rgba(229,55,43,0.06), 0 10px 24px rgba(0,0,0,0.45);
+    box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--accent) 6%, transparent), 0 10px 24px rgba(0,0,0,0.45);
   }
   .finale-stamp .pulse {
     width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
-    box-shadow: 0 0 0 0 rgba(229,55,43,0.7);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent);
     animation: finalePulse 1.6s ease-out infinite;
   }
   @keyframes finalePulse {
-    0% { box-shadow: 0 0 0 0 rgba(229,55,43,0.7); }
-    100% { box-shadow: 0 0 0 18px rgba(229,55,43,0); }
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); }
+    100% { box-shadow: 0 0 0 18px color-mix(in srgb, var(--accent) 0%, transparent); }
   }
 
   .finale-right { position: relative; display: flex; flex-direction: column; align-items: flex-end; }
@@ -1396,7 +1396,7 @@
   .finale-age .now {
     font-size: 420px; color: var(--accent);
     letter-spacing: -0.05em;
-    text-shadow: 0 0 60px rgba(229,55,43,0.35);
+    text-shadow: 0 0 60px color-mix(in srgb, var(--accent) 35%, transparent);
     position: relative;
   }
   .finale-age .now::after {
@@ -1456,15 +1456,106 @@
     0%, 100% { transform: rotate(-0.6deg); }
     50%      { transform: rotate(0.6deg); }
   }
+  /* ===== sci-fi HUD readout cells ===== */
   .fg-foot {
-    position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
-    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
-    font-family: "Archivo", sans-serif;
+    position: relative; display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 10px;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.10);
   }
-  .fg-foot .fk { display: block; font-size: 10px; letter-spacing: 0.24em; color: var(--muted); font-weight: 700; text-transform: uppercase; }
-  .fg-foot .fv { display: block; margin-top: 4px; font-size: 18px; color: var(--ink); font-weight: 800; }
-  .fg-foot .fv.r { color: var(--accent); }
-  .fg-foot .fv.g { color: #3fb56a; }
+  .fg-stat {
+    --c: var(--muted);
+    position: relative; padding: 11px 13px 11px; min-width: 0;
+    border: 1px solid rgba(255,255,255,0.10);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012)),
+      rgba(10,10,12,0.55);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%);
+  }
+  .fg-stat::before {                /* glowing top accent strip in the cell's colour */
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--c); box-shadow: 0 0 10px var(--c); opacity: 0.9;
+  }
+  .fg-stat::after {                 /* HUD corner bracket, bottom-right */
+    content: ""; position: absolute; right: 6px; bottom: 6px; width: 8px; height: 8px;
+    border-right: 1px solid var(--c); border-bottom: 1px solid var(--c); opacity: 0.55;
+  }
+  .fg-stat .fk {
+    display: flex; align-items: center; gap: 6px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted); font-weight: 700;
+  }
+  .fg-stat .fk::before {
+    content: ""; width: 5px; height: 5px; background: var(--c);
+    box-shadow: 0 0 7px var(--c); animation: fgBlink 1.6s steps(1) infinite;
+  }
+  .fg-stat .fv {
+    display: block; margin-top: 8px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 22px; font-weight: 800; letter-spacing: 0.01em; line-height: 1;
+    color: var(--c); text-shadow: 0 0 12px var(--c);
+  }
+  .fg-stat .fv.band {
+    font-family: "Archivo", sans-serif; font-size: 15px; font-weight: 900;
+    letter-spacing: 0.04em; line-height: 1.05;
+  }
+  @keyframes fgBlink { 0%, 68% { opacity: 1; } 69%, 100% { opacity: 0.2; } }
+  .fg-head-r { display: inline-flex; align-items: center; gap: 12px; }
+  .fg-enlarge {
+    background: transparent; border: 1px solid var(--line); color: var(--muted);
+    font-family: "Archivo", sans-serif; font-weight: 800; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; padding: 4px 9px;
+    cursor: pointer; white-space: nowrap; transition: border-color .15s, color .15s;
+  }
+  .fg-enlarge:hover { border-color: var(--accent); color: var(--ink); }
+
+  /* Enlarge overlay: gauge + live feed share one bordered "stage" so they're equal height. */
+  .fg-overlay {
+    position: fixed; inset: 0; z-index: 100000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4vh 4vw; box-sizing: border-box;
+    background: rgba(5,5,7,0.74); backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
+  }
+  .fg-stage {
+    display: flex; align-items: stretch; max-width: 96vw; max-height: 92vh;
+    border: 1px solid var(--line); background: rgba(8,8,10,0.66);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 30px 90px rgba(0,0,0,0.62);
+  }
+  /* SVG scales with its viewBox, so a wider pane renders the gauge ~3x. */
+  .fg-stage .fg.fg-big {
+    width: min(1140px, 62vw); transform: none !important; cursor: default;
+    border: 0; box-shadow: none;
+  }
+  .fg-feed {
+    display: grid; grid-template-rows: auto minmax(0, 1fr);   /* head + scrolling list */
+    width: 400px; max-width: 30vw; min-height: 0; overflow: hidden;   /* gauge defines stage height */
+    border-left: 1px solid var(--line); background: rgba(255,255,255,0.015);
+  }
+  .fg-feed-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 16px; border-bottom: 1px solid var(--line);
+    font-family: "Archivo", sans-serif; font-weight: 800; font-size: 12px;
+    letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+  }
+  .fg-feed-list { min-height: 0; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 9px; }
+  .fg-rep {
+    display: flex; gap: 11px; align-items: flex-start;
+    border-left: 3px solid var(--line); padding: 10px 13px;
+    background: rgba(255,255,255,0.035);
+    font-family: "Archivo", sans-serif; font-size: 15px; line-height: 1.3; color: var(--ink);
+    animation: fgRepIn .35s ease;
+  }
+  .fg-rep.furry  { border-left-color: #e5372b; }
+  .fg-rep.normal { border-left-color: #3fb56a; }
+  .fg-rep.idle { color: var(--muted); font-style: italic; }
+  .fg-rep .ico { font-weight: 900; font-size: 16px; line-height: 1.2; }
+  .fg-rep.furry  .ico { color: #e5372b; }
+  .fg-rep.normal .ico { color: #3fb56a; }
+  .fg-rep .rmsg { display: block; }
+  .fg-rep .rt {
+    display: block; margin-top: 4px; font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); font-weight: 700;
+  }
+  @keyframes fgRepIn { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: none; } }
   .finale-stat {
     padding: 14px 18px; border-right: 1px solid var(--line);
   }
@@ -2124,16 +2215,16 @@
         <div class="finale-ticker-track">
           <span>Subject: <span class="r">S. Bruess</span></span><span class="sep">◆</span>
           <span>Origin: Hailey, ID</span><span class="sep">◆</span>
-          <span>Risk level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
-          <span>Peak risk: <span class="r">+98.4</span></span><span class="sep">◆</span>
+          <span>Risk level: <span class="r js-band">Bad Dragon</span></span><span class="sep">◆</span>
+          <span>Peak risk: <span class="r js-peak">+98.4</span></span><span class="sep">◆</span>
           <span>Status: Married</span><span class="sep">◆</span>
           <span>Trajectory: <span class="r">↓ 12 / yr</span></span><span class="sep">◆</span>
           <span>Verdict: <span class="r">Past peak</span></span><span class="sep">◆</span>
           <!-- duplicate for seamless loop -->
           <span>Subject: <span class="r">S. Bruess</span></span><span class="sep">◆</span>
           <span>Origin: Hailey, ID</span><span class="sep">◆</span>
-          <span>Risk level: <span class="r">Bad Dragon</span></span><span class="sep">◆</span>
-          <span>Peak risk: <span class="r">+98.4</span></span><span class="sep">◆</span>
+          <span>Risk level: <span class="r js-band">Bad Dragon</span></span><span class="sep">◆</span>
+          <span>Peak risk: <span class="r js-peak">+98.4</span></span><span class="sep">◆</span>
           <span>Status: Married</span><span class="sep">◆</span>
           <span>Trajectory: <span class="r">↓ 12 / yr</span></span><span class="sep">◆</span>
           <span>Verdict: <span class="r">Past peak</span></span><span class="sep">◆</span>
@@ -2165,7 +2256,7 @@
           </div>
           <div id="finale-gauge-root" class="finale-gauge-mount"></div>
           <div class="finale-stat-row">
-            <div class="finale-stat"><span class="k">Peak risk</span><span class="v red">+98.4</span></div>
+            <div class="finale-stat"><span class="k">Peak risk</span><span class="v red js-peak">+98.4</span></div>
             <div class="finale-stat"><span class="k">Today</span><span class="v">−25 / yr</span></div>
             <div class="finale-stat"><span class="k">Trend</span><span class="v good">↓ Receding</span></div>
           </div>
@@ -3599,7 +3690,7 @@
                       <span className="meta">Sales Engineer · Outreach · Seattle, WA. Birthday boy. Egregious case.</span>
 
                       {(() => {
-                        const pct = (window.RiskState && window.RiskState.current) || 83.4;
+                        const pct = (window.RiskState && typeof window.RiskState.current === 'number') ? window.RiskState.current : 83.4;
                         const cx = 120, cy = 130, r = 100;
                         const a = Math.PI * (1 - pct / 100);
                         const ex = cx + r * Math.cos(a);
@@ -3915,6 +4006,64 @@
 </script>
 
 <script type="text/babel">
+  // Behavior-report message pools for the finale feed. A random one is dropped in
+  // whenever the live value jumps from a vote (furry = up, normal = down).
+  const FURRY_REPORTS = [
+    'Subject spotted doing Furry-like shit',
+    'Subject observed nuzzling a complete stranger',
+    'Paw-shaped evidence recovered at the scene',
+    'Handler confirms unprompted tail-wagging',
+    'Subject caught bidding on a half-finished fursuit',
+    'Murr detected in subject’s immediate vicinity',
+    'Subject seen practicing a disturbingly good bark',
+    'Telemetry flags elevated headpat-seeking behavior',
+    'Subject added “OwO” to a work email',
+    'Witness reports subject responding to “good boy”',
+    'Subject filmed booping an unconsenting snoot',
+    'Drone footage shows subject doing a little paw-flex',
+    'Subject overheard negotiating commission prices',
+    'Asset reports subject growling at a vacuum cleaner',
+    'Subject’s search history flagged: “how to floof”',
+    'Subject seen applying for con staff, unprompted',
+    'Subject responded “yip” in a quarterly meeting',
+    'Thermal imaging detects fursuit-level sweating',
+    'Subject caught color-matching paw pads',
+    'Subject left a “:3” on a federal document',
+  ];
+  const NORMAL_REPORTS = [
+    'Subject witnessed behaving normally',
+    'Subject filed taxes like a regular human',
+    'No paws detected for a full reporting cycle',
+    'Subject watched the game, displayed no tail',
+    'Handler reports completely unremarkable conduct',
+    'Subject operated a fork with full competence',
+    'Zero murrs recorded this interval',
+    'Subject made eye contact and shook a hand',
+    'Subject discussed mortgage rates, unprompted',
+    'Subject correctly identified as a normal guy',
+    'Subject mowed the lawn with zero tail involvement',
+    'Subject complained about gas prices like a man',
+    'Surveillance confirms subject eating a plain sandwich',
+    'Subject asked about the score of the big game',
+    'Subject assembled furniture without a single murr',
+    'Subject returned a shopping cart, fully upright',
+    'No fursona detected across all monitored channels',
+    'Subject discussed the weather at acceptable length',
+    'Subject wore normal shoes, not paw-shaped ones',
+    'Subject paid a utility bill ahead of schedule',
+  ];
+
+  // Risk-level label bands for the finale meter's centre cell.
+  function riskBand(p) {
+    if (p < 15) return 'Normal';
+    if (p < 25) return 'Teenage Boy';
+    if (p < 50) return 'Typical Gooner';
+    if (p < 65) return 'Advanced Coomer';
+    if (p < 80) return 'Funtanari-Cubbing Addict';
+    if (p < 95) return 'Bad Dragon';
+    return 'Furry';
+  }
+
   // Cooler, bigger risk gauge for the finale slide. Subscribes to the same global tick.
   function FinaleGauge() {
     const { useState, useEffect, useRef } = React;
@@ -3962,7 +4111,43 @@
       }
     }, [dragging]);
 
-    const pct = (window.RiskState && window.RiskState.current) || 83.4;
+    // Enlarge mode + the live "behavior reports" feed (local, resets on refresh).
+    const [enlarged, setEnlarged] = useState(false);
+    const [feed, setFeed] = useState([]);
+    const prevValRef = useRef(null), repIdRef = useRef(0), readyRef = useRef(false);
+    // Skip the initial Firebase sync jump (default 83.4 → real shared value) so it
+    // doesn't fire a phantom report; start reporting once the value has settled.
+    useEffect(() => {
+      const id = setTimeout(() => { readyRef.current = true; }, 1500);
+      return () => clearTimeout(id);
+    }, []);
+    // Session peak/low: reset on reload, track the highest & lowest value seen.
+    const peakRef = useRef(null), lowRef = useRef(null);
+
+    const pct = (window.RiskState && typeof window.RiskState.current === 'number') ? window.RiskState.current : 83.4;
+
+    // Infer votes from the shared value: ambient drift moves ±0.1 per tick, a vote
+    // moves ±0.7, so a jump ≥0.35 is a real vote → drop a random themed report in.
+    useEffect(() => {
+      const prev = prevValRef.current;
+      prevValRef.current = pct;
+      if (prev === null || !readyRef.current) return;
+      const delta = pct - prev;
+      if (Math.abs(delta) >= 0.35) {
+        const furry = delta > 0;
+        const pool = furry ? FURRY_REPORTS : NORMAL_REPORTS;
+        setFeed((f) => {
+          const lastMsg = f.length ? f[0].msg : null;   // avoid the same line twice in a row
+          let msg;
+          do { msg = pool[Math.floor(Math.random() * pool.length)]; }
+          while (pool.length > 1 && msg === lastMsg);
+          return [{ id: ++repIdRef.current, d: furry ? 1 : -1, msg }].concat(f).slice(0, 40);
+        });
+      }
+    }, [pct]);
+
+    if (peakRef.current === null || pct > peakRef.current) peakRef.current = pct;
+    if (lowRef.current === null || pct < lowRef.current) lowRef.current = pct;
     const cx = 200, cy = 215, r = 175;
     const a  = Math.PI * (1 - pct / 100);
     const ex = cx + r * Math.cos(a);
@@ -3975,13 +4160,25 @@
     };
     const start = arc(0);
     const col = window.riskColor ? window.riskColor(pct) : 'var(--accent)';
-    return (
-      <div className="fg" style={{ transform: `translate(${pos.x}px, ${pos.y}px)`, '--accent': col }}
-           onPointerDown={onDown}>
-        <div className="fg-head">
-          <span>Live · Current Risk Index</span>
-          <span className="lvl"><span className="dot"></span>Live signal</span>
-        </div>
+    const stop = (e) => e.stopPropagation();
+    const peak = peakRef.current, low = lowRef.current;
+
+    // Drive the whole last slide from the live value: every red element (ticker,
+    // headline, name, Japanese, signoff, "33" glow) tracks the dial colour, and the
+    // peak/risk-level readouts (ticker + the stat under "33") match the live gauge.
+    useEffect(() => {
+      const root = document.getElementById('finale-gauge-root');
+      const sec = root && root.closest('section');
+      if (!sec) return;
+      sec.style.setProperty('--accent', col);
+      const peakTxt = '+' + peak.toFixed(1);
+      sec.querySelectorAll('.js-peak').forEach((el) => { el.textContent = peakTxt; });
+      const bandTxt = riskBand(pct);
+      sec.querySelectorAll('.js-band').forEach((el) => { el.textContent = bandTxt; });
+    }, [col, peak, pct]);
+
+    const gaugeBody = (
+      <>
         <svg viewBox="0 0 400 250" className="fg-svg">
           <defs>
             <linearGradient id="fgGrad" x1="0" y1="0" x2="1" y2="0">
@@ -4050,11 +4247,67 @@
                 style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '0.32em', fontFamily: 'Archivo, sans-serif' }}>OF 100 · LIVE</text>
         </svg>
         <div className="fg-foot">
-          <div><span className="fk">Peak</span><span className="fv r">+98.4</span></div>
-          <div><span className="fk">Today</span><span className="fv">{pct.toFixed(1)}</span></div>
-          <div><span className="fk">12 Mo. Low</span><span className="fv g">79.3</span></div>
+          <div className="fg-stat" style={{ '--c': '#e5372b' }}>
+            <span className="fk">Peak</span><span className="fv">{peak.toFixed(1)}</span>
+          </div>
+          <div className="fg-stat lvl" style={{ '--c': col }}>
+            <span className="fk">Risk Level</span><span className="fv band">{riskBand(pct)}</span>
+          </div>
+          <div className="fg-stat" style={{ '--c': '#3fb56a' }}>
+            <span className="fk">Low</span><span className="fv">{low.toFixed(1)}</span>
+          </div>
         </div>
-      </div>
+      </>
+    );
+
+    return (
+      <>
+        <div className="fg" style={{ transform: `translate(${pos.x}px, ${pos.y}px)`, '--accent': col }}
+             onPointerDown={onDown}>
+          <div className="fg-head">
+            <span>Live · Current Risk Index</span>
+            <span className="fg-head-r">
+              <span className="lvl"><span className="dot"></span>Live signal</span>
+              <button className="fg-enlarge" onPointerDown={stop}
+                      onClick={(e) => { stop(e); setEnlarged(true); }}>Enlarge ⤢</button>
+            </span>
+          </div>
+          {gaugeBody}
+        </div>
+        {enlarged && window.ReactDOM && ReactDOM.createPortal(
+          <div className="fg-overlay" onClick={() => setEnlarged(false)}>
+            <div className="fg-stage" style={{ '--accent': col }} onClick={stop}>
+              <div className="fg fg-big">
+                <div className="fg-head">
+                  <span>Live · Current Risk Index</span>
+                  <span className="lvl"><span className="dot"></span>Live signal</span>
+                </div>
+                {gaugeBody}
+              </div>
+              <div className="fg-feed">
+                <div className="fg-feed-head">
+                  <span>Live Behavior Reports</span>
+                  <button className="fg-enlarge" onClick={() => setEnlarged(false)}>✕ Close</button>
+                </div>
+                <div className="fg-feed-list">
+                  {feed.length === 0 && (
+                    <div className="fg-rep idle"><span className="rmsg">Awaiting reports…</span></div>
+                  )}
+                  {feed.map((ev) => (
+                    <div key={ev.id} className={'fg-rep ' + (ev.d > 0 ? 'furry' : 'normal')}>
+                      <span className="ico">{ev.d > 0 ? '▲' : '▼'}</span>
+                      <span className="rmsg">{ev.msg}
+                        <span className="rt">{ev.d > 0 ? 'Furry behavior · +0.7' : 'Normal conduct · −0.7'}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+      </>
     );
   }
   (function () {

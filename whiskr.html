@@ -857,6 +857,8 @@
   };
 
   // Vote: atomic, applied on top of the live (drifted) value, clamped to the gauge range.
+  // The deck infers the report from the value jump (±0.7 vote vs ±0.1 drift) — nothing
+  // extra to write here.
   window.voteShaneRisk = function (delta) {
     ref.transaction(function (c) {
       var base = (c && typeof c.v === 'number') ? c : { v: REST, t: now() };
